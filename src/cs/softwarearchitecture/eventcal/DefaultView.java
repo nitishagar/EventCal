@@ -2,14 +2,16 @@ package cs.softwarearchitecture.eventcal;
 
 import java.util.Locale;
 
+import cs.softwarearchitecture.eventcal.R;
+import cs.softwarearchitecture.eventcal.SettingsActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,6 +58,19 @@ public class DefaultView extends FragmentActivity {
 		getMenuInflater().inflate(R.menu.default_view, menu);
 		return true;
 	}
+	
+	@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	
+    	switch(item.getItemId()){
+    	case R.id.action_settings:
+    		Intent settingIntent = new Intent(this, SettingsActivity.class);
+    		startActivity(settingIntent);
+    		break;
+    	}
+    	
+    	return true;
+    }
 
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
