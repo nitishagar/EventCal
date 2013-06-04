@@ -1,5 +1,7 @@
 package cs.softwarearchitecture.eventcal.dayview;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -11,16 +13,21 @@ import cs.softwarearchitecture.eventcal.R;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils.TruncateAt;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 @SuppressLint("ValidFragment")
 public class DayviewFragment extends Fragment {
@@ -158,8 +165,128 @@ public class DayviewFragment extends Fragment {
 		return containerView;
 	}
 
-	private void loadDataForDay() {
+	private void loadDataForDay() throws ParseException {
 		// TODO Auto-generated method stub
+		DataInterface dataInterface = new DataInterface(mContext);
+		ArrayList<Event> appointments = 
+				dataInterface.getCurrentDayEvents(eventDate);
 		
+		for (Event appointment : appointments) {
+			String startTime = appointment.getStart();
+			String endTime = appointment.getEnd();
+			title = appointment.getTitle();
+			
+			for (int i = 0; i < timevalues.length; i++){
+				
+				if ((startTime.contains(timevalues[i]))){
+					createViewForAppointment(startTime, endTime);
+				}
+			}
+		}
+	}
+	
+	
+	private void createViewForAppointment(String startTime, String endTime) {
+		int marginTop = calculateMargin(startTime);
+		int height = (int) calculateDiffInTime(startTime, endTime);
+		
+		LayoutParams lprams = 
+				new LayoutParams(LayoutParams.MATCH_PARENT, height);
+		int marginLeft = 30;
+		lprams.setMargins(marginLeft, 0, 0, 0);
+		lprams.topMargin = marginTop;
+		
+		Button button = new Button(mContext);
+		button.setBackgroundResource(R.drawable.appointment_new);
+		button.setLayoutParams((lprams);
+		button.setTextColor(Color.BLACK);
+		button.setTextApperance(mContext, R.style.ButtonFontStyle);
+		button.setText("Event");
+		if (height <= 18) {
+			button.setSingleLine();
+		}
+		button.setEllipsize(TruncateAt.END);
+		dayRelative.addView(button);
+		button.setOnClickListener(new OnClickListener(){
+			
+			public void onClick(View v) {
+				
+				Toast.makeText(mContext, "Button Click1", 
+						Toast.LENGTH_SHORT).show();
+			}
+		});
+	}
+	
+	private long calculateDiffInTime(String startTime, String endTime) {
+		String startTimeAppointment = startTime;
+		String endTimeAppointment = endTime;
+		long diffMinutes = 0;
+		SimpleDateFormat format = new SimpleDateFormat("hh:mm aa");
+		Date d1 = null;
+		Date d2 = null;
+		try {
+			d1 = format.parse(startTimeAppointment);
+			d2 = format.parse(endTimeAppointment);
+			
+			long diff = d2.getTime() - d1.getTime();
+			diffMinutes = diff / (60 * 1000);
+		} catch (java.text.ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return diffMinutes;
+	}
+	
+	private int calculateMargin(String startTime){
+		margin = 3;
+		for (int i = 0; startTime.compareToIgnoreCase(timevalues[i]) != 0; i++){
+			margin = margin + 30;
+		}
+		
+		return margin;
+	}
+	
+	private void setGridCellAdapterToDate(int month, int year) 
+			throws ParseException{
+		Calendar date = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+		
+		String monthTemp = months[cal.get(Calendar.MONTH)];
+		String newdate = " " + cal.get(Calendar.DATE) + " ";
+		String dateTime = sdf.format(date.getTime());
+		String yearTemp = "" + cal.get(Calendar.YEAR);
+		String monthTemp1 = monthsNumbers[cal.get(Calendar.MONTH)];
+		
+		int changedmonth = cal.get(Calendar.MONTH);
+		int changedYear = cal.get(Calendar.YEAR);
+		int day = cal.get(Calendar.YEAR);
+		String changedNewDate = monthTemp1 + "/" + day + "/" + year;
+		eventDate = changedNewDate;
+		
+		loadDataForDay();
+		String changedDate = newdate + monthTemp + "," + yearTemp;
+		
+		currentDate.setText(changedDate);
+	}
+	
+	public void onActivityCreated(Bundle savedInstanceState){
+		super.onActivityCreated(savedInstanceState);
+	}
+	
+	private void onLTRFling() throws ParseException {
+		removeViews();
+		cal.add(Calendar.DAY_OF_MONTH, -1);
+		setGridCellAdapterToDate(cal.MONTH, cal.YEAR);
+	}
+	
+	private void onRTLFling() throws ParseException {
+		removeViews();
+		cal.add(Calendar.DAY_OF_MONTH, 1);
+		setGridCellAdapterToDate(cal.MONTH, cal.YEAR);
+	}
+
+	private void removeViews() {
+		// TODO Auto-generated method stub
+		dayRelative.removeAllViews();
 	}
 } 
