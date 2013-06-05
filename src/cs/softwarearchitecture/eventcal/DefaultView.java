@@ -63,12 +63,19 @@ public class DefaultView extends FragmentActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
     	
     	switch(item.getItemId()){
+    	case R.id.action_search:
+    		Intent searchIntent = new Intent(this, SearchActivity.class);
+    		startActivity(searchIntent);
+    		break;
+    	case R.id.action_goto:
+    		Intent gotoIntent = new Intent(this, GotoActivity.class);
+    		startActivity(gotoIntent);
+    		break;
     	case R.id.action_settings:
     		Intent settingIntent = new Intent(this, SettingsActivity.class);
     		startActivity(settingIntent);
     		break;
     	}
-    	
     	return true;
     }
 
