@@ -39,7 +39,7 @@ public class DefaultView extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.dayview);
+		setContentView(R.layout.activity_default_view);
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
@@ -63,14 +63,6 @@ public class DefaultView extends FragmentActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
     	
     	switch(item.getItemId()){
-    	case R.id.action_search:
-    		Intent searchIntent = new Intent(this, SearchActivity.class);
-    		startActivity(searchIntent);
-    		break;
-    	case R.id.action_goto:
-    		Intent gotoIntent = new Intent(this, GotoActivity.class);
-    		startActivity(gotoIntent);
-    		break;
     	case R.id.action_settings:
     		Intent settingIntent = new Intent(this, SettingsActivity.class);
     		startActivity(settingIntent);
@@ -95,9 +87,9 @@ public class DefaultView extends FragmentActivity {
 			// getItem is called to instantiate the fragment for the given page.
 			// Return a DummySectionFragment (defined as a static inner class
 			// below) with the page number as its lone argument.
-			Fragment fragment = new DummySectionFragment();
+			Fragment fragment = new DayViewFragment();
 			Bundle args = new Bundle();
-			args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, position + 1);
+			args.putInt(DayViewFragment.ARG_SECTION_NUMBER, position + 1);
 			fragment.setArguments(args);
 			return fragment;
 		}
@@ -113,11 +105,11 @@ public class DefaultView extends FragmentActivity {
 			Locale l = Locale.getDefault();
 			switch (position) {
 			case 0:
-				return getString(R.string.title_section1).toUpperCase(l);
+				return getString(R.string.testing_date).toUpperCase(l);
 			case 1:
-				return getString(R.string.title_section2).toUpperCase(l);
+				return getString(R.string.testing_date).toUpperCase(l);
 			case 2:
-				return getString(R.string.title_section3).toUpperCase(l);
+				return getString(R.string.testing_date).toUpperCase(l);
 			}
 			return null;
 		}
@@ -127,14 +119,14 @@ public class DefaultView extends FragmentActivity {
 	 * A dummy fragment representing a section of the app, but that simply
 	 * displays dummy text.
 	 */
-	public static class DummySectionFragment extends Fragment {
+	public static class DayViewFragment extends Fragment {
 		/**
 		 * The fragment argument representing the section number for this
 		 * fragment.
 		 */
 		public static final String ARG_SECTION_NUMBER = "section_number";
 
-		public DummySectionFragment() {
+		public DayViewFragment() {
 		}
 
 		@Override
@@ -142,8 +134,6 @@ public class DefaultView extends FragmentActivity {
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(
 					R.layout.dayview, container, false);
-			
-			
 			return rootView;
 		}
 	}
