@@ -39,7 +39,7 @@ public class DefaultView extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_default_view);
+		setContentView(R.layout.dayview);
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
@@ -63,6 +63,14 @@ public class DefaultView extends FragmentActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
     	
     	switch(item.getItemId()){
+    	case R.id.action_search:
+    		Intent searchIntent = new Intent(this, SearchActivity.class);
+    		startActivity(searchIntent);
+    		break;
+    	case R.id.action_goto:
+    		Intent gotoIntent = new Intent(this, GotoActivity.class);
+    		startActivity(gotoIntent);
+    		break;
     	case R.id.action_settings:
     		Intent settingIntent = new Intent(this, SettingsActivity.class);
     		startActivity(settingIntent);
@@ -133,11 +141,9 @@ public class DefaultView extends FragmentActivity {
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(
-					R.layout.fragment_default_view_dummy, container, false);
-			TextView dummyTextView = (TextView) rootView
-					.findViewById(R.id.section_label);
-			dummyTextView.setText(Integer.toString(getArguments().getInt(
-					ARG_SECTION_NUMBER)));
+					R.layout.dayview, container, false);
+			
+			
 			return rootView;
 		}
 	}
