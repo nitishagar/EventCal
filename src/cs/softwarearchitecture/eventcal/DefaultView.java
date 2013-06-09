@@ -35,6 +35,9 @@ public class DefaultView extends FragmentActivity {
 	 * The {@link ViewPager} that will host the section contents.
 	 */
 	ViewPager mViewPager;
+	
+	// TAG for logCat
+	public static String TAG = "EVENT CALENDAR";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
