@@ -30,6 +30,10 @@
             android:configChanges="orientation"
     		android:screenOrientation="portrait" >
         </activity>
+        <provider
+            android:name=".contentprovider.DBEventsContentProvider"
+            android:authorities="cs.softwarearchitecture.eventcal.contentprovider" >
+        </provider>
     </application>
 
 </manifest>
