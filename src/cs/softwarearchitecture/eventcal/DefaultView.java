@@ -33,6 +33,7 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
+import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
 import cs.softwarearchitecture.eventcal.model.Event;
 import cs.softwarearchitecture.eventcal.viewpagerindicator.TitlePageIndicator;
 
@@ -369,7 +370,16 @@ public class DefaultView extends FragmentActivity {
 			
 			if (cursor.moveToFirst()) {
 				while(!cursor.isAfterLast()){
-					String data = cursor.getString(cursor.getColumnIndex(""));
+					String _id = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_ID));
+					String title = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TITLE));
+					String start_time = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_TIME));
+					String end_time = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_END_TIME));
+					String location = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_LOCATION));
+					String group = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TABLE));
+					
+					Event event = new Event(title, start_time, end_time, location, group);
+					
+					eventList.add(event);
 					cursor.moveToNext();
 				}
 		    }

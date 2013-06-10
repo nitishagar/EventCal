@@ -25,14 +25,14 @@ public class DBEventsContentProvider extends ContentProvider {
 	// Database
 	private DBSQLiteHelper eventDatabase;
 
-	private static final String AUTHORITY = "com.eventsample.eventret.contentprovider";
-	private static final String BASE_PATH = "eventret";
+	private static final String AUTHORITY = "cs.softwarearchitecture.eventcal.contentprovider";
+	private static final String BASE_PATH = "eventcal";
 	
 	public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY
 		      + "/" + BASE_PATH);
 	
 	public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
-		      + "/eventret";
+		      + "/eventcal";
 	public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
 		      + "/EventCalDB";
 		  

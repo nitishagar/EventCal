@@ -8,6 +8,20 @@
         android:minSdkVersion="14"
         android:targetSdkVersion="16" />
 
+    <permission
+        android:name="READ_DATABASE"
+        android:label="@string/app_read"
+        android:protectionLevel="normal" >
+    </permission>
+    <permission
+        android:name="WRITE_DATABASE"
+        android:label="@string/app_write"
+        android:protectionLevel="normal" >
+    </permission>
+
+    <uses-permission android:name="cs.softwarearchitecture.eventcal.contentprovider.READ_DATABASE" />
+    <uses-permission android:name="cs.softwarearchitecture.eventcal.contentprovider.WRITE_DATABASE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -15,9 +29,9 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="cs.softwarearchitecture.eventcal.DefaultView"
-            android:label="@string/app_name" 
             android:configChanges="orientation"
-    		android:screenOrientation="portrait" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,14 +40,22 @@
         </activity>
         <activity
             android:name="cs.softwarearchitecture.eventcal.SettingsActivity"
-            android:label="@string/title_activity_settings" 
             android:configChanges="orientation"
-    		android:screenOrientation="portrait" >
+            android:label="@string/title_activity_settings"
+            android:screenOrientation="portrait" >
         </activity>
+
         <provider
-            android:name=".contentprovider.DBEventsContentProvider"
-            android:authorities="cs.softwarearchitecture.eventcal.contentprovider" >
+            android:name="cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider"
+            android:authorities="cs.softwarearchitecture.eventcal.contentprovider"
+            android:readPermission="cs.softwarearchitecture.eventcal.contentprovider.READ_DATABASE"
+            android:writePermission="cs.softwarearchitecture.eventcal.contentprovider.WRITE_DATABASE" >
         </provider>
+
+        <activity
+            android:name="cs.softwarearchitecture.eventcal.AddEvent"
+            android:label="@string/title_activity_add_event" >
+        </activity>
     </application>
 
 </manifest>

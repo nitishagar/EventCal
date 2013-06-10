@@ -394,9 +394,9 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int vpi__tab_unselected_pressed_holo=0x7f020025;
     }
     public static final class id {
-        public static final int action_goto=0x7f090011;
-        public static final int action_search=0x7f090010;
-        public static final int action_settings=0x7f090012;
+        public static final int action_goto=0x7f090012;
+        public static final int action_search=0x7f090011;
+        public static final int action_settings=0x7f090010;
         public static final int bottom=0x7f090003;
         public static final int currentDate=0x7f090007;
         public static final int dayEventRelative=0x7f09000e;
@@ -405,6 +405,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int flipper=0x7f090008;
         public static final int linearLayout2=0x7f09000b;
         public static final int linearLayout3=0x7f09000d;
+        public static final int menu_add=0x7f090013;
         public static final int none=0x7f090000;
         public static final int pageIndicator=0x7f090005;
         public static final int relativeLayout242=0x7f09000a;
@@ -422,41 +423,48 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int default_underline_indicator_fade_length=0x7f0c0004;
     }
     public static final class layout {
-        public static final int activity_default_view=0x7f030000;
-        public static final int dayview=0x7f030001;
-        public static final int fragment_default_view_dummy=0x7f030002;
+        public static final int activity_add_event=0x7f030000;
+        public static final int activity_default_view=0x7f030001;
+        public static final int dayview=0x7f030002;
+        public static final int fragment_default_view_dummy=0x7f030003;
     }
     public static final class menu {
-        public static final int default_view=0x7f0d0000;
+        public static final int add_event=0x7f0d0000;
+        public static final int default_view=0x7f0d0001;
     }
     public static final class string {
         public static final int action_goto=0x7f060002;
         public static final int action_search=0x7f060001;
         public static final int action_settings=0x7f060003;
+        public static final int add_event=0x7f060005;
         public static final int app_name=0x7f060000;
-        public static final int pref_default_display_name=0x7f06000a;
-        public static final int pref_description_social_recommendations=0x7f060008;
+        public static final int app_read=0x7f060006;
+        public static final int app_write=0x7f060007;
+        public static final int hello_world=0x7f060009;
+        public static final int pref_default_display_name=0x7f06000f;
+        public static final int pref_description_social_recommendations=0x7f06000d;
         /**  Example settings for Data & Sync 
          */
-        public static final int pref_header_data_sync=0x7f06000c;
+        public static final int pref_header_data_sync=0x7f060011;
         /**  Strings related to Settings 
  Example General settings 
          */
-        public static final int pref_header_general=0x7f060006;
+        public static final int pref_header_general=0x7f06000b;
         /**  Example settings for Notifications 
          */
-        public static final int pref_header_notifications=0x7f06000f;
-        public static final int pref_ringtone_silent=0x7f060012;
-        public static final int pref_title_add_friends_to_messages=0x7f06000b;
-        public static final int pref_title_display_name=0x7f060009;
-        public static final int pref_title_new_message_notifications=0x7f060010;
-        public static final int pref_title_ringtone=0x7f060011;
-        public static final int pref_title_social_recommendations=0x7f060007;
-        public static final int pref_title_sync_frequency=0x7f06000d;
-        public static final int pref_title_system_sync_settings=0x7f06000e;
-        public static final int pref_title_vibrate=0x7f060013;
+        public static final int pref_header_notifications=0x7f060014;
+        public static final int pref_ringtone_silent=0x7f060017;
+        public static final int pref_title_add_friends_to_messages=0x7f060010;
+        public static final int pref_title_display_name=0x7f06000e;
+        public static final int pref_title_new_message_notifications=0x7f060015;
+        public static final int pref_title_ringtone=0x7f060016;
+        public static final int pref_title_social_recommendations=0x7f06000c;
+        public static final int pref_title_sync_frequency=0x7f060012;
+        public static final int pref_title_system_sync_settings=0x7f060013;
+        public static final int pref_title_vibrate=0x7f060018;
         public static final int testing_date=0x7f060004;
-        public static final int title_activity_settings=0x7f060005;
+        public static final int title_activity_add_event=0x7f060008;
+        public static final int title_activity_settings=0x7f06000a;
     }
     public static final class style {
         /** 
