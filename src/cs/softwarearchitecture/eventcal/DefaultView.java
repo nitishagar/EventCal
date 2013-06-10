@@ -7,16 +7,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-
-import cs.softwarearchitecture.eventcal.R;
-import cs.softwarearchitecture.eventcal.SettingsActivity;
-import cs.softwarearchitecture.eventcal.viewpagerindicator.TitlePageIndicator;
-
-import cs.softwarearchitecture.eventcal.model.Event;
-
-
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -32,12 +26,15 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.Toast;
+import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
+import cs.softwarearchitecture.eventcal.model.Event;
+import cs.softwarearchitecture.eventcal.viewpagerindicator.TitlePageIndicator;
 
 public class DefaultView extends FragmentActivity {
 
@@ -71,9 +68,12 @@ public class DefaultView extends FragmentActivity {
 
 
 	//Calendar calendar; 
-	Calendar calChanging;
+	static Calendar calChanging;
 
 	private static Values values;
+	
+	// Content Resolver
+	private static ContentResolver mEventContentResolver;
 
 	/**
 	 * The {@link ViewPager} that will host the section contents.
@@ -87,6 +87,8 @@ public class DefaultView extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_default_view);
+		
+		mEventContentResolver = getContentResolver();
 
 		values = new Values();
 		//calendar = Calendar.getInstance(Locale.getDefault());
@@ -332,12 +334,12 @@ public class DefaultView extends FragmentActivity {
 			ArrayList<Event> events = new ArrayList<Event>();
 			
 			// To load events data from database:
-			// events = db.getCurrentDayEvents(calChanging);
+			events = getCurrentDayEvents();
 			// calChaing is the currentDate
-
-			events.add(testEvent1);
-			events.add(testEvent2);
-			events.add(testEvent3);
+//
+//			events.add(testEvent1);
+//			events.add(testEvent2);
+//			events.add(testEvent3);
 
 			for (Event event : events){
 				String title = event.getTitle();
@@ -351,6 +353,28 @@ public class DefaultView extends FragmentActivity {
 					}
 				}
 			}
+		}
+
+		private ArrayList<Event> getCurrentDayEvents() {
+			Log.d(TAG, "Day of the Month: " + calChanging);
+			
+			ArrayList<Event> eventList = new ArrayList<Event>(); 
+			int nextDay = calChanging.get(Calendar.DATE);
+			int nextMonth = calChanging.get(Calendar.MONTH);
+			int nextYear = calChanging.get(Calendar.YEAR);
+			
+			String[] dateString = { Integer.toString(nextDay) + Integer.toString(nextMonth) + Integer.toString(nextYear) };
+			
+			Cursor cursor = mEventContentResolver.query(DBEventsContentProvider.CONTENT_URI, null, "START_DATE =?", dateString, null);
+			
+			if (cursor.moveToFirst()) {
+				while(!cursor.isAfterLast()){
+					String data = cursor.getString(cursor.getColumnIndex(""));
+					cursor.moveToNext();
+				}
+		    }
+			cursor.close();
+			return eventList;
 		}
 
 		private void createViewForEvent(

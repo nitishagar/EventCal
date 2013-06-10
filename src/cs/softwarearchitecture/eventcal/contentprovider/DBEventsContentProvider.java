@@ -162,8 +162,8 @@ public class DBEventsContentProvider extends ContentProvider {
 
 	private void checkColumns(String[] projection) {
 		String[] available = { DBSQLiteHelper.COLUMN_ID, DBSQLiteHelper.COLUMN_TABLE, DBSQLiteHelper.COLUMN_TITLE,
-				DBSQLiteHelper.COLUMN_START_TIME, DBSQLiteHelper.COLUMN_END_TIME,
-				DBSQLiteHelper.COLUMN_LOCATION };
+				DBSQLiteHelper.COLUMN_START_TIME, DBSQLiteHelper.COLUMN_START_DATE, DBSQLiteHelper.COLUMN_END_TIME,
+				DBSQLiteHelper.COLUMN_END_DATE, DBSQLiteHelper.COLUMN_LOCATION };
 		if (projection != null) {
 			HashSet<String> requestedColumns = new HashSet<String>(Arrays.asList(projection));
 			HashSet<String> availableColumns = new HashSet<String>(Arrays.asList(available));
@@ -230,17 +230,20 @@ public class DBEventsContentProvider extends ContentProvider {
 					SQLiteStatement insert = 
 							db.compileStatement("insert or replace into " + DBSQLiteHelper.TABLE_NAME
 									+ " ( " + DBSQLiteHelper.COLUMN_TABLE + ", " + DBSQLiteHelper.COLUMN_TITLE
-									+ ", " + DBSQLiteHelper.COLUMN_START_TIME + ", " + DBSQLiteHelper.COLUMN_END_TIME 
+									+ ", " + DBSQLiteHelper.COLUMN_START_TIME + ", " + DBSQLiteHelper.COLUMN_START_DATE
+									+ ", " + DBSQLiteHelper.COLUMN_END_TIME + ", " + DBSQLiteHelper.COLUMN_END_DATE
 									+ ", " + DBSQLiteHelper.COLUMN_LOCATION + " )"
-									+" values " + "(?,?,?,?,?)");
+									+" values " + "(?,?,?,?,?,?,?)");
 
 					for (ContentValues value : values){
 						//bind the 1-indexed ?'s to the values specified
 						insert.bindString(1, value.getAsString(DBSQLiteHelper.COLUMN_TABLE));
 						insert.bindString(2, value.getAsString(DBSQLiteHelper.COLUMN_TITLE));
-						insert.bindString(3, value.getAsString(DBSQLiteHelper.COLUMN_START_TIME));
-						insert.bindString(4, value.getAsString(DBSQLiteHelper.COLUMN_END_TIME));
-						insert.bindString(5, value.getAsString(DBSQLiteHelper.COLUMN_LOCATION));
+						insert.bindLong(3, value.getAsInteger(DBSQLiteHelper.COLUMN_START_TIME));
+						insert.bindLong(4, value.getAsInteger(DBSQLiteHelper.COLUMN_START_DATE));
+						insert.bindLong(5, value.getAsInteger(DBSQLiteHelper.COLUMN_END_TIME));
+						insert.bindLong(6, value.getAsInteger(DBSQLiteHelper.COLUMN_END_DATE));
+						insert.bindString(7, value.getAsString(DBSQLiteHelper.COLUMN_LOCATION));
 						insert.execute();
 					}
 				}
@@ -248,16 +251,17 @@ public class DBEventsContentProvider extends ContentProvider {
 					SQLiteStatement insert = 
 							db.compileStatement("insert or replace into " + DBSQLiteHelper.TABLE_NAME
 									+ " ( " + DBSQLiteHelper.COLUMN_TABLE + ", " + DBSQLiteHelper.COLUMN_TITLE
-									+ ", " + DBSQLiteHelper.COLUMN_START_TIME + ", " 
+									+ ", " + DBSQLiteHelper.COLUMN_START_TIME + ", " + DBSQLiteHelper.COLUMN_START_DATE
 									+ DBSQLiteHelper.COLUMN_LOCATION + " )"
-									+" values " + "(?,?,?,?)");
+									+" values " + "(?,?,?,?,?)");
 
 					for (ContentValues value : values){
 						//bind the 1-indexed ?'s to the values specified
 						insert.bindString(1, value.getAsString(DBSQLiteHelper.COLUMN_TABLE));
 						insert.bindString(2, value.getAsString(DBSQLiteHelper.COLUMN_TITLE));
-						insert.bindString(3, value.getAsString(DBSQLiteHelper.COLUMN_START_TIME));
-						insert.bindString(4, value.getAsString(DBSQLiteHelper.COLUMN_LOCATION));
+						insert.bindLong(3, value.getAsInteger(DBSQLiteHelper.COLUMN_START_TIME));
+						insert.bindLong(4, value.getAsInteger(DBSQLiteHelper.COLUMN_START_DATE));
+						insert.bindString(5, value.getAsString(DBSQLiteHelper.COLUMN_LOCATION));
 						insert.execute();
 					}
 				}
