@@ -114,7 +114,6 @@ public class DefaultView extends FragmentActivity {
 
 			@Override
 			public void onPageScrollStateChanged(int state) {
-				// TODO Auto-generated method stub
 
 				if (state == ViewPager.SCROLL_STATE_IDLE) {	
 					if (currentPage < 1){
@@ -210,6 +209,10 @@ public class DefaultView extends FragmentActivity {
 			Intent settingIntent = new Intent(this, SettingsActivity.class);
 			startActivity(settingIntent);
 			break;
+		case R.id.menu_add:
+			Intent addEventIntent = new Intent(this, AddEvent.class);
+			startActivity(addEventIntent);
+			break;
 		}
 		return true;
 	}
@@ -303,32 +306,32 @@ public class DefaultView extends FragmentActivity {
 		private void loadDataForDay(){
 			
 			// Test with dummy data
-			Event testEvent1 = new Event
-					(
-							"testEvent1", 
-							"120000", 
-							"123000", 
-							"DC 1301", 
-							"TestGroup"
-							);
-			
-			Event testEvent2 = new Event
-					(
-							"testEvent2", 
-							"130000", 
-							"143000", 
-							"DC 1301", 
-							"TestGroup"
-							);
-			
-			Event testEvent3 = new Event
-					(
-							"testEvent3", 
-							"150000", 
-							"163000", 
-							"DC 1301", 
-							"TestGroup"
-							);
+//			Event testEvent1 = new Event
+//					(
+//							"testEvent1", 
+//							"120000", 
+//							"123000", 
+//							"DC 1301", 
+//							"TestGroup"
+//							);
+//			
+//			Event testEvent2 = new Event
+//					(
+//							"testEvent2", 
+//							"130000", 
+//							"143000", 
+//							"DC 1301", 
+//							"TestGroup"
+//							);
+//			
+//			Event testEvent3 = new Event
+//					(
+//							"testEvent3", 
+//							"150000", 
+//							"163000", 
+//							"DC 1301", 
+//							"TestGroup"
+//							);
 
 
 			

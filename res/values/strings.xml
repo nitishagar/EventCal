@@ -11,5 +11,14 @@
     <string name="app_write">App Write</string>
     <string name="title_activity_add_event">AddEvent</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title">Title</string>
+    <string name="from">From:</string>
+    <string name="to">To:</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="reminder">Reminder</string>
+    <string name="_15_min">15 min</string>
+    <string name="_10_min">10 min</string>
+    <string name="_5_min">5 min</string>
 
 </resources>

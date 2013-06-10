@@ -163,7 +163,7 @@ public class DBEventsContentProvider extends ContentProvider {
 	private void checkColumns(String[] projection) {
 		String[] available = { DBSQLiteHelper.COLUMN_ID, DBSQLiteHelper.COLUMN_TABLE, DBSQLiteHelper.COLUMN_TITLE,
 				DBSQLiteHelper.COLUMN_START_TIME, DBSQLiteHelper.COLUMN_START_DATE, DBSQLiteHelper.COLUMN_END_TIME,
-				DBSQLiteHelper.COLUMN_END_DATE, DBSQLiteHelper.COLUMN_LOCATION };
+				DBSQLiteHelper.COLUMN_END_DATE, DBSQLiteHelper.COLUMN_LOCATION, DBSQLiteHelper.COLUMN_REMINDER_TIME };
 		if (projection != null) {
 			HashSet<String> requestedColumns = new HashSet<String>(Arrays.asList(projection));
 			HashSet<String> availableColumns = new HashSet<String>(Arrays.asList(available));
@@ -216,6 +216,7 @@ public class DBEventsContentProvider extends ContentProvider {
 	    return rowsUpdated;
 	}
 	
+	// Bulk insert does not have reminder built in
 	@Override
 	public int bulkInsert(Uri uri, ContentValues[] values) {
 		final SQLiteDatabase db = eventDatabase.getWritableDatabase();
