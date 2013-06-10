@@ -4,7 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-    <com.viewpagerindicator.TitlePageIndicator
+    <cs.softwarearchitecture.eventcal.viewpagerindicator.TitlePageIndicator
         android:id="@+id/pageIndicator"
         android:padding="10dip"
         android:layout_height="wrap_content"

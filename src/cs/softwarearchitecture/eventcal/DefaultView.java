@@ -1,14 +1,23 @@
 package cs.softwarearchitecture.eventcal;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
-import com.viewpagerindicator.TitlePageIndicator;
 
 import cs.softwarearchitecture.eventcal.R;
 import cs.softwarearchitecture.eventcal.SettingsActivity;
+import cs.softwarearchitecture.eventcal.viewpagerindicator.TitlePageIndicator;
 
+import cs.softwarearchitecture.eventcal.model.Event;
+
+
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -17,11 +26,18 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.TextUtils.TruncateAt;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
+import android.widget.RelativeLayout.LayoutParams;
 
 public class DefaultView extends FragmentActivity {
 
@@ -34,42 +50,36 @@ public class DefaultView extends FragmentActivity {
 	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
 	 */
 	CalendarPagerAdapter mCalendarPagerAdapter;
-	int  PAGE_NUMBER = 3;
-	int CURRENT_POSITION = 1;
-	
+
 	int currentDay;
 	int currentMonth;
 	int currentYear;
-	
+
 	int previousDay;
 	int previousMonth;
 	int previousYear;
-	
+
 	int nextDay;
 	int nextMonth;
 	int nextYear;
-	
+
 	int currentPage;
-	
+
 	private String currentDate;
 	private String previousDate;
 	private String nextDate;
-	
-	
+
+
 	//Calendar calendar; 
 	Calendar calChanging;
 
-	
-	private String monthsName[] = {
-			"Jan", "Feb", "Mar", "Apr", "May", "Jun",
-			"Jul", "Aug", "Sep", "Oct", "Nov", "Dec" 	
-	};
-	
+	private static Values values;
+
 	/**
 	 * The {@link ViewPager} that will host the section contents.
 	 */
 	ViewPager dayViewPager;
-	
+
 	// TAG for logCat
 	public static String TAG = "EVENT CALENDAR";
 
@@ -78,12 +88,13 @@ public class DefaultView extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_default_view);
 
-		
+		values = new Values();
 		//calendar = Calendar.getInstance(Locale.getDefault());
 		calChanging = Calendar.getInstance(Locale.getDefault());
-		
 		updateDate(0);
-		
+
+
+
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
 		mCalendarPagerAdapter = new CalendarPagerAdapter(
@@ -92,33 +103,34 @@ public class DefaultView extends FragmentActivity {
 		// Set up the ViewPager with the sections adapter.
 		dayViewPager = (ViewPager) findViewById(R.id.dayViewPager);
 		dayViewPager.setAdapter(mCalendarPagerAdapter);
-		
-		
+
 		final TitlePageIndicator pageIndicator = 
 				(TitlePageIndicator) findViewById(R.id.pageIndicator);
-		pageIndicator.setViewPager(dayViewPager,CURRENT_POSITION);
+		pageIndicator.setViewPager(dayViewPager,values.getCURRENT_PAGE());
 		pageIndicator.setOnPageChangeListener(new OnPageChangeListener(){
 
 			@Override
 			public void onPageScrollStateChanged(int state) {
 				// TODO Auto-generated method stub
-				
+
 				if (state == ViewPager.SCROLL_STATE_IDLE) {	
 					if (currentPage < 1){
 						updateDate(-1);
+						
 					}
 					else if (currentPage > 1){
 						updateDate(1);
 					}
-
-					pageIndicator.setCurrentItem(CURRENT_POSITION, false);
+					
+					pageIndicator.setCurrentItem(values.getCURRENT_PAGE(), false);
+					mCalendarPagerAdapter.notifyDataSetChanged();
 				}
 			}
 
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
 				// TODO Auto-generated method stub
-				
+
 
 			}
 
@@ -133,40 +145,44 @@ public class DefaultView extends FragmentActivity {
 
 	protected void updateDate(int changedDays) {
 		// TODO Auto-generated method stub
-		
+
 		// Calculate current date
 		calChanging.add(Calendar.DAY_OF_MONTH, changedDays);
-		
+
 		currentDay = calChanging.get(Calendar.DATE);
 		currentMonth = calChanging.get(Calendar.MONTH);
 		currentYear = calChanging.get(Calendar.YEAR);
-		
-		currentDate = currentDay + " " + monthsName[currentMonth] +
+
+		currentDate = currentDay + " " 
+				+ values.getMONTH_VALUES()[currentMonth] +
 				", " + currentYear;
-		
+
 		// Calculate previous date
 		calChanging.add(Calendar.DAY_OF_MONTH, -1);
-		
+
 		previousDay = calChanging.get(Calendar.DATE);
 		previousMonth = calChanging.get(Calendar.MONTH);
 		previousYear = calChanging.get(Calendar.YEAR);
-		
-		previousDate = previousDay + " " + monthsName[previousMonth] +
+
+		previousDate = previousDay + " " 
+				+ values.getMONTH_VALUES()[previousMonth] +
 				", " + previousYear;
-		
+
 		// Calculate next date
 		calChanging.add(Calendar.DAY_OF_MONTH, +2);
-		
+
 		nextDay = calChanging.get(Calendar.DATE);
 		nextMonth = calChanging.get(Calendar.MONTH);
 		nextYear = calChanging.get(Calendar.YEAR);
-		
-		nextDate = nextDay + " " + monthsName[nextMonth] + 
+
+		nextDate = nextDay + " " 
+				+ values.getMONTH_VALUES()[nextMonth] + 
 				", " + nextYear;
-		
+
 		// Reset calChanging to current day
 		calChanging.add(Calendar.DAY_OF_MONTH, -1);
 	}
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -174,26 +190,26 @@ public class DefaultView extends FragmentActivity {
 		getMenuInflater().inflate(R.menu.default_view, menu);
 		return true;
 	}
-	
+
 	@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-    	
-    	switch(item.getItemId()){
-    	case R.id.action_search:
-    		Intent searchIntent = new Intent(this, SearchActivity.class);
-    		startActivity(searchIntent);
-    		break;
-    	case R.id.action_goto:
-    		Intent gotoIntent = new Intent(this, GotoActivity.class);
-    		startActivity(gotoIntent);
-    		break;
-    	case R.id.action_settings:
-    		Intent settingIntent = new Intent(this, SettingsActivity.class);
-    		startActivity(settingIntent);
-    		break;
-    	}
-    	return true;
-    }
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		switch(item.getItemId()){
+		case R.id.action_search:
+			Intent searchIntent = new Intent(this, SearchActivity.class);
+			startActivity(searchIntent);
+			break;
+		case R.id.action_goto:
+			Intent gotoIntent = new Intent(this, GotoActivity.class);
+			startActivity(gotoIntent);
+			break;
+		case R.id.action_settings:
+			Intent settingIntent = new Intent(this, SettingsActivity.class);
+			startActivity(settingIntent);
+			break;
+		}
+		return true;
+	}
 
 	/**
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -214,19 +230,25 @@ public class DefaultView extends FragmentActivity {
 			Bundle args = new Bundle();
 			args.putInt(DayViewFragment.ARG_SECTION_NUMBER, position + 1);
 			fragment.setArguments(args);
+			
 			return fragment;
 		}
 
 		@Override
 		public int getCount() {
 			// Show 3 total pages.
-			return PAGE_NUMBER;
+			return values.getPAGE_NUMBER();
+		}
+		
+		@Override
+		public int getItemPosition(Object object) {
+		    return POSITION_NONE;
 		}
 
 		@Override
 		public CharSequence getPageTitle(int position) {
 			Locale l = Locale.getDefault();
-			
+
 			switch (position) {
 			case 0:
 				return previousDate.toUpperCase(l);
@@ -249,6 +271,9 @@ public class DefaultView extends FragmentActivity {
 		 * fragment.
 		 */
 		public static final String ARG_SECTION_NUMBER = "section_number";
+		
+		private Context mContext;
+		RelativeLayout dayEventRelative;
 
 		public DayViewFragment() {
 		}
@@ -256,9 +281,154 @@ public class DefaultView extends FragmentActivity {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(
+			ViewGroup rootView = (ViewGroup) inflater.inflate(
 					R.layout.dayview, container, false);
+			
+			mContext = getActivity().getApplicationContext();	
+			
+			dayEventRelative = 
+					(RelativeLayout) rootView.findViewById(R.id.dayEventRelative);
+			
+			Log.v(TAG, "onCreateView");
+			
+			loadDataForDay();
+			
 			return rootView;
+		}
+
+
+		private void loadDataForDay(){
+			
+			// Test with dummy data
+			Event testEvent1 = new Event
+					(
+							"testEvent1", 
+							"120000", 
+							"123000", 
+							"DC 1301", 
+							"TestGroup"
+							);
+			
+			Event testEvent2 = new Event
+					(
+							"testEvent2", 
+							"130000", 
+							"143000", 
+							"DC 1301", 
+							"TestGroup"
+							);
+			
+			Event testEvent3 = new Event
+					(
+							"testEvent3", 
+							"150000", 
+							"163000", 
+							"DC 1301", 
+							"TestGroup"
+							);
+
+
+			
+			ArrayList<Event> events = new ArrayList<Event>();
+			
+			// To load events data from database:
+			// events = db.getCurrentDayEvents(calChanging);
+			// calChaing is the currentDate
+
+			events.add(testEvent1);
+			events.add(testEvent2);
+			events.add(testEvent3);
+
+			for (Event event : events){
+				String title = event.getTitle();
+				String start_time = event.getStartTime();
+				String end_time = event.getEndTime();
+
+				for (int i = 0; i < values.getTIME_VALUES().length; i++){
+
+					if ((start_time.contains(values.getTIME_VALUES()[i]))){
+						createViewForEvent(title, start_time, end_time);
+					}
+				}
+			}
+		}
+
+		private void createViewForEvent(
+				String title, String start_time, String end_time
+				){
+			// TODO Auto-generated method stub
+			int marginTop = calculateMargin(start_time);
+			int height = (int) calculateDiffInTime(start_time, end_time);
+			height = (int) (1.3 * height);
+
+			LayoutParams lprams = new LayoutParams(LayoutParams.MATCH_PARENT,
+					height);
+
+			int marginLeft = 75;
+			lprams.setMargins(marginLeft, 0, 0, 0);
+			lprams.topMargin = marginTop;
+
+			Button button = new Button(mContext);
+			button.setBackgroundResource(R.drawable.appointment_new);
+			button.setLayoutParams(lprams);
+			button.setTextColor(Color.BLACK);
+			button.setTextAppearance(mContext, R.style.ButtonFontStyle);
+			button.setText(title);
+			if (height <= 18) {
+				button.setSingleLine();
+			}
+			button.setEllipsize(TruncateAt.END);
+			dayEventRelative.addView(button);
+			button.setOnClickListener(new OnClickListener() {
+
+				public void onClick(View v) {
+
+					Toast.makeText(mContext, "Test tapping event ", 
+							Toast.LENGTH_SHORT)
+							.show();
+				}
+			});
+		}
+
+		private long calculateDiffInTime(String start_time, String end_time) {
+			// TODO Auto-generated method stub
+			// TODO Auto-generated method stub
+			String startTimeEvent = start_time;
+			String endTimeEvent = end_time;
+			
+			Log.v(TAG, "startTime = " + start_time);
+			Log.v(TAG, "endTime = " + end_time);
+			
+			long diffMinutes = 0;
+			SimpleDateFormat format = new SimpleDateFormat("HHmmss");
+			Date d1 = null;
+			Date d2 = null;
+			try {
+				d1 = format.parse(startTimeEvent);
+				d2 = format.parse(endTimeEvent);
+
+				long diff = d2.getTime() - d1.getTime();
+				diffMinutes = diff / (60 * 1000);
+				
+				Log.v(TAG, "diffMinutes = " + diffMinutes);
+				
+
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			return diffMinutes;
+		}
+
+
+		private int calculateMargin(String start_time) {
+			// TODO Auto-generated method stub
+			double margin = 3;
+			for (int i = 0; start_time.compareToIgnoreCase(
+					values.getTIME_VALUES()[i]) != 0; i++) {
+				margin = margin + 6.67;
+			}
+
+			return (int) margin;
 		}
 	}
 }

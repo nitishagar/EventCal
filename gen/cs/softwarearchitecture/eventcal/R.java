@@ -394,18 +394,22 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int vpi__tab_unselected_pressed_holo=0x7f020025;
     }
     public static final class id {
-        public static final int action_goto=0x7f09000d;
-        public static final int action_search=0x7f09000c;
-        public static final int action_settings=0x7f09000e;
+        public static final int action_goto=0x7f090011;
+        public static final int action_search=0x7f090010;
+        public static final int action_settings=0x7f090012;
         public static final int bottom=0x7f090003;
         public static final int currentDate=0x7f090007;
+        public static final int dayEventRelative=0x7f09000e;
         public static final int dayViewPager=0x7f090006;
         public static final int dayViewScroll=0x7f090009;
         public static final int flipper=0x7f090008;
+        public static final int linearLayout2=0x7f09000b;
+        public static final int linearLayout3=0x7f09000d;
         public static final int none=0x7f090000;
         public static final int pageIndicator=0x7f090005;
         public static final int relativeLayout242=0x7f09000a;
-        public static final int section_label=0x7f09000b;
+        public static final int relativeLayout3=0x7f09000c;
+        public static final int section_label=0x7f09000f;
         public static final int top=0x7f090004;
         public static final int triangle=0x7f090001;
         public static final int underline=0x7f090002;
@@ -481,11 +485,12 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
  All customizations that are NOT specific to a particular API-level can go here. 
          */
         public static final int AppTheme=0x7f080001;
-        public static final int TextAppearance_TabPageIndicator=0x7f080005;
-        public static final int Theme_PageIndicatorDefaults=0x7f080002;
-        public static final int Widget=0x7f080003;
-        public static final int Widget_IconPageIndicator=0x7f080006;
-        public static final int Widget_TabPageIndicator=0x7f080004;
+        public static final int ButtonFontStyle=0x7f080002;
+        public static final int TextAppearance_TabPageIndicator=0x7f080006;
+        public static final int Theme_PageIndicatorDefaults=0x7f080003;
+        public static final int Widget=0x7f080004;
+        public static final int Widget_IconPageIndicator=0x7f080007;
+        public static final int Widget_TabPageIndicator=0x7f080005;
     }
     public static final class xml {
         public static final int pref_data_sync=0x7f040000;
