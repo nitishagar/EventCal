@@ -27,7 +27,7 @@ public class DBSQLiteHelper extends SQLiteOpenHelper {
 	public static final String COLUMN_REMINDER_TIME = "reminder_time";
 	
 	private static final String DATABASE_NAME = "eventcal.db";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 
 	// Database creation sql statement
 	private static final String DATABASE_CREATE = "CREATE TABLE "

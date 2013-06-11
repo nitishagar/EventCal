@@ -204,6 +204,7 @@ public class DefaultView extends FragmentActivity {
 		switch(item.getItemId()){
 		case R.id.action_search:
 			Intent searchIntent = new Intent(this, SearchActivity.class);
+			searchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(searchIntent);
 			break;
 		case R.id.action_goto:
@@ -216,6 +217,7 @@ public class DefaultView extends FragmentActivity {
 			break;
 		case R.id.menu_add:
 			Intent addEventIntent = new Intent(this, AddEventActivity.class);
+			addEventIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(addEventIntent);
 			break;
 		}

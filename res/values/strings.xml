@@ -9,7 +9,6 @@
     <string name="add_event">Add Event</string>
     <string name="app_read">App Read</string>
     <string name="app_write">App Write</string>
-    <string name="title_activity_add_event">AddEvent</string>
     <string name="hello_world">Hello world!</string>
     <string name="title">Title</string>
     <string name="from">From:</string>
@@ -20,5 +19,6 @@
     <string name="_15_min">15 min</string>
     <string name="_10_min">10 min</string>
     <string name="_5_min">5 min</string>
+    <string name="event_calendar">Event Calendar</string>
 
 </resources>

@@ -3,6 +3,7 @@ package cs.softwarearchitecture.eventcal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
@@ -12,6 +13,7 @@ import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.ContentValues;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -45,6 +47,9 @@ public class AddEventActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_event);
+		
+		ActionBar actionBar = getActionBar();
+	    actionBar.setDisplayHomeAsUpEnabled(true);
 		
 	}
 	
@@ -81,6 +86,16 @@ public class AddEventActivity extends Activity implements OnClickListener {
 		save.setOnClickListener(this);
 		cancel.setOnClickListener(this);
 		
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()){
+		case android.R.id.home:
+			super.onBackPressed();
+			break;
+		}
+		return true;
 	}
 	
 	@Override
@@ -167,7 +182,7 @@ public class AddEventActivity extends Activity implements OnClickListener {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.add_event, menu);
+		// getMenuInflater().inflate(R.menu.add_event, menu);
 		return true;
 	}
 
