@@ -58,9 +58,14 @@ public class AddEvent extends Activity implements OnClickListener {
 
 		txtDate.setText(mDateFormatter.format(mDateTime.getTime()));   
 		txtTime.setText(mTimeFormatter.format(mDateTime.getTime()));
-
+		
 		txtDate = (Button) findViewById(R.id.toDate);
 		txtTime = (Button) findViewById(R.id.toTime);
+		
+		// Setting initial value of variables
+		mFromDate = Integer.parseInt(Integer.toString(mDateTime.DAY_OF_MONTH) + Integer.toString(mDateTime.MONTH) 
+				+ Integer.toString(mDateTime.YEAR));
+		mFromTime = Integer.parseInt(Integer.toString(mDateTime.HOUR) + Integer.toString(mDateTime.MINUTE) + "00");
 
 		txtDate.setText(mDateFormatter.format(mDateTime.getTime()));   
 		txtTime.setText(mTimeFormatter.format(mDateTime.getTime()));
