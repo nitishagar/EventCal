@@ -24,6 +24,7 @@ public class DBSQLiteHelper extends SQLiteOpenHelper {
 	public static final String COLUMN_END_TIME = "end_time";
 	public static final String COLUMN_END_DATE = "end_date";
 	public static final String COLUMN_LOCATION = "location";
+	public static final String COLUMN_REMINDER_TIME = "reminder_time";
 	
 	private static final String DATABASE_NAME = "eventcal.db";
 	private static final int DATABASE_VERSION = 1;
@@ -34,8 +35,9 @@ public class DBSQLiteHelper extends SQLiteOpenHelper {
 	      + " integer primary key autoincrement, " + COLUMN_TABLE + " text not null, " 
 	      + COLUMN_TITLE + " text not null, " + COLUMN_START_TIME + " integer not null , "
 	      + COLUMN_START_DATE + " integer not null , " + COLUMN_END_TIME + " integer null, "  
-	      + COLUMN_END_DATE + " integer null, " + COLUMN_LOCATION + " text null, UNIQUE( " 
-	      + COLUMN_TABLE + ", " + COLUMN_TITLE + ", " + COLUMN_START_DATE + ") ON CONFLICT REPLACE);";
+	      + COLUMN_END_DATE + " integer null, " + COLUMN_REMINDER_TIME + " integer null, " 
+	      + COLUMN_LOCATION + " text null, UNIQUE( " + COLUMN_TABLE + ", " 
+	      + COLUMN_TITLE + ", " + COLUMN_START_DATE + ") ON CONFLICT REPLACE);";
 
 	
 	/**
