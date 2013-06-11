@@ -144,6 +144,11 @@ public class DefaultView extends FragmentActivity {
 
 		});
 	}
+	
+	protected void onResume(){
+		super.onResume();
+		mCalendarPagerAdapter.notifyDataSetChanged();
+	}
 
 	protected void updateDate(int changedDays) {
 		// TODO Auto-generated method stub
@@ -210,7 +215,7 @@ public class DefaultView extends FragmentActivity {
 			startActivity(settingIntent);
 			break;
 		case R.id.menu_add:
-			Intent addEventIntent = new Intent(this, AddEvent.class);
+			Intent addEventIntent = new Intent(this, AddEventActivity.class);
 			startActivity(addEventIntent);
 			break;
 		}
@@ -305,45 +310,12 @@ public class DefaultView extends FragmentActivity {
 
 		private void loadDataForDay(){
 			
-			// Test with dummy data
-//			Event testEvent1 = new Event
-//					(
-//							"testEvent1", 
-//							"120000", 
-//							"123000", 
-//							"DC 1301", 
-//							"TestGroup"
-//							);
-//			
-//			Event testEvent2 = new Event
-//					(
-//							"testEvent2", 
-//							"130000", 
-//							"143000", 
-//							"DC 1301", 
-//							"TestGroup"
-//							);
-//			
-//			Event testEvent3 = new Event
-//					(
-//							"testEvent3", 
-//							"150000", 
-//							"163000", 
-//							"DC 1301", 
-//							"TestGroup"
-//							);
 
-
-			
-			ArrayList<Event> events = new ArrayList<Event>();
-			
 			// To load events data from database:
-			events = getCurrentDayEvents();
-			// calChaing is the currentDate
-//
-//			events.add(testEvent1);
-//			events.add(testEvent2);
-//			events.add(testEvent3);
+		
+			ArrayList<Event> events = getCurrentDayEvents();
+			
+			Log.v(TAG,"events legnth = " + events.size());
 
 			for (Event event : events){
 				String title = event.getTitle();
@@ -363,25 +335,31 @@ public class DefaultView extends FragmentActivity {
 			Log.d(TAG, "Day of the Month: " + calChanging);
 			
 			ArrayList<Event> eventList = new ArrayList<Event>(); 
-			int nextDay = calChanging.get(Calendar.DATE);
-			int nextMonth = calChanging.get(Calendar.MONTH);
-			int nextYear = calChanging.get(Calendar.YEAR);
+			int currentDay = calChanging.get(Calendar.DATE);
+			int currentMonth = calChanging.get(Calendar.MONTH);
+			int currentYear = calChanging.get(Calendar.YEAR);
 			
-			String[] dateString = { Integer.toString(nextDay) + Integer.toString(nextMonth) + Integer.toString(nextYear) };
+			String[] dateString = 
+				{ Integer.toString(currentDay) 
+					+ Integer.toString(currentMonth) 
+					+ Integer.toString(currentYear) };
 			
-			Cursor cursor = mEventContentResolver.query(DBEventsContentProvider.CONTENT_URI, null, "START_DATE =?", dateString, null);
+			Cursor cursor = 
+					mEventContentResolver.query(
+							DBEventsContentProvider.CONTENT_URI, null, 
+							"START_DATE =?", dateString, null);
 			
 			if (cursor.moveToFirst()) {
 				while(!cursor.isAfterLast()){
 					String _id = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_ID));
-					String title = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TITLE));
+                    String title = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TITLE));
 					String start_time = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_TIME));
 					String end_time = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_END_TIME));
 					String location = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_LOCATION));
 					String group = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TABLE));
-					
-					Event event = new Event(title, start_time, end_time, location, group);
-					
+				
+					Event event = 
+							new Event(title, start_time, end_time, location, group, _id);
 					eventList.add(event);
 					cursor.moveToNext();
 				}

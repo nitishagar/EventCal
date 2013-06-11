@@ -23,7 +23,7 @@ import android.widget.Toast;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
 import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
 
-public class AddEvent extends Activity implements OnClickListener {
+public class AddEventActivity extends Activity implements OnClickListener {
 	
 	// Event Group
 	public static final String PERSONAL = "PERSONAL";

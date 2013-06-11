@@ -9,7 +9,6 @@ public class Event {
 	private String group;
 	
 	private String _id;
-	private String table_source;
 	
 	
 	public Event(){
@@ -21,13 +20,15 @@ public class Event {
 			String start_time, 
 			String end_time,
 			String location,
-			String group
+			String group,
+			String _id
 			){
 		this.title = title;
 		this.start_time = start_time;
 		this.end_time = end_time;
 		this.location = location;
 		this.group = group;
+		this._id = _id;
 	}
 
 	public String getTitle(){
@@ -76,13 +77,5 @@ public class Event {
 	
 	public void setID(String id){
 		this._id = id;
-	}
-	
-	public String getTableSource(){
-		return table_source;
-	}
-	
-	public void setTableSource(String tableSource){
-		this.table_source = tableSource;
 	}
 }
