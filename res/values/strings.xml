@@ -7,6 +7,7 @@
     <string name="action_settings">Settings</string>
     <string name="testing_date">21 May, 2013</string>
     <string name="add_event">Add Event</string>
+    <string name="edit_event">Edit Event</string>
     <string name="app_read">App Read</string>
     <string name="app_write">App Write</string>
     <string name="hello_world">Hello world!</string>

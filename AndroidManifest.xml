@@ -56,6 +56,12 @@
             android:name="cs.softwarearchitecture.eventcal.AddEventActivity"
             android:label="@string/add_event" >
         </activity>
+        
+         <activity
+            android:name="cs.softwarearchitecture.eventcal.EditEventActivity"
+            android:label="@string/edit_event" >
+        </activity>
+        
     </application>
 
 </manifest>

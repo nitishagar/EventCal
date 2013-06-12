@@ -2,7 +2,11 @@ package cs.softwarearchitecture.eventcal;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
+import org.apache.http.ParseException;
+
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -10,7 +14,9 @@ import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
+import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,7 +31,20 @@ import android.widget.Toast;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
 import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
 
-public class AddEventActivity extends Activity implements OnClickListener {
+public class EditEventActivity  extends Activity implements OnClickListener {
+	
+	
+	// Event id
+	int _id;
+	String title;
+	String start_time;
+	String end_time;
+	String start_date;
+	String end_date;
+	String location;
+	String reminder;
+	String group;
+	
 	
 	// Event Group
 	public static final String PERSONAL = "PERSONAL";
@@ -35,6 +54,9 @@ public class AddEventActivity extends Activity implements OnClickListener {
 	SimpleDateFormat mDateFormatter = new SimpleDateFormat("MMMM dd yyyy");
 	SimpleDateFormat mTimeFormatter = new SimpleDateFormat("hh:mm a");
 	
+	// Content Resolver
+	private static ContentResolver mEventContentResolver;
+
 	// Reminder value
 	private String mTitle;
 	private int mFromDate = 0;
@@ -42,12 +64,44 @@ public class AddEventActivity extends Activity implements OnClickListener {
 	private int mToDate = 0;
 	private int mToTime = 0;
 	private int mReminder = 0;
+
 	
+	@SuppressLint("NewApi")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_event);
 		
+		Bundle b = getIntent().getExtras();
+		_id = b.getInt("event_id");
+		
+		mEventContentResolver = getContentResolver();
+		
+		
+		Cursor cursor = 
+				mEventContentResolver.query(
+						DBEventsContentProvider.CONTENT_URI, null, 
+						"ID =?", null , Integer.toString(_id), null);
+		
+		if (cursor.moveToFirst()) {
+			title = 
+					cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TITLE));
+			start_time = 
+					cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_TIME));
+			end_time = 
+					cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_END_TIME));
+			start_date = 
+					cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_DATE));
+			end_date = 
+					cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_END_DATE));
+			location = 
+					cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_LOCATION));
+			reminder = 
+					cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_REMINDER_TIME));
+			group = 
+					cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TABLE));
+		}
+
 		ActionBar actionBar = getActionBar();
 	    actionBar.setDisplayHomeAsUpEnabled(true);
 		
@@ -57,23 +111,44 @@ public class AddEventActivity extends Activity implements OnClickListener {
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		
-		// Setting the text of the Buttons to current date and time
-		Button txtDate = (Button) findViewById(R.id.fromDate);
-		Button txtTime = (Button) findViewById(R.id.fromTime);
-
-		txtDate.setText(mDateFormatter.format(mDateTime.getTime()));   
-		txtTime.setText(mTimeFormatter.format(mDateTime.getTime()));
+		EditText titleBox = (EditText)findViewById(R.id.editTitle);
+		titleBox.setText(title);
 		
-		txtDate = (Button) findViewById(R.id.toDate);
+		// Setting the text of the Buttons to current date and time
+		Button txtTime = (Button) findViewById(R.id.fromTime);
+		Button txtDate = (Button) findViewById(R.id.fromDate);
+
+		SimpleDateFormat timeFormat = new SimpleDateFormat("HHmmss");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy");
+		
+		Date fromTime = null;
+		Date fromDate = null;
+		Date toTime = null;
+		Date toDate = null;
+		
+		try {
+			fromTime = timeFormat.parse(start_time);
+			fromDate = dateFormat.parse(start_date);
+			toTime = timeFormat.parse(end_time);
+			toDate = dateFormat.parse(end_date);
+		} catch (java.text.ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		txtTime.setText(mTimeFormatter.format(fromTime.getTime()));
+		txtDate.setText(mDateFormatter.format(fromDate.getTime()));   
+		
 		txtTime = (Button) findViewById(R.id.toTime);
+		txtDate = (Button) findViewById(R.id.toDate);
+		
+		txtTime.setText(mTimeFormatter.format(toTime.getTime()));
+		txtDate.setText(mDateFormatter.format(toDate.getTime()));   
 		
 		// Setting initial value of variables
-		mFromDate = Integer.parseInt(Integer.toString(mDateTime.DAY_OF_MONTH) + Integer.toString(mDateTime.MONTH) 
-				+ Integer.toString(mDateTime.YEAR));
-		mFromTime = Integer.parseInt(Integer.toString(mDateTime.HOUR) + Integer.toString(mDateTime.MINUTE) + "00");
+		mFromDate = Integer.parseInt(start_date);
+		mFromTime = Integer.parseInt(start_time);
 
-		txtDate.setText(mDateFormatter.format(mDateTime.getTime()));   
-		txtTime.setText(mTimeFormatter.format(mDateTime.getTime()));
 		
 		((Button) findViewById(R.id.fromDate)).setOnClickListener(this);
 		((Button) findViewById(R.id.fromTime)).setOnClickListener(this);
@@ -82,6 +157,8 @@ public class AddEventActivity extends Activity implements OnClickListener {
 		
 		Button save = (Button) findViewById(R.id.saveButton);
 		Button cancel = (Button) findViewById(R.id.cancelButton);
+		
+		
 		
 		save.setOnClickListener(this);
 		cancel.setOnClickListener(this);
@@ -204,6 +281,10 @@ public class AddEventActivity extends Activity implements OnClickListener {
 			mTitle = titleBox.getText().toString();
 			
 			if (mandatoryValuesSpecified()){
+				String where = "ID=?";
+				String[] args = new String[] {Integer.toString(_id)};
+				mEventContentResolver.delete(DBEventsContentProvider.CONTENT_URI, where, args);
+				
 				ContentValues values = new ContentValues();
 				values.put(DBSQLiteHelper.COLUMN_TABLE, PERSONAL);
 				values.put(DBSQLiteHelper.COLUMN_TITLE, mTitle);
@@ -216,9 +297,9 @@ public class AddEventActivity extends Activity implements OnClickListener {
 				if (mReminder != 0)
 					values.put(DBSQLiteHelper.COLUMN_REMINDER_TIME, mReminder);
 				
-				getContentResolver().insert(DBEventsContentProvider.CONTENT_URI, values);
+				mEventContentResolver.insert(DBEventsContentProvider.CONTENT_URI, values);
 				
-				Toast successToast = Toast.makeText(this, "Event Added!", Toast.LENGTH_LONG);
+				Toast successToast = Toast.makeText(this, "Event Editted!", Toast.LENGTH_LONG);
 				successToast.show();
 				
 				// Go back to the previous activity
