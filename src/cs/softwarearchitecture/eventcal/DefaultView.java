@@ -340,11 +340,8 @@ public class DefaultView extends FragmentActivity {
 			int currentDay = calChanging.get(Calendar.DATE);
 			int currentMonth = calChanging.get(Calendar.MONTH);
 			int currentYear = calChanging.get(Calendar.YEAR);
-			
-			String[] dateString = 
-				{ Integer.toString(currentDay) 
-					+ Integer.toString(currentMonth) 
-					+ Integer.toString(currentYear) };
+				
+			String[] dateString = { Integer.toString(timeDateFormatter(currentDay, currentMonth, Integer.toString(currentYear))) };
 			
 			Cursor cursor = 
 					mEventContentResolver.query(
@@ -447,5 +444,27 @@ public class DefaultView extends FragmentActivity {
 
 			return (int) margin;
 		}
+		
+		private int timeDateFormatter(int firstVal, int secondVal, String thirdVal) {
+			int formattedValue = 0;
+			String firstString = null;
+			String secondString = null;
+			
+			if (firstVal < 10)
+				firstString = "0" + Integer.toString(firstVal);
+			else
+				firstString = Integer.toString(firstVal);
+			
+			if (secondVal < 10)
+				secondString = "0" + Integer.toString(secondVal);
+			else
+				secondString = Integer.toString(secondVal);
+		
+			formattedValue = Integer.parseInt(firstString + secondString 
+					+ thirdVal);
+			
+			return formattedValue;
+		}
+
 	}
 }
