@@ -31,7 +31,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
-import android.widget.Toast;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
 import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
 import cs.softwarearchitecture.eventcal.model.Event;
@@ -131,27 +130,24 @@ public class DefaultView extends FragmentActivity {
 
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
-				// TODO Auto-generated method stub
-
 
 			}
 
 			@Override
 			public void onPageSelected(int position) {
-				// TODO Auto-generated method stub
 				currentPage = position;
 			}
 
 		});
 	}
 	
+	@Override
 	protected void onResume(){
 		super.onResume();
 		mCalendarPagerAdapter.notifyDataSetChanged();
 	}
 
 	protected void updateDate(int changedDays) {
-		// TODO Auto-generated method stub
 
 		// Calculate current date
 		calChanging.add(Calendar.DAY_OF_MONTH, changedDays);
@@ -216,7 +212,7 @@ public class DefaultView extends FragmentActivity {
 			startActivity(settingIntent);
 			break;
 		case R.id.menu_add:
-			Intent addEventIntent = new Intent(this, AddEventActivity.class);
+			Intent addEventIntent = new Intent(this, AddEvent.class);
 			addEventIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(addEventIntent);
 			break;
@@ -311,24 +307,22 @@ public class DefaultView extends FragmentActivity {
 
 
 		private void loadDataForDay(){
-			
 
 			// To load events data from database:
 		
 			ArrayList<Event> events = getCurrentDayEvents();
 			
-			Log.v(TAG,"events legnth = " + events.size());
+			Log.d(TAG,"events length = " + events.size());
 
 			for (Event event : events){
-				Log.v(TAG,"event start time: " + 
+				Log.d(TAG,"event start time: " + 
 								event.getStartTime() + 
 								" end time: " + event.getEndTime());
 				for (int i = 0; i < values.getTIME_VALUES().length; i++){
 					String start_time = event.getStartTime();
 
-					if ((start_time.contains(values.getTIME_VALUES()[i]))){
+					if ((start_time.contains(values.getTIME_VALUES()[i])))
 						createViewForEvent(event);
-					}
 				}
 			}
 		}
@@ -340,9 +334,10 @@ public class DefaultView extends FragmentActivity {
 			int currentDay = calChanging.get(Calendar.DATE);
 			int currentMonth = calChanging.get(Calendar.MONTH);
 			int currentYear = calChanging.get(Calendar.YEAR);
-			
+
 			String[] dateString = { Integer.toString(timeDateFormatter(currentDay, currentMonth, Integer.toString(currentYear))) };
-			Log.v(TAG, "dateString " + dateString[0]);
+					
+			Log.v(TAG, dateString[0] );
 			
 			Cursor cursor = 
 					mEventContentResolver.query(
@@ -360,7 +355,17 @@ public class DefaultView extends FragmentActivity {
 					String end_time = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_END_TIME));
 					String location = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_LOCATION));
 					String group = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TABLE));
+					
+					Log.v(TAG, "before start_time is " +  start_time);
+					Log.v(TAG, "before end_time is " + end_time);
 				
+					// remove "1" at the beginning
+					start_time = start_time.substring(1);
+					end_time = end_time.substring(1);
+					
+					Log.v(TAG, "start_time is " +  start_time);
+					Log.v(TAG, "end_time is " + end_time);
+					
 					Event event = 
 							new Event(title, start_time, end_time, location, group, _id);
 					eventList.add(event);
@@ -371,10 +376,7 @@ public class DefaultView extends FragmentActivity {
 			return eventList;
 		}
 
-		private void createViewForEvent(
-				Event event
-				){
-			// TODO Auto-generated method stub
+		private void createViewForEvent (Event event) {
 			String start_time = event.getStartTime();
 			String end_time = event.getEndTime();
 			String title 	= event.getTitle();
@@ -384,7 +386,7 @@ public class DefaultView extends FragmentActivity {
 			int height = (int) calculateDiffInTime(start_time, end_time);
 			height = (int) (1.375 * height);
 
-			LayoutParams lprams = new LayoutParams(LayoutParams.MATCH_PARENT,
+			LayoutParams lprams = new LayoutParams(android.view.ViewGroup.LayoutParams.MATCH_PARENT,
 					height);
 
 			int marginLeft = 75;
@@ -405,9 +407,10 @@ public class DefaultView extends FragmentActivity {
 			dayEventRelative.addView(button);
 			button.setOnClickListener(new OnClickListener() {
 
+				@Override
 				public void onClick(View v) {
 					Intent editEventIntent = 
-							new Intent(getActivity(), EditEventActivity.class);
+							new Intent(getActivity(), EditEvent.class);
 					Bundle b = new Bundle();
 					b.putInt("event_id", _id);
 					editEventIntent.putExtras(b);
@@ -473,10 +476,11 @@ public class DefaultView extends FragmentActivity {
 			else
 				secondString = Integer.toString(secondVal);
 		
-			formattedValue = Integer.parseInt(firstString + secondString 
+			formattedValue = Integer.parseInt("1" + firstString + secondString 
 					+ thirdVal);
 			
 			return formattedValue;
 		}
+
 	}
 }

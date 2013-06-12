@@ -543,7 +543,8 @@ public class TitlePageIndicator extends View implements PageIndicator {
         }
     }
 
-    public boolean onTouchEvent(android.view.MotionEvent ev) {
+    @Override
+	public boolean onTouchEvent(android.view.MotionEvent ev) {
         if (super.onTouchEvent(ev)) {
             return true;
         }
@@ -752,7 +753,8 @@ public class TitlePageIndicator extends View implements PageIndicator {
         invalidate();
     }
 
-    public void setCurrentItem(int item, boolean smoothScroll) {
+    @Override
+	public void setCurrentItem(int item, boolean smoothScroll) {
         if (mViewPager == null) {
             throw new IllegalStateException("ViewPager has not been bound.");
         }

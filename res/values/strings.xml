@@ -21,5 +21,6 @@
     <string name="_10_min">10 min</string>
     <string name="_5_min">5 min</string>
     <string name="event_calendar">Event Calendar</string>
+    <string name="title_activity_edit_event">EditEvent</string>
 
 </resources>
