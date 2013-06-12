@@ -12,6 +12,7 @@ import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.ContentValues;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,7 +34,7 @@ public class AddEventActivity extends Activity implements OnClickListener {
 	Calendar mDateTime = Calendar.getInstance();
 
 	SimpleDateFormat mDateFormatter = new SimpleDateFormat("MMMM dd yyyy");
-	SimpleDateFormat mTimeFormatter = new SimpleDateFormat("hh:mm a");
+	SimpleDateFormat mTimeFormatter = new SimpleDateFormat("hh:mm");
 	
 	// Reminder value
 	private String mTitle;
@@ -42,6 +43,8 @@ public class AddEventActivity extends Activity implements OnClickListener {
 	private int mToDate = 0;
 	private int mToTime = 0;
 	private int mReminder = 0;
+	
+	public static String TAG = "Add Event";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,9 +71,8 @@ public class AddEventActivity extends Activity implements OnClickListener {
 		txtTime = (Button) findViewById(R.id.toTime);
 		
 		// Setting initial value of variables
-		mFromDate = Integer.parseInt(Integer.toString(mDateTime.DAY_OF_MONTH) + Integer.toString(mDateTime.MONTH) 
-				+ Integer.toString(mDateTime.YEAR));
-		mFromTime = Integer.parseInt(Integer.toString(mDateTime.HOUR) + Integer.toString(mDateTime.MINUTE) + "00");
+		mFromDate = timeDateFormatter(mDateTime.DAY_OF_MONTH, mDateTime.MONTH, Integer.toString(mDateTime.YEAR));
+		mFromTime = timeDateFormatter(mDateTime.HOUR_OF_DAY, mDateTime.MINUTE, "00");
 
 		txtDate.setText(mDateFormatter.format(mDateTime.getTime()));   
 		txtTime.setText(mTimeFormatter.format(mDateTime.getTime()));
@@ -115,13 +117,13 @@ public class AddEventActivity extends Activity implements OnClickListener {
 				{
 					mDateTime.set(year, monthOfYear, dayOfMonth);
 					
-					String dateFormatted = Integer.toString(dayOfMonth) + Integer.toString(monthOfYear) 
-							+ Integer.toString(year);
+//					String dateFormatted = Integer.toString(dayOfMonth) + Integer.toString(monthOfYear) 
+//							+ Integer.toString(year);
 					
 					if (iD == R.id.toDate)
-						mToDate = Integer.parseInt(dateFormatted);
+						mToDate = timeDateFormatter(dayOfMonth, monthOfYear, Integer.toString(year));
 					else
-						mFromDate = Integer.parseInt(dateFormatted);
+						mFromDate = timeDateFormatter(dayOfMonth, monthOfYear, Integer.toString(year));
 
 					txtDate.setText(mDateFormatter.format(mDateTime.getTime()));
 				}
@@ -142,12 +144,12 @@ public class AddEventActivity extends Activity implements OnClickListener {
 					mDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
 					mDateTime.set(Calendar.MINUTE, minute);
 					
-					String timeFormatted = Integer.toString(hourOfDay) + Integer.toString(minute) + "00";
+//					String timeFormatted = Integer.toString(hourOfDay) + Integer.toString(minute) + "00";
 					
 					if (iD == R.id.toTime)
-						mToTime = Integer.parseInt(timeFormatted);
+						mToTime = timeDateFormatter(hourOfDay, minute, "00");
 					else
-						mFromTime = Integer.parseInt(timeFormatted);
+						mFromTime = timeDateFormatter(hourOfDay, minute, "00");
 					
 					txtTime.setText(mTimeFormatter.format(mDateTime.getTime()));
 				}
@@ -204,6 +206,8 @@ public class AddEventActivity extends Activity implements OnClickListener {
 			mTitle = titleBox.getText().toString();
 			
 			if (mandatoryValuesSpecified()){
+				
+				Log.v(TAG, "from : " + mFromTime + " to: " + mToTime);
 				ContentValues values = new ContentValues();
 				values.put(DBSQLiteHelper.COLUMN_TABLE, PERSONAL);
 				values.put(DBSQLiteHelper.COLUMN_TITLE, mTitle);
@@ -216,6 +220,10 @@ public class AddEventActivity extends Activity implements OnClickListener {
 				if (mReminder != 0)
 					values.put(DBSQLiteHelper.COLUMN_REMINDER_TIME, mReminder);
 				
+				
+				
+				Log.v(TAG, "from : " + Integer.toString(mFromTime) + 
+						" to: " + Integer.toString(mToTime));
 				getContentResolver().insert(DBEventsContentProvider.CONTENT_URI, values);
 				
 				Toast successToast = Toast.makeText(this, "Event Added!", Toast.LENGTH_LONG);
@@ -249,4 +257,24 @@ public class AddEventActivity extends Activity implements OnClickListener {
 		return true;
 	}
 
+	private int timeDateFormatter(int firstVal, int secondVal, String thirdVal) {
+		int formattedValue = 0;
+		String firstString = null;
+		String secondString = null;
+		
+		if (firstVal < 10)
+			firstString = "0" + Integer.toString(firstVal);
+		else
+			firstString = Integer.toString(firstVal);
+		
+		if (secondVal < 10)
+			secondString = "0" + Integer.toString(secondVal);
+		else
+			secondString = Integer.toString(secondVal);
+	
+		formattedValue = Integer.parseInt(firstString + secondString 
+				+ thirdVal);
+		
+		return formattedValue;
+	}
 }

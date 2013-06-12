@@ -302,7 +302,7 @@ public class DefaultView extends FragmentActivity {
 			dayEventRelative = 
 					(RelativeLayout) rootView.findViewById(R.id.dayEventRelative);
 			
-			Log.v(TAG, "onCreateView");
+			//Log.v(TAG, "onCreateView");
 			
 			loadDataForDay();
 			
@@ -334,7 +334,7 @@ public class DefaultView extends FragmentActivity {
 		}
 
 		private ArrayList<Event> getCurrentDayEvents() {
-			Log.d(TAG, "Day of the Month: " + calChanging);
+			//Log.d(TAG, "Day of the Month: " + calChanging);
 			
 			ArrayList<Event> eventList = new ArrayList<Event>(); 
 			int currentDay = calChanging.get(Calendar.DATE);
@@ -351,8 +351,11 @@ public class DefaultView extends FragmentActivity {
 							DBEventsContentProvider.CONTENT_URI, null, 
 							"START_DATE =?", dateString, null);
 			
+			Log.v(TAG, "loading events");
 			if (cursor.moveToFirst()) {
+					//Log.v(TAG, "loading events");
 				while(!cursor.isAfterLast()){
+					//Log.v(TAG, "loading events");
 					String _id = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_ID));
                     String title = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TITLE));
 					String start_time = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_TIME));
