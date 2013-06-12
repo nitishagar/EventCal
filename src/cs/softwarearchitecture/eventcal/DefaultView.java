@@ -382,7 +382,7 @@ public class DefaultView extends FragmentActivity {
 			
 			int marginTop = calculateMargin(start_time);
 			int height = (int) calculateDiffInTime(start_time, end_time);
-			height = (int) (1.3 * height);
+			height = (int) (1.375 * height);
 
 			LayoutParams lprams = new LayoutParams(LayoutParams.MATCH_PARENT,
 					height);
