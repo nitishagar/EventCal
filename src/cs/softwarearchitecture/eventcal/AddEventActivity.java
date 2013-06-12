@@ -12,6 +12,7 @@ import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.ContentValues;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,7 +34,7 @@ public class AddEventActivity extends Activity implements OnClickListener {
 	Calendar mDateTime = Calendar.getInstance();
 
 	SimpleDateFormat mDateFormatter = new SimpleDateFormat("MMMM dd yyyy");
-	SimpleDateFormat mTimeFormatter = new SimpleDateFormat("hh:mm");
+	SimpleDateFormat mTimeFormatter = new SimpleDateFormat("hh:mm a");
 	
 	// Reminder value
 	private String mTitle;
@@ -70,7 +71,9 @@ public class AddEventActivity extends Activity implements OnClickListener {
 		// Setting initial value of variables
 		mFromDate = timeDateFormatter(mDateTime.DAY_OF_MONTH, mDateTime.MONTH, Integer.toString(mDateTime.YEAR));
 		mFromTime = timeDateFormatter(mDateTime.HOUR_OF_DAY, mDateTime.MINUTE, "00");
-
+		
+		Log.d(DefaultView.TAG, "From Date: " + Integer.toString(mFromDate));
+		
 		txtDate.setText(mDateFormatter.format(mDateTime.getTime()));   
 		txtTime.setText(mTimeFormatter.format(mDateTime.getTime()));
 		
