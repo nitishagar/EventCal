@@ -8,20 +8,6 @@
         android:minSdkVersion="14"
         android:targetSdkVersion="16" />
 
-    <permission
-        android:name="READ_DATABASE"
-        android:label="@string/app_read"
-        android:protectionLevel="normal" >
-    </permission>
-    <permission
-        android:name="WRITE_DATABASE"
-        android:label="@string/app_write"
-        android:protectionLevel="normal" >
-    </permission>
-
-    <uses-permission android:name="cs.softwarearchitecture.eventcal.contentprovider.READ_DATABASE" />
-    <uses-permission android:name="cs.softwarearchitecture.eventcal.contentprovider.WRITE_DATABASE" />
-
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -47,9 +33,7 @@
 
         <provider
             android:name="cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider"
-            android:authorities="cs.softwarearchitecture.eventcal.contentprovider"
-            android:readPermission="cs.softwarearchitecture.eventcal.contentprovider.READ_DATABASE"
-            android:writePermission="cs.softwarearchitecture.eventcal.contentprovider.WRITE_DATABASE" >
+            android:authorities="cs.softwarearchitecture.eventcal.contentprovider" >
         </provider>
 
         <activity

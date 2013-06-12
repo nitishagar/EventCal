@@ -81,7 +81,7 @@ public class EditEventActivity  extends Activity implements OnClickListener {
 		Cursor cursor = 
 				mEventContentResolver.query(
 						DBEventsContentProvider.CONTENT_URI, null, 
-						"ID =?", null , Integer.toString(_id), null);
+						"ID =?", null , Integer.toString(_id));
 		
 		if (cursor.moveToFirst()) {
 			title = 
@@ -283,7 +283,6 @@ public class EditEventActivity  extends Activity implements OnClickListener {
 			if (mandatoryValuesSpecified()){
 				String where = "ID=?";
 				String[] args = new String[] {Integer.toString(_id)};
-				mEventContentResolver.delete(DBEventsContentProvider.CONTENT_URI, where, args);
 				
 				ContentValues values = new ContentValues();
 				values.put(DBSQLiteHelper.COLUMN_TABLE, PERSONAL);
