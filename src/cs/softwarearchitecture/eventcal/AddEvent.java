@@ -64,28 +64,28 @@ public class AddEvent extends Activity implements OnClickListener {
 		Button txtDate = (Button) findViewById(R.id.fromDate);
 		Button txtTime = (Button) findViewById(R.id.fromTime);
 
-		txtDate.setText(mDateFormatter.format(mDateTime.getTime()));   
-		txtTime.setText(mTimeFormatter.format(mDateTime.getTime()));
+		txtDate.setText(mDateFormatter.format(DefaultView.calChanging.getTime()));   
+		txtTime.setText(mTimeFormatter.format(DefaultView.calChanging.getTime()));
 		
 		txtDate = (Button) findViewById(R.id.toDate);
 		txtTime = (Button) findViewById(R.id.toTime);
 		
 		// Setting initial value of variables
 		mFromDate = timeDateFormatter(
-				mDateTime.get(Calendar.DATE),
-				mDateTime.get(Calendar.MONTH), 
-				Integer.toString(mDateTime.get(Calendar.YEAR)));
+				DefaultView.calChanging.get(Calendar.DATE),
+				DefaultView.calChanging.get(Calendar.MONTH), 
+				Integer.toString(DefaultView.calChanging.get(Calendar.YEAR)));
 		
 		mFromTime = timeDateFormatter(
-				mDateTime.get(Calendar.HOUR_OF_DAY), 
-				mDateTime.get(Calendar.MINUTE), 
+				DefaultView.calChanging.get(Calendar.HOUR_OF_DAY), 
+				DefaultView.calChanging.get(Calendar.MINUTE), 
 				"00");
 		
 		Log.v(TAG, "From Date: " + Integer.toString(mFromDate));
 		Log.v(TAG, "From Time: " + Integer.toString(mFromTime));
 		
-		txtDate.setText(mDateFormatter.format(mDateTime.getTime()));   
-		txtTime.setText(mTimeFormatter.format(mDateTime.getTime()));
+		txtDate.setText(mDateFormatter.format(DefaultView.calChanging.getTime()));   
+		txtTime.setText(mTimeFormatter.format(DefaultView.calChanging.getTime()));
 		
 		((Button) findViewById(R.id.fromDate)).setOnClickListener(this);
 		((Button) findViewById(R.id.fromTime)).setOnClickListener(this);
