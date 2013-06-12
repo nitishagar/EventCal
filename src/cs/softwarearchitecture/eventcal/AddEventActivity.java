@@ -250,10 +250,16 @@ public class AddEventActivity extends Activity implements OnClickListener {
 		int formattedValue = 0;
 		String firstString = null;
 		String secondString = null;
+		
 		if (firstVal < 10)
-			firstString = '0' + Integer.toString(firstVal);
+			firstString = "0" + Integer.toString(firstVal);
+		else
+			firstString = Integer.toString(firstVal);
+		
 		if (secondVal < 10)
-			secondString = '0' + Integer.toString(secondVal);
+			secondString = "0" + Integer.toString(secondVal);
+		else
+			secondString = Integer.toString(secondVal);
 	
 		formattedValue = Integer.parseInt(firstString + secondString 
 				+ thirdVal);
