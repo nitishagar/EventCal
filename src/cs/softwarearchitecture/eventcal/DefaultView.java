@@ -302,7 +302,7 @@ public class DefaultView extends FragmentActivity {
 			dayEventRelative = 
 					(RelativeLayout) rootView.findViewById(R.id.dayEventRelative);
 			
-			Log.v(TAG, "onCreateView");
+			//Log.v(TAG, "onCreateView");
 			
 			loadDataForDay();
 			
@@ -320,36 +320,45 @@ public class DefaultView extends FragmentActivity {
 			Log.v(TAG,"events legnth = " + events.size());
 
 			for (Event event : events){
-				String title = event.getTitle();
-				String start_time = event.getStartTime();
-				String end_time = event.getEndTime();
-
+				Log.v(TAG,"event start time: " + 
+								event.getStartTime() + 
+								" end time: " + event.getEndTime());
 				for (int i = 0; i < values.getTIME_VALUES().length; i++){
+					String start_time = event.getStartTime();
 
 					if ((start_time.contains(values.getTIME_VALUES()[i]))){
-						createViewForEvent(title, start_time, end_time);
+						createViewForEvent(event);
 					}
 				}
 			}
 		}
 
 		private ArrayList<Event> getCurrentDayEvents() {
-			Log.d(TAG, "Day of the Month: " + calChanging);
+			//Log.d(TAG, "Day of the Month: " + calChanging);
 			
 			ArrayList<Event> eventList = new ArrayList<Event>(); 
 			int currentDay = calChanging.get(Calendar.DATE);
 			int currentMonth = calChanging.get(Calendar.MONTH);
 			int currentYear = calChanging.get(Calendar.YEAR);
+<<<<<<< HEAD
 				
 			String[] dateString = { Integer.toString(timeDateFormatter(currentDay, currentMonth, Integer.toString(currentYear))) };
+=======
+			
+			String[] dateString = { Integer.toString(timeDateFormatter(currentDay, currentMonth, Integer.toString(currentYear))) };
+			Log.v(TAG, "dateString " + dateString[0]);
+>>>>>>> 9a19de237fe6568356e5bbc95690beb666b869ad
 			
 			Cursor cursor = 
 					mEventContentResolver.query(
 							DBEventsContentProvider.CONTENT_URI, null, 
 							"START_DATE =?", dateString, null);
 			
+			//Log.v(TAG, "loading events");
 			if (cursor.moveToFirst()) {
+					Log.v(TAG, "loading events");
 				while(!cursor.isAfterLast()){
+					//Log.v(TAG, "loading events");
 					String _id = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_ID));
                     String title = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TITLE));
 					String start_time = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_TIME));
@@ -368,9 +377,14 @@ public class DefaultView extends FragmentActivity {
 		}
 
 		private void createViewForEvent(
-				String title, String start_time, String end_time
+				Event event
 				){
 			// TODO Auto-generated method stub
+			String start_time = event.getStartTime();
+			String end_time = event.getEndTime();
+			String title 	= event.getTitle();
+			final int _id = Integer.parseInt(event.getID());
+			
 			int marginTop = calculateMargin(start_time);
 			int height = (int) calculateDiffInTime(start_time, end_time);
 			height = (int) (1.3 * height);
@@ -383,6 +397,7 @@ public class DefaultView extends FragmentActivity {
 			lprams.topMargin = marginTop;
 
 			Button button = new Button(mContext);
+			button.setId(_id);
 			button.setBackgroundResource(R.drawable.appointment_new);
 			button.setLayoutParams(lprams);
 			button.setTextColor(Color.BLACK);
@@ -396,10 +411,13 @@ public class DefaultView extends FragmentActivity {
 			button.setOnClickListener(new OnClickListener() {
 
 				public void onClick(View v) {
-
-					Toast.makeText(mContext, "Test tapping event ", 
-							Toast.LENGTH_SHORT)
-							.show();
+					Intent editEventIntent = 
+							new Intent(getActivity(), EditEventActivity.class);
+					Bundle b = new Bundle();
+					b.putInt("event_id", _id);
+					editEventIntent.putExtras(b);
+					editEventIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					startActivity(editEventIntent);
 				}
 			});
 		}
@@ -439,7 +457,7 @@ public class DefaultView extends FragmentActivity {
 			double margin = 3;
 			for (int i = 0; start_time.compareToIgnoreCase(
 					values.getTIME_VALUES()[i]) != 0; i++) {
-				margin = margin + 6.67;
+				margin = margin + 1.334;
 			}
 
 			return (int) margin;
@@ -465,6 +483,9 @@ public class DefaultView extends FragmentActivity {
 			
 			return formattedValue;
 		}
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9a19de237fe6568356e5bbc95690beb666b869ad
 	}
 }
