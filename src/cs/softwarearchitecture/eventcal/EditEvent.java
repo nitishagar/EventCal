@@ -76,6 +76,7 @@ public class EditEvent extends Activity implements OnClickListener {
 
 		mGroup = extras.getString("group");
 		String title = extras.getString("title");
+		mTitle = title;
 
 		// Setting text of the title
 		EditText titleBox = (EditText)findViewById(R.id.editTitle);
@@ -148,6 +149,8 @@ public class EditEvent extends Activity implements OnClickListener {
 		monthOfYear = Integer.parseInt(date.substring(3,5));
 		dayOfMonth = Integer.parseInt(date.substring(1,3));
 		mDateTime.set(year, monthOfYear, dayOfMonth);
+		mFromDate = timeDateFormatter(dayOfMonth, monthOfYear, Integer.toString(year));
+		mToDate = timeDateFormatter(dayOfMonth, monthOfYear, Integer.toString(year));
 		txtDate.setText(mDateFormatter.format(mDateTime.getTime()));
 
 		// setting the time
@@ -155,10 +158,14 @@ public class EditEvent extends Activity implements OnClickListener {
 		case R.id.fromTime:
 			hourOfDay = Integer.parseInt(start_time.substring(0, 2));
 			minute = Integer.parseInt(start_time.substring(2, 4));
+			
+			mFromTime = timeDateFormatter(hourOfDay, minute, "00");
 			break;
 		case R.id.toTime:
 			hourOfDay = Integer.parseInt(end_time.substring(0, 2));
 			minute = Integer.parseInt(end_time.substring(2, 4));
+			
+			mToTime = timeDateFormatter(hourOfDay, minute, "00");
 			break;
 		}
 
