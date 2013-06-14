@@ -41,6 +41,7 @@ public class EditEvent extends Activity implements OnClickListener {
 	private int mToDate = 0;
 	private int mToTime = 0;
 	private int mReminder = 0;
+	private String[] mIdArgs = new String[1];
 
 	SimpleDateFormat mDateFormatter = new SimpleDateFormat("MMMM dd yyyy");
 	SimpleDateFormat mTimeFormatter = new SimpleDateFormat("hh:mm a");
@@ -71,8 +72,7 @@ public class EditEvent extends Activity implements OnClickListener {
 		Bundle extras = getIntent().getExtras();
 		
 		// Delete the previous entry
-		String[] idArg = { Integer.toString(extras.getInt("id")) };
-		getContentResolver().delete(DBEventsContentProvider.CONTENT_URI, "_ID =?", idArg);
+		mIdArgs[0] = Integer.toString(extras.getInt("id"));
 
 		mGroup = extras.getString("group");
 		String title = extras.getString("title");
@@ -212,7 +212,10 @@ public class EditEvent extends Activity implements OnClickListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()){
 		case R.id.delete_event:
-			break;
+			// Deleting the current event
+			getContentResolver().delete(DBEventsContentProvider.CONTENT_URI, "_ID =?", mIdArgs);
+			
+			Toast.makeText(this, "Event Deleted!", Toast.LENGTH_LONG).show();
 		case android.R.id.home:
 			super.onBackPressed();
 			break;
@@ -344,6 +347,10 @@ public class EditEvent extends Activity implements OnClickListener {
 				Log.d(TAG, "from : " + Integer.toString(mFromTime) + 
 						" to: " + Integer.toString(mToTime));
 
+				// Delete the original entry
+				getContentResolver().delete(DBEventsContentProvider.CONTENT_URI, "_ID =?", mIdArgs);
+				
+				// Insert the new entry
 				getContentResolver().insert(DBEventsContentProvider.CONTENT_URI, values);
 
 				Toast successToast = Toast.makeText(this, "Event Updated!", Toast.LENGTH_LONG);
