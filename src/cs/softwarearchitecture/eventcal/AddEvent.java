@@ -231,10 +231,9 @@ public class AddEvent extends Activity implements OnClickListener {
 				if (mReminder != 0)
 					values.put(DBSQLiteHelper.COLUMN_REMINDER_TIME, mReminder);
 				
-				
-				
-				Log.v(TAG, "from : " + Integer.toString(mFromTime) + 
+				Log.d(TAG, "from : " + Integer.toString(mFromTime) + 
 						" to: " + Integer.toString(mToTime));
+				
 				getContentResolver().insert(DBEventsContentProvider.CONTENT_URI, values);
 				
 				Toast successToast = Toast.makeText(this, "Event Added!", Toast.LENGTH_LONG);

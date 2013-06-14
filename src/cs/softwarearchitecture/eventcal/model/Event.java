@@ -5,10 +5,11 @@ public class Event {
 	private String title;
 	private String start_time;
 	private String end_time;
+	private String date;
 	private String location;
 	private String group;
-	
-	private String _id;
+	private int reminder;
+	private int _id;
 	
 	
 	public Event(){
@@ -19,15 +20,19 @@ public class Event {
 			String title, 
 			String start_time, 
 			String end_time,
+			String date,
 			String location,
 			String group,
-			String _id
+			int reminder,
+			int _id
 			){
 		this.title = title;
 		this.start_time = start_time;
 		this.end_time = end_time;
+		this.date = date;
 		this.location = location;
 		this.group = group;
+		this.reminder = reminder;
 		this._id = _id;
 	}
 
@@ -54,6 +59,14 @@ public class Event {
 	public void setEndTime(String end_time) {
 		this.end_time = end_time;
 	}
+
+	public String getDate(){
+		return date;
+	}
+	
+	public void setDate(String date){
+		this.date = date;
+	}
 	
 	public String getLocation(){
 		return location;
@@ -71,11 +84,19 @@ public class Event {
 		this.group = group;
 	}
 	
-	public String getID(){
+	public int getReminder(){
+		return reminder;
+	}
+	
+	public void setReminder(int reminder){
+		this.reminder = reminder;
+	}
+	
+	public int getID(){
 		return _id;
 	}
 	
-	public void setID(String id){
+	public void setID(int id){
 		this._id = id;
 	}
 }

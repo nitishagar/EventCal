@@ -349,12 +349,14 @@ public class DefaultView extends FragmentActivity {
 					Log.v(TAG, "loading events");
 				while(!cursor.isAfterLast()){
 					//Log.v(TAG, "loading events");
-					String _id = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_ID));
+					int _id = cursor.getInt(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_ID));
                     String title = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TITLE));
 					String start_time = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_TIME));
 					String end_time = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_END_TIME));
+					String start_date = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_DATE));
 					String location = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_LOCATION));
 					String group = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TABLE));
+					int reminder = cursor.getInt(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_REMINDER_TIME));
 					
 					Log.v(TAG, "before start_time is " +  start_time);
 					Log.v(TAG, "before end_time is " + end_time);
@@ -367,7 +369,7 @@ public class DefaultView extends FragmentActivity {
 					Log.v(TAG, "end_time is " + end_time);
 					
 					Event event = 
-							new Event(title, start_time, end_time, location, group, _id);
+							new Event(title, start_time, end_time, start_date, location, group, reminder, _id);
 					eventList.add(event);
 					cursor.moveToNext();
 				}
@@ -380,7 +382,10 @@ public class DefaultView extends FragmentActivity {
 			final String start_time = event.getStartTime();
 			final String end_time = event.getEndTime();
 			final String title 	= event.getTitle();
-			final int _id = Integer.parseInt(event.getID());
+			final String date = event.getDate();
+			final String group = event.getGroup();
+			final int reminder = event.getReminder();
+			final int _id = event.getID();
 			
 			int marginTop = calculateMargin(start_time);
 			int height = (int) calculateDiffInTime(start_time, end_time);
@@ -415,6 +420,10 @@ public class DefaultView extends FragmentActivity {
 					editEventIntent.putExtra("title", title);
 					editEventIntent.putExtra("start_time", start_time);
 					editEventIntent.putExtra("end_time", end_time);
+					editEventIntent.putExtra("date", date);
+					editEventIntent.putExtra("reminder", reminder);
+					editEventIntent.putExtra("group", group);
+					editEventIntent.putExtra("id", _id);
 					
 					Log.d(TAG, "Event start_time: " + start_time);
 					
