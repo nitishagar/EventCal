@@ -327,8 +327,8 @@ public class EditEvent extends Activity implements OnClickListener {
 
 			if (mandatoryValuesSpecified()){
 
-				Log.v(TAG, "from : " + mFromTime + " to: " + mToTime);
-				Log.v(TAG, "from date: " + mFromDate);
+				Log.d(TAG, "from : " + mFromTime + " to: " + mToTime);
+				Log.d(TAG, "from date: " + mFromDate);
 				ContentValues values = new ContentValues();
 				values.put(DBSQLiteHelper.COLUMN_TABLE, mGroup);
 				values.put(DBSQLiteHelper.COLUMN_TITLE, mTitle);
