@@ -377,9 +377,9 @@ public class DefaultView extends FragmentActivity {
 		}
 
 		private void createViewForEvent (Event event) {
-			String start_time = event.getStartTime();
-			String end_time = event.getEndTime();
-			String title 	= event.getTitle();
+			final String start_time = event.getStartTime();
+			final String end_time = event.getEndTime();
+			final String title 	= event.getTitle();
 			final int _id = Integer.parseInt(event.getID());
 			
 			int marginTop = calculateMargin(start_time);
@@ -411,9 +411,13 @@ public class DefaultView extends FragmentActivity {
 				public void onClick(View v) {
 					Intent editEventIntent = 
 							new Intent(getActivity(), EditEvent.class);
-					Bundle b = new Bundle();
-					b.putInt("event_id", _id);
-					editEventIntent.putExtras(b);
+					
+					editEventIntent.putExtra("title", title);
+					editEventIntent.putExtra("start_time", start_time);
+					editEventIntent.putExtra("end_time", end_time);
+					
+					Log.d(TAG, "Event start_time: " + start_time);
+					
 					editEventIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					startActivity(editEventIntent);
 				}
@@ -421,8 +425,6 @@ public class DefaultView extends FragmentActivity {
 		}
 
 		private long calculateDiffInTime(String start_time, String end_time) {
-			// TODO Auto-generated method stub
-			// TODO Auto-generated method stub
 			String startTimeEvent = start_time;
 			String endTimeEvent = end_time;
 			

@@ -1,12 +1,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/delete_event"
-        android:icon="@android:drawable/ic_menu_delete"
-        android:showAsAction="ifRoom"/>
-    <item
         android:id="@+id/menu_item_share"
         android:actionProviderClass="android.widget.ShareActionProvider"
         android:showAsAction="ifRoom"
-        android:title="Share"/>
+        android:title="@string/share"/>
+    
+    <item
+        android:id="@+id/delete_event"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:showAsAction="ifRoom"
+        android:title="@string/delete"/>
+    
 </menu>
