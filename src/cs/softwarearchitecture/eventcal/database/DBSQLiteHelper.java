@@ -1,12 +1,11 @@
 package cs.softwarearchitecture.eventcal.database;
 
-import cs.softwarearchitecture.eventcal.DefaultView;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import cs.softwarearchitecture.eventcal.DefaultView;
 
 /**
  * @author nitishagarwal

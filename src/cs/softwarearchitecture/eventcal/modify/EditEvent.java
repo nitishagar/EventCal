@@ -29,9 +29,6 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import cs.softwarearchitecture.eventcal.DefaultView;
 import cs.softwarearchitecture.eventcal.R;
-import cs.softwarearchitecture.eventcal.R.id;
-import cs.softwarearchitecture.eventcal.R.layout;
-import cs.softwarearchitecture.eventcal.R.menu;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
 import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
 
