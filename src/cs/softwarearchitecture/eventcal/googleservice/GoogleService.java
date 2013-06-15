@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.services.samples.calendar.android;
+package com.google.api.services.samples.calendar.android;     
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
