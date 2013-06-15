@@ -34,6 +34,8 @@ import android.widget.RelativeLayout.LayoutParams;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
 import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
 import cs.softwarearchitecture.eventcal.model.Event;
+import cs.softwarearchitecture.eventcal.modify.AddEvent;
+import cs.softwarearchitecture.eventcal.modify.EditEvent;
 import cs.softwarearchitecture.eventcal.viewpagerindicator.TitlePageIndicator;
 
 public class DefaultView extends FragmentActivity {
@@ -68,7 +70,7 @@ public class DefaultView extends FragmentActivity {
 
 
 	//Calendar calendar; 
-	static Calendar calChanging;
+	public static Calendar calChanging;
 
 	private static Values values;
 	
