@@ -34,6 +34,8 @@ import android.widget.RelativeLayout.LayoutParams;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
 import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
 import cs.softwarearchitecture.eventcal.model.Event;
+import cs.softwarearchitecture.eventcal.modify.AddEvent;
+import cs.softwarearchitecture.eventcal.modify.EditEvent;
 import cs.softwarearchitecture.eventcal.viewpagerindicator.TitlePageIndicator;
 
 public class DefaultView extends FragmentActivity {
@@ -62,13 +64,13 @@ public class DefaultView extends FragmentActivity {
 
 	int currentPage;
 
-	private String currentDate;
-	private String previousDate;
-	private String nextDate;
+	private String mCurrentDate;
+	private String mPreviousDate;
+	private String mNextDate;
 
 
 	//Calendar calendar; 
-	static Calendar calChanging;
+	public static Calendar calChanging;
 
 	private static Values values;
 	
@@ -116,8 +118,7 @@ public class DefaultView extends FragmentActivity {
 
 				if (state == ViewPager.SCROLL_STATE_IDLE) {	
 					if (currentPage < 1){
-						updateDate(-1);
-						
+						updateDate(-1);	
 					}
 					else if (currentPage > 1){
 						updateDate(1);
@@ -156,7 +157,7 @@ public class DefaultView extends FragmentActivity {
 		currentMonth = calChanging.get(Calendar.MONTH);
 		currentYear = calChanging.get(Calendar.YEAR);
 
-		currentDate = currentDay + " " 
+		mCurrentDate = currentDay + " " 
 				+ values.getMONTH_VALUES()[currentMonth] +
 				", " + currentYear;
 
@@ -167,7 +168,7 @@ public class DefaultView extends FragmentActivity {
 		previousMonth = calChanging.get(Calendar.MONTH);
 		previousYear = calChanging.get(Calendar.YEAR);
 
-		previousDate = previousDay + " " 
+		mPreviousDate = previousDay + " " 
 				+ values.getMONTH_VALUES()[previousMonth] +
 				", " + previousYear;
 
@@ -178,7 +179,7 @@ public class DefaultView extends FragmentActivity {
 		nextMonth = calChanging.get(Calendar.MONTH);
 		nextYear = calChanging.get(Calendar.YEAR);
 
-		nextDate = nextDay + " " 
+		mNextDate = nextDay + " " 
 				+ values.getMONTH_VALUES()[nextMonth] + 
 				", " + nextYear;
 
@@ -215,6 +216,8 @@ public class DefaultView extends FragmentActivity {
 			Intent addEventIntent = new Intent(this, AddEvent.class);
 			addEventIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(addEventIntent);
+			break;
+		case R.id.today:
 			break;
 		}
 		return true;
@@ -260,11 +263,11 @@ public class DefaultView extends FragmentActivity {
 
 			switch (position) {
 			case 0:
-				return previousDate.toUpperCase(l);
+				return mPreviousDate.toUpperCase(l);
 			case 1:
-				return currentDate.toUpperCase(l); 
+				return mCurrentDate.toUpperCase(l); 
 			case 2:
-				return nextDate.toUpperCase(l); 
+				return mNextDate.toUpperCase(l); 
 			}
 			return null;
 		}

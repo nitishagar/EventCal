@@ -13,7 +13,6 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.database.sqlite.SQLiteStatement;
 import android.net.Uri;
 import android.text.TextUtils;
-
 import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
 
 /**

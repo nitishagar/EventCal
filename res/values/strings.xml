@@ -24,5 +24,6 @@
     <string name="title_activity_edit_event">EditEvent</string>
     <string name="share">Share</string>
     <string name="delete">Delete</string>
+    <string name="today">Today</string>
 
 </resources>

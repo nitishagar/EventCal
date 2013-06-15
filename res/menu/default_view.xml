@@ -20,5 +20,10 @@
         android:icon="@android:drawable/ic_menu_add"
         android:showAsAction="ifRoom|withText"
         android:title="@string/add_event"/>
-
+	<item
+        android:id="@+id/today"
+        android:icon="@android:drawable/ic_menu_today"
+        android:showAsAction="ifRoom"
+        android:title="@string/today"/>
+	
 </menu>

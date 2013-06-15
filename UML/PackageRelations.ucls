@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.3" icons="true" automaticImage="PNG" always-add-relationships="false" generalizations="true" 
+  realizations="true" associations="true" dependencies="false" nesting-relationships="true">  
+  <package id="1" language="java" name="cs.softwarearchitecture.eventcal.modify" project="EventCal" 
+    file="/EventCal/src/cs/softwarearchitecture/eventcal/modify" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="213" y="302"/>    
+    <display autosize="true" stereotype="true" accessors="true"/>  
+  </package>  
+  <package id="2" language="java" name="cs.softwarearchitecture.eventcal" project="EventCal" 
+    file="/EventCal/src/cs/softwarearchitecture/eventcal" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="647" y="220"/>    
+    <display autosize="true" stereotype="true" accessors="true"/>  
+  </package>  
+  <package id="3" language="java" name="cs.softwarearchitecture.eventcal.contentprovider" project="EventCal" 
+    file="/EventCal/src/cs/softwarearchitecture/eventcal/contentprovider" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="649" y="405"/>    
+    <display autosize="true" stereotype="true" accessors="true"/>  
+  </package>  
+  <package id="4" language="java" name="cs.softwarearchitecture.eventcal.model" project="EventCal" 
+    file="/EventCal/src/cs/softwarearchitecture/eventcal/model" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1040" y="154"/>    
+    <display autosize="true" stereotype="true" accessors="true"/>  
+  </package>  
+  <package id="5" language="java" name="cs.softwarearchitecture.eventcal.viewpagerindicator" project="EventCal" 
+    file="/EventCal/src/cs/softwarearchitecture/eventcal/viewpagerindicator" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="247" y="156"/>    
+    <display autosize="true" stereotype="true" accessors="true"/>  
+  </package>  
+  <package id="6" language="java" name="cs.softwarearchitecture.eventcal.database" project="EventCal" 
+    file="/EventCal/src/cs/softwarearchitecture/eventcal/database" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="1040" y="293"/>    
+    <display autosize="true" stereotype="true" accessors="true"/>  
+  </package>  
+  <package id="7" language="java" name="android.database.sqlite" project="EventCal" 
+    file="/Applications/adt-bundle-mac-x86_64/sdk/platforms/android-17/android.jar" binary="true" corner="BOTTOM_RIGHT">    
+    <position height="50" width="258" x="914" y="462"/>    
+    <display autosize="false" stereotype="true" accessors="true"/>  
+  </package>  
+  <dependency id="8">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="3"/>  
+  </dependency>  
+  <dependency id="9">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="6"/>  
+  </dependency>  
+  <dependency id="10">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <dependency id="11">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </dependency>  
+  <dependency id="12">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="7"/>  
+  </dependency>  
+  <dependency id="13">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <dependency id="14">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="7"/>  
+  </dependency>  
+  <dependency id="15">    
+    <end type="SOURCE" refId="1"/>    
+    <end type="TARGET" refId="6"/>  
+  </dependency>  
+  <dependency id="16">    
+    <end type="SOURCE" refId="5"/>    
+    <end type="TARGET" refId="2"/>  
+  </dependency>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
