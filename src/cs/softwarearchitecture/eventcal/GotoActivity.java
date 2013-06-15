@@ -1,5 +1,7 @@
 package cs.softwarearchitecture.eventcal;
 
-public class GotoActivity {
+import android.app.Activity;
+
+public class GotoActivity extends Activity{
 
 }
