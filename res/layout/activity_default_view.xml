@@ -9,7 +9,7 @@
         android:padding="10dip"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
-		android:textColor="#a0a0a0"        
+		android:textColor="#3b3b3d"        
         />
     
     <android.support.v4.view.ViewPager

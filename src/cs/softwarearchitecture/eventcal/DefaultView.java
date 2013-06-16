@@ -7,6 +7,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +32,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
@@ -38,7 +42,7 @@ import cs.softwarearchitecture.eventcal.modify.AddEvent;
 import cs.softwarearchitecture.eventcal.modify.EditEvent;
 import cs.softwarearchitecture.eventcal.viewpagerindicator.TitlePageIndicator;
 
-public class DefaultView extends FragmentActivity {
+public class DefaultView extends FragmentActivity {  
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -81,6 +85,7 @@ public class DefaultView extends FragmentActivity {
 	 * The {@link ViewPager} that will host the section contents.
 	 */
 	ViewPager dayViewPager;
+	TitlePageIndicator pageIndicator;
 
 	// TAG for logCat
 	public static String TAG = "EVENT CALENDAR";
@@ -93,11 +98,7 @@ public class DefaultView extends FragmentActivity {
 		mEventContentResolver = getContentResolver();
 
 		values = new Values();
-		//calendar = Calendar.getInstance(Locale.getDefault());
 		calChanging = Calendar.getInstance(Locale.getDefault());
-		updateDate(0);
-
-
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
@@ -107,10 +108,13 @@ public class DefaultView extends FragmentActivity {
 		// Set up the ViewPager with the sections adapter.
 		dayViewPager = (ViewPager) findViewById(R.id.dayViewPager);
 		dayViewPager.setAdapter(mCalendarPagerAdapter);
-
-		final TitlePageIndicator pageIndicator = 
+		pageIndicator = 
 				(TitlePageIndicator) findViewById(R.id.pageIndicator);
 		pageIndicator.setViewPager(dayViewPager,values.getCURRENT_PAGE());
+		
+		// set today's view
+		updateDate(0);
+		
 		pageIndicator.setOnPageChangeListener(new OnPageChangeListener(){
 
 			@Override
@@ -123,9 +127,6 @@ public class DefaultView extends FragmentActivity {
 					else if (currentPage > 1){
 						updateDate(1);
 					}
-					
-					pageIndicator.setCurrentItem(values.getCURRENT_PAGE(), false);
-					mCalendarPagerAdapter.notifyDataSetChanged();
 				}
 			}
 
@@ -160,6 +161,8 @@ public class DefaultView extends FragmentActivity {
 		mCurrentDate = currentDay + " " 
 				+ values.getMONTH_VALUES()[currentMonth] +
 				", " + currentYear;
+		
+		Log.v(TAG, "current Date is " + mCurrentDate);
 
 		// Calculate previous date
 		calChanging.add(Calendar.DAY_OF_MONTH, -1);
@@ -185,6 +188,8 @@ public class DefaultView extends FragmentActivity {
 
 		// Reset calChanging to current day
 		calChanging.add(Calendar.DAY_OF_MONTH, -1);
+		mCalendarPagerAdapter.notifyDataSetChanged();
+		pageIndicator.setCurrentItem(values.getCURRENT_PAGE(), false);
 	}
 
 
@@ -205,8 +210,7 @@ public class DefaultView extends FragmentActivity {
 			startActivity(searchIntent);
 			break;
 		case R.id.action_goto:
-			Intent gotoIntent = new Intent(this, GotoActivity.class);
-			startActivity(gotoIntent);
+			showDialog(R.id.action_goto);
 			break;
 		case R.id.action_settings:
 			Intent settingIntent = new Intent(this, SettingsActivity.class);
@@ -218,9 +222,33 @@ public class DefaultView extends FragmentActivity {
 			startActivity(addEventIntent);
 			break;
 		case R.id.today:
+			calChanging = Calendar.getInstance(Locale.getDefault());
+			updateDate(0);
 			break;
 		}
 		return true;
+	}
+	
+	@Override
+	protected Dialog onCreateDialog(final int iD)
+	{
+		switch (iD)
+		{
+		case R.id.action_goto:
+			return new DatePickerDialog(this, new OnDateSetListener()
+			{
+				@Override
+				public void onDateSet(DatePicker view, int year,
+						int monthOfYear, int dayOfMonth)
+				{
+					calChanging.set(year, monthOfYear, dayOfMonth);
+					updateDate(0);
+				}
+			}, calChanging.get(Calendar.YEAR),
+			calChanging.get(Calendar.MONTH),
+			calChanging.get(Calendar.DAY_OF_MONTH));	
+		}
+		return null;
 	}
 
 	/**
@@ -260,7 +288,7 @@ public class DefaultView extends FragmentActivity {
 		@Override
 		public CharSequence getPageTitle(int position) {
 			Locale l = Locale.getDefault();
-
+			
 			switch (position) {
 			case 0:
 				return mPreviousDate.toUpperCase(l);
