@@ -7,9 +7,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import android.app.ActionBar;
+import android.app.ActionBar.OnNavigationListener;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.DatePickerDialog.OnDateSetListener;
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -25,16 +27,19 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils.TruncateAt;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.SpinnerAdapter;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
 import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
 import cs.softwarearchitecture.eventcal.model.Event;
@@ -197,9 +202,60 @@ public class DefaultView extends FragmentActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.default_view, menu);
+		
+		actionBarViewSelector();
 		return true;
 	}
 
+	/**
+	 * 
+	 */
+	private void actionBarViewSelector() {
+		// View Selection aka Spinner
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayShowTitleEnabled(false);
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		
+		SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(new ContextThemeWrapper(this, android.R.style.Theme_Holo), 
+				R.array.view_list, android.R.layout.simple_spinner_dropdown_item);
+
+		OnNavigationListener mOnNavigationListener = new OnNavigationListener() {
+			// Get the same strings provided for the drop-down's ArrayAdapter
+			String[] viewList = getResources().getStringArray(R.array.view_list);
+			Intent targetIntent = new Intent();
+			
+			@Override
+			public boolean onNavigationItemSelected(int position, long itemId) {
+				switch(position){
+				case 0:
+					String className = "cs.softwarearchitecture.eventcal.DefaultView$2";
+					if(!className.equals(this.getClass().getName())) {
+						targetIntent.setClass(getApplicationContext(), DefaultView.class);
+						startActivity(targetIntent);
+						finish();
+					}
+					break;
+				case 1:
+					Log.d(TAG, this.getClass().getName());
+					Log.d(TAG, getApplicationContext().getClass().getName());
+					targetIntent.setClass(getApplicationContext(), MonthActivity.class);
+					startActivity(targetIntent);
+					finish();
+					break;
+				case 2:
+					targetIntent.setClass(getApplicationContext(), AgendaActivity.class);
+					startActivity(targetIntent);
+					finish();
+					break;
+				}
+				return true;
+			}
+		};
+
+		actionBar.setListNavigationCallbacks(mSpinnerAdapter, mOnNavigationListener);
+		
+	}
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -249,6 +305,14 @@ public class DefaultView extends FragmentActivity {
 			calChanging.get(Calendar.DAY_OF_MONTH));	
 		}
 		return null;
+	}
+
+	/**
+	 * 
+	 */
+	private void startIntent(String className) {
+		String targetClass = className + ".class"; 
+		
 	}
 
 	/**

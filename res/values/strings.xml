@@ -26,4 +26,13 @@
     <string name="delete">Delete</string>
     <string name="today">Today</string>
 
+    <string-array name="view_list">
+        <item>Days</item>
+        <item>Months</item>
+        <item>Agenda</item>
+    </string-array>
+
+    <string name="title_activity_agenda">AgendaActivity</string>
+    <string name="title_activity_month">MonthActivity</string>
+
 </resources>
