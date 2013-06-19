@@ -12,6 +12,7 @@ import android.app.ActionBar.OnNavigationListener;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
+import android.app.SearchManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -39,6 +40,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.SearchView;
 import android.widget.SpinnerAdapter;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
 import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
@@ -203,6 +205,14 @@ public class DefaultView extends FragmentActivity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.default_view, menu);
 		
+		// Associate searchable configuration with the SearchView
+		SearchManager searchManager =
+				(SearchManager) getSystemService(Context.SEARCH_SERVICE);
+		SearchView searchView =
+				(SearchView) menu.findItem(R.id.search).getActionView();
+		searchView.setSearchableInfo(
+				searchManager.getSearchableInfo(getComponentName()));
+		
 		actionBarViewSelector();
 		return true;
 	}
@@ -256,15 +266,11 @@ public class DefaultView extends FragmentActivity {
 		
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		switch(item.getItemId()){
-		case R.id.action_search:
-			Intent searchIntent = new Intent(this, SearchActivity.class);
-			searchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(searchIntent);
-			break;
 		case R.id.action_goto:
 			showDialog(R.id.action_goto);
 			break;

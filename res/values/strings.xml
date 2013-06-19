@@ -34,5 +34,7 @@
 
     <string name="title_activity_agenda">AgendaActivity</string>
     <string name="title_activity_month">MonthActivity</string>
+    <string name="enter_the_event_name">Enter the Event Name</string>
+    <string name="event_search">Event Search</string>
 
 </resources>
