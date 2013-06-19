@@ -314,6 +314,7 @@ public class EditEvent extends Activity implements OnClickListener {
 			break;
 		}
 	}
+	
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onClick(View viewArg) {
