@@ -430,7 +430,7 @@ public class DefaultView extends FragmentActivity {
 			int currentMonth = calChanging.get(Calendar.MONTH);
 			int currentYear = calChanging.get(Calendar.YEAR);
 
-			String[] dateString = { Integer.toString(timeDateFormatter(currentDay, currentMonth, Integer.toString(currentYear))) };
+			String[] dateString = { Integer.toString(CurrentDateTimeConverter.timeDateFormatter(currentDay, currentMonth, Integer.toString(currentYear))) };
 					
 			Log.v(TAG, dateString[0] );
 			
@@ -567,26 +567,5 @@ public class DefaultView extends FragmentActivity {
 			return (int) margin;
 		}
 		
-		private int timeDateFormatter(int firstVal, int secondVal, String thirdVal) {
-			int formattedValue = 0;
-			String firstString = null;
-			String secondString = null;
-			
-			if (firstVal < 10)
-				firstString = "0" + Integer.toString(firstVal);
-			else
-				firstString = Integer.toString(firstVal);
-			
-			if (secondVal < 10)
-				secondString = "0" + Integer.toString(secondVal);
-			else
-				secondString = Integer.toString(secondVal);
-		
-			formattedValue = Integer.parseInt("1" + firstString + secondString 
-					+ thirdVal);
-			
-			return formattedValue;
-		}
-
 	}
 }

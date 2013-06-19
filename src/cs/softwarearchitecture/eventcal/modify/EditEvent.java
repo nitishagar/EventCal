@@ -31,6 +31,7 @@ import cs.softwarearchitecture.eventcal.DefaultView;
 import cs.softwarearchitecture.eventcal.R;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
 import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
+import cs.softwarearchitecture.eventcal.CurrentDateTimeConverter;
 
 @SuppressLint("SimpleDateFormat")
 public class EditEvent extends Activity implements OnClickListener {
@@ -151,8 +152,8 @@ public class EditEvent extends Activity implements OnClickListener {
 		monthOfYear = Integer.parseInt(date.substring(3,5));
 		dayOfMonth = Integer.parseInt(date.substring(1,3));
 		mDateTime.set(year, monthOfYear, dayOfMonth);
-		mFromDate = timeDateFormatter(dayOfMonth, monthOfYear, Integer.toString(year));
-		mToDate = timeDateFormatter(dayOfMonth, monthOfYear, Integer.toString(year));
+		mFromDate = CurrentDateTimeConverter.timeDateFormatter(dayOfMonth, monthOfYear, Integer.toString(year));
+		mToDate = CurrentDateTimeConverter.timeDateFormatter(dayOfMonth, monthOfYear, Integer.toString(year));
 		txtDate.setText(mDateFormatter.format(mDateTime.getTime()));
 
 		// setting the time
@@ -161,13 +162,13 @@ public class EditEvent extends Activity implements OnClickListener {
 			hourOfDay = Integer.parseInt(start_time.substring(0, 2));
 			minute = Integer.parseInt(start_time.substring(2, 4));
 			
-			mFromTime = timeDateFormatter(hourOfDay, minute, "00");
+			mFromTime = CurrentDateTimeConverter.timeDateFormatter(hourOfDay, minute, "00");
 			break;
 		case R.id.toTime:
 			hourOfDay = Integer.parseInt(end_time.substring(0, 2));
 			minute = Integer.parseInt(end_time.substring(2, 4));
 			
-			mToTime = timeDateFormatter(hourOfDay, minute, "00");
+			mToTime = CurrentDateTimeConverter.timeDateFormatter(hourOfDay, minute, "00");
 			break;
 		}
 
@@ -254,9 +255,9 @@ public class EditEvent extends Activity implements OnClickListener {
 					//							+ Integer.toString(year);
 
 					if (iD == R.id.toDate)
-						mToDate = timeDateFormatter(dayOfMonth, monthOfYear, Integer.toString(year));
+						mToDate = CurrentDateTimeConverter.timeDateFormatter(dayOfMonth, monthOfYear, Integer.toString(year));
 					else
-						mFromDate = timeDateFormatter(dayOfMonth, monthOfYear, Integer.toString(year));
+						mFromDate = CurrentDateTimeConverter.timeDateFormatter(dayOfMonth, monthOfYear, Integer.toString(year));
 
 					txtDate.setText(mDateFormatter.format(mDateTime.getTime()));
 				}
@@ -280,9 +281,9 @@ public class EditEvent extends Activity implements OnClickListener {
 					//					String timeFormatted = Integer.toString(hourOfDay) + Integer.toString(minute) + "00";
 
 					if (iD == R.id.toTime)
-						mToTime = timeDateFormatter(hourOfDay, minute, "00");
+						mToTime = CurrentDateTimeConverter.timeDateFormatter(hourOfDay, minute, "00");
 					else
-						mFromTime = timeDateFormatter(hourOfDay, minute, "00");
+						mFromTime = CurrentDateTimeConverter.timeDateFormatter(hourOfDay, minute, "00");
 
 					txtTime.setText(mTimeFormatter.format(mDateTime.getTime()));
 				}
@@ -384,27 +385,6 @@ public class EditEvent extends Activity implements OnClickListener {
 			return false;
 		}
 		return true;
-	}
-
-	private int timeDateFormatter(int firstVal, int secondVal, String thirdVal) {
-		int formattedValue = 0;
-		String firstString = "";
-		String secondString = "";
-
-		if (firstVal < 10)
-			firstString = "0" + Integer.toString(firstVal);
-		else
-			firstString = Integer.toString(firstVal);
-
-		if (secondVal < 10)
-			secondString = "0" + Integer.toString(secondVal);
-		else
-			secondString = Integer.toString(secondVal);
-
-		formattedValue = Integer.parseInt("1" + firstString + secondString 
-				+ thirdVal);
-
-		return formattedValue;
 	}
 
 }
