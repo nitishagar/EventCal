@@ -59,8 +59,8 @@ public class CurrentDateTimeConverter {
 			}
 
 			// Formatting the int value for both
-			mDate = timeDateFormatter(mDateTime.getDate(), mDateTime.getMonth(), 
-					Integer.toString(mDateTime.getYear()));
+			mDate = timeDateFormatter(mDateTime.getDate(), mDateTime.getMonth() + 1, 
+					Integer.toString(mDateTime.getYear() + 1900));
 
 			mTime = timeDateFormatter(mDateTime.getHours(), mDateTime.getMinutes(), "00");
 			Log.d(DefaultView.TAG, "Date: " + Integer.toString(mDate) + " Time: " + Integer.toString(mTime));

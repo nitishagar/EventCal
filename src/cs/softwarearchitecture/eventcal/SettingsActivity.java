@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.media.Ringtone;
@@ -276,6 +277,13 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 
 		}
 
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		DefaultView.mFacebook.authorizeCallback(requestCode, resultCode, data);
 	}
 
 	@Override

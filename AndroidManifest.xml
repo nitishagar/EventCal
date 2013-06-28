@@ -76,6 +76,8 @@
             android:name="cs.softwarearchitecture.eventcal.MonthActivity"
             android:label="@string/title_activity_month" >
         </activity>
+        
+        <service android:name="cs.softwarearchitecture.eventcal.services.FacebookService"></service>
     </application>
 
 </manifest>

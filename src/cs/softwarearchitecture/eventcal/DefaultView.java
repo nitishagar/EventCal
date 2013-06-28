@@ -54,6 +54,7 @@ import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
 import cs.softwarearchitecture.eventcal.model.Event;
 import cs.softwarearchitecture.eventcal.modify.AddEvent;
 import cs.softwarearchitecture.eventcal.modify.EditEvent;
+import cs.softwarearchitecture.eventcal.services.FacebookService;
 import cs.softwarearchitecture.eventcal.viewpagerindicator.TitlePageIndicator;
 
 public class DefaultView extends FragmentActivity {  
@@ -175,6 +176,18 @@ public class DefaultView extends FragmentActivity {
 		 if(settingsPreference.getBoolean("facebook_login", false)) {
 		     // Facebook service kickoff
 			 Log.d(TAG, "Facebook Logged in Kickoff the service...");
+			 String access_token = mPreference.getString("access_token", null);
+			 Long expires = mPreference.getLong("access_expires", 0);
+
+			 if(access_token != null){
+				 //mAsyncRunnner.request("me", new IDRequestListener());
+				 Log.d(TAG, "You are already logged in :)");
+				 mFacebook.setAccessToken(access_token);
+				 Intent intent = new Intent(this, FacebookService.class);
+				 startService(intent);
+			 }
+			 if(expires != 0)
+				 mFacebook.setAccessExpires(expires);
 		 }
 		 
 		 if(settingsPreference.getBoolean("google_login", false)) {
@@ -189,7 +202,9 @@ public class DefaultView extends FragmentActivity {
 	}
 
 	private void servicesInit() {
-		// Facebook service init
+		/*
+		 *  Facebook service init
+		 */
 		mPreference = getSharedPreferences("facebook-session", Context.MODE_PRIVATE);
 
 		// Setup Facebook Session
@@ -201,6 +216,13 @@ public class DefaultView extends FragmentActivity {
 	protected void onResume(){
 		super.onResume();
 		mCalendarPagerAdapter.notifyDataSetChanged();
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		mFacebook.authorizeCallback(requestCode, resultCode, data);
 	}
 
 	protected void updateDate(int changedDays) {
