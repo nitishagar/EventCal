@@ -17,6 +17,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -44,6 +45,10 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.SearchView;
 import android.widget.SpinnerAdapter;
+
+import com.facebook.android.AsyncFacebookRunner;
+import com.facebook.android.Facebook;
+
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
 import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
 import cs.softwarearchitecture.eventcal.model.Event;
@@ -90,6 +95,15 @@ public class DefaultView extends FragmentActivity {
 	// Content Resolver
 	private static ContentResolver mEventContentResolver;
 
+	// Pref. storage
+	protected static SharedPreferences mPreference;
+	protected static Editor mEditor;
+
+	// Facebook vars
+	public static Facebook mFacebook;
+	@SuppressWarnings("deprecation")
+	public static AsyncFacebookRunner mAsyncRunnner;
+	
 	/**
 	 * The {@link ViewPager} that will host the section contents.
 	 */
@@ -156,6 +170,7 @@ public class DefaultView extends FragmentActivity {
 	}
 	
 	private void startServices() {
+		servicesInit();
 		SharedPreferences settingsPreference = PreferenceManager.getDefaultSharedPreferences(this);
 		 if(settingsPreference.getBoolean("facebook_login", false)) {
 		     // Facebook service kickoff
@@ -171,6 +186,15 @@ public class DefaultView extends FragmentActivity {
 		 }
 		 
 		 // UW service kickoff
+	}
+
+	private void servicesInit() {
+		// Facebook service init
+		mPreference = getSharedPreferences("facebook-session", Context.MODE_PRIVATE);
+
+		// Setup Facebook Session
+		mFacebook = new Facebook(getString(R.string.app_id));
+		mAsyncRunnner = new AsyncFacebookRunner(mFacebook);
 	}
 
 	@Override

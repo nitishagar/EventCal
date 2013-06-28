@@ -37,15 +37,6 @@ public class SettingsActivity extends PreferenceActivity {
 	// Handler member variable
 	private Handler mHandler = new Handler();
 
-	// Pref. storage
-	protected SharedPreferences mPreference;
-	protected Editor mEditor;
-
-	// Facebook vars
-	public static Facebook mFacebook;
-	@SuppressWarnings("deprecation")
-	public AsyncFacebookRunner mAsyncRunnner;
-
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
@@ -68,13 +59,6 @@ public class SettingsActivity extends PreferenceActivity {
 		preferenceHeader.setTitle(R.string.pref_header_data_sync);
 		getPreferenceScreen().addPreference(preferenceHeader);
 		addPreferencesFromResource(R.xml.pref_data_sync);
-
-		// Facebook service init
-		mPreference = getSharedPreferences("facebook-session", Context.MODE_PRIVATE);
-
-		// Setup Facebook Session
-		mFacebook = new Facebook(getString(R.string.app_id));
-		mAsyncRunnner = new AsyncFacebookRunner(mFacebook);
 		
 		// Bind the summaries of List/Dialog/Ringtone preferences to
 		// their values. When their values change, their summaries are updated
@@ -149,14 +133,14 @@ public class SettingsActivity extends PreferenceActivity {
 				if (valueOfCheckBox){
 					Log.d(DefaultView.TAG, "Facebook Login requested!");
 					LoginDialogListener loginComplete = new LoginDialogListener();
-					mFacebook.authorize(this, PERMS, loginComplete);
+					DefaultView.mFacebook.authorize(this, PERMS, loginComplete);
 					Log.d(DefaultView.TAG, "Facebook authorize called!");
 				}
 				else {
-					if(mFacebook.isSessionValid()){
+					if(DefaultView.mFacebook.isSessionValid()){
 						Log.d(DefaultView.TAG, "Logging out...");
 						try{
-							mAsyncRunnner.logout(this, new LogoutRequestListener());
+							DefaultView.mAsyncRunnner.logout(this, new LogoutRequestListener());
 						}
 						catch (Exception e){
 							Log.e(DefaultView.TAG, "Exception caught: " + e.getMessage());
@@ -214,14 +198,15 @@ public class SettingsActivity extends PreferenceActivity {
 		/* (non-Javadoc)
 		 * @see com.facebook.android.Facebook.DialogListener#onComplete(android.os.Bundle)
 		 */
+		@SuppressWarnings("deprecation")
 		@Override
 		public void onComplete(Bundle values) {
 			Log.d(DefaultView.TAG, "Facebook Login successful!");
 			//			mText.setText("Facebook Login successful. Press Menu...");
-			mEditor = mPreference.edit();
-			mEditor.putString("access_token", mFacebook.getAccessToken());
-			mEditor.putLong("access_expires", mFacebook.getAccessExpires());
-			mEditor.commit();
+			DefaultView.mEditor = DefaultView.mPreference.edit();
+			DefaultView.mEditor.putString("access_token", DefaultView.mFacebook.getAccessToken());
+			DefaultView.mEditor.putLong("access_expires", DefaultView.mFacebook.getAccessExpires());
+			DefaultView.mEditor.commit();
 
 		}
 
