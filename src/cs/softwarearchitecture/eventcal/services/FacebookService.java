@@ -17,20 +17,21 @@
 //import android.net.Uri;
 //import android.util.Log;
 //
-//import com.eventsample.eventret.contentprovider.DBEventsContentProvider;
-//import com.eventsample.eventret.database.DBSQLiteHelper;
 //import com.facebook.android.AsyncFacebookRunner;
 //import com.facebook.android.AsyncFacebookRunner.RequestListener;
 //import com.facebook.android.FacebookError;
+//
+//import cs.softwarearchitecture.eventcal.DefaultView;
 //
 ///**
 // * @author nitishagarwal
 // *
 // */
-//public class FacebookEventsService extends IntentService {
+//@SuppressWarnings("deprecation")
+//public class FacebookService extends IntentService {
 //
 //	// Application ID from Facebook Developers site
-//	public static final String APP_ID = "393068010813001";
+//	public static final String APP_ID = "377349995710558";
 //
 //	// URI
 //	private Uri eventURI = null;
@@ -39,8 +40,8 @@
 //	@SuppressWarnings("deprecation")
 //	protected AsyncFacebookRunner mAsyncRunner;
 //
-//	public FacebookEventsService() {
-//		super("FacebookEventsService");
+//	public FacebookService() {
+//		super("FacebookService");
 //	}
 //
 //	/*
@@ -51,10 +52,10 @@
 //	@SuppressWarnings("deprecation")
 //	@Override
 //	protected void onHandleIntent(Intent intent) {
-//		Log.d(MainActivity.TAG, "Handle Intent Activated!");
-//		if(MainActivity.mFacebook.isSessionValid()){
-//			Log.d(MainActivity.TAG, "Handle Intent with Async");
-//			mAsyncRunner = new AsyncFacebookRunner(MainActivity.mFacebook);
+//		Log.d(DefaultView.TAG, "Handle Intent Activated!");
+//		if(DefaultView.mFacebook.isSessionValid()){
+//			Log.d(DefaultView.TAG, "Handle Intent with Async");
+//			mAsyncRunner = new AsyncFacebookRunner(DefaultView.mFacebook);
 //			mAsyncRunner.request("me/events", new EventRequenstListener());
 //		}
 //	}
@@ -76,7 +77,7 @@
 //		public void onComplete(String response, Object state) {
 //			try {
 //				// Process the response here: executed in background thread
-//				Log.d(MainActivity.TAG, "Response: " + response.toString());
+//				Log.d(DefaultView.TAG, "Response: " + response.toString());
 //
 //				final JSONObject json = new JSONObject(response);
 //				JSONArray jsonArray = json.getJSONArray("data");
@@ -88,7 +89,7 @@
 //				for (int i = 0; i < jsonArray.length(); i++) {
 //					JSONObject event = jsonArray.getJSONObject(i);
 //					
-//					Log.d(MainActivity.TAG, event.getString("start_time"));
+//					Log.d(DefaultView.TAG, event.getString("start_time"));
 //					currentTimeConverter = new CurrentTimeConverter(event.getString("start_time"));
 //					
 //					//					FacebookEvent newEvent;
@@ -160,7 +161,7 @@
 //				//					}
 //				//				});
 //			} catch (JSONException e) {
-//				Log.e(MainActivity.TAG, "JSON error in response! Message: " + e.getMessage());
+//				Log.e(DefaultView.TAG, "JSON error in response! Message: " + e.getMessage());
 //			}
 //
 //		}

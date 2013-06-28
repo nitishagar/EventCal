@@ -40,5 +40,6 @@
     <string name="eventbrite_login">Eventbrite</string>
     <string name="google_login">Google</string>
     <string name="accounts_login">ACCOUNTS LOGIN</string>
+    <string name="app_id">377349995710558</string>
 
 </resources>

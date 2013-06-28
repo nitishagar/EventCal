@@ -157,16 +157,16 @@ public class DefaultView extends FragmentActivity {
 	
 	private void startServices() {
 		SharedPreferences settingsPreference = PreferenceManager.getDefaultSharedPreferences(this);
-		 if(settingsPreference.getBoolean("facebook_login", true)) {
+		 if(settingsPreference.getBoolean("facebook_login", false)) {
 		     // Facebook service kickoff
 			 Log.d(TAG, "Facebook Logged in Kickoff the service...");
 		 }
 		 
-		 if(settingsPreference.getBoolean("google_login", true)) {
+		 if(settingsPreference.getBoolean("google_login", false)) {
 		      // Google service kickoff
 		 }
 		 
-		 if(settingsPreference.getBoolean("eventbrite_login", true)) {
+		 if(settingsPreference.getBoolean("eventbrite_login", false)) {
 		      // Eventbrite service kickoff
 		 }
 		 
