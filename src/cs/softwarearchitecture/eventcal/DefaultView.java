@@ -17,6 +17,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -44,11 +45,16 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.SearchView;
 import android.widget.SpinnerAdapter;
+
+import com.facebook.android.AsyncFacebookRunner;
+import com.facebook.android.Facebook;
+
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
 import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
 import cs.softwarearchitecture.eventcal.model.Event;
 import cs.softwarearchitecture.eventcal.modify.AddEvent;
 import cs.softwarearchitecture.eventcal.modify.EditEvent;
+import cs.softwarearchitecture.eventcal.services.FacebookService;
 import cs.softwarearchitecture.eventcal.viewpagerindicator.TitlePageIndicator;
 
 public class DefaultView extends FragmentActivity {  
@@ -90,6 +96,15 @@ public class DefaultView extends FragmentActivity {
 	// Content Resolver
 	private static ContentResolver mEventContentResolver;
 
+	// Pref. storage
+	protected static SharedPreferences mPreference;
+	protected static Editor mEditor;
+
+	// Facebook vars
+	public static Facebook mFacebook;
+	@SuppressWarnings("deprecation")
+	public static AsyncFacebookRunner mAsyncRunnner;
+	
 	/**
 	 * The {@link ViewPager} that will host the section contents.
 	 */
@@ -156,27 +171,58 @@ public class DefaultView extends FragmentActivity {
 	}
 	
 	private void startServices() {
+		servicesInit();
 		SharedPreferences settingsPreference = PreferenceManager.getDefaultSharedPreferences(this);
-		 if(settingsPreference.getBoolean("facebook_login", true)) {
+		 if(settingsPreference.getBoolean("facebook_login", false)) {
 		     // Facebook service kickoff
 			 Log.d(TAG, "Facebook Logged in Kickoff the service...");
+			 String access_token = mPreference.getString("access_token", null);
+			 Long expires = mPreference.getLong("access_expires", 0);
+
+			 if(access_token != null){
+				 //mAsyncRunnner.request("me", new IDRequestListener());
+				 Log.d(TAG, "You are already logged in :)");
+				 mFacebook.setAccessToken(access_token);
+				 Intent intent = new Intent(this, FacebookService.class);
+				 startService(intent);
+			 }
+			 if(expires != 0)
+				 mFacebook.setAccessExpires(expires);
 		 }
 		 
-		 if(settingsPreference.getBoolean("google_login", true)) {
+		 if(settingsPreference.getBoolean("google_login", false)) {
 		      // Google service kickoff
 		 }
 		 
-		 if(settingsPreference.getBoolean("eventbrite_login", true)) {
+		 if(settingsPreference.getBoolean("eventbrite_login", false)) {
 		      // Eventbrite service kickoff
 		 }
 		 
 		 // UW service kickoff
 	}
 
+	private void servicesInit() {
+		/*
+		 *  Facebook service init
+		 */
+		mPreference = getSharedPreferences("facebook-session", Context.MODE_PRIVATE);
+
+		// Setup Facebook Session
+		mFacebook = new Facebook(getString(R.string.app_id));
+		mAsyncRunnner = new AsyncFacebookRunner(mFacebook);
+	}
+
 	@Override
 	protected void onResume(){
 		super.onResume();
 		mCalendarPagerAdapter.notifyDataSetChanged();
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		mFacebook.authorizeCallback(requestCode, resultCode, data);
 	}
 
 	protected void updateDate(int changedDays) {
