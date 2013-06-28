@@ -16,9 +16,11 @@ import android.app.SearchManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -102,6 +104,9 @@ public class DefaultView extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_default_view);
 		
+		// Service Start Listener
+		startServices();
+		
 		mEventContentResolver = getContentResolver();
 
 		values = new Values();
@@ -150,6 +155,24 @@ public class DefaultView extends FragmentActivity {
 		});
 	}
 	
+	private void startServices() {
+		SharedPreferences settingsPreference = PreferenceManager.getDefaultSharedPreferences(this);
+		 if(settingsPreference.getBoolean("facebook_login", true)) {
+		     // Facebook service kickoff
+			 Log.d(TAG, "Facebook Logged in Kickoff the service...");
+		 }
+		 
+		 if(settingsPreference.getBoolean("google_login", true)) {
+		      // Google service kickoff
+		 }
+		 
+		 if(settingsPreference.getBoolean("eventbrite_login", true)) {
+		      // Eventbrite service kickoff
+		 }
+		 
+		 // UW service kickoff
+	}
+
 	@Override
 	protected void onResume(){
 		super.onResume();

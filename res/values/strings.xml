@@ -10,7 +10,6 @@
     <string name="edit_event">Edit Event</string>
     <string name="app_read">App Read</string>
     <string name="app_write">App Write</string>
-    <string name="hello_world">Hello world!</string>
     <string name="title">Title</string>
     <string name="from">From:</string>
     <string name="to">To:</string>
@@ -36,5 +35,10 @@
     <string name="title_activity_month">MonthActivity</string>
     <string name="enter_the_event_name">Enter the Event Name</string>
     <string name="event_search">Event Search</string>
+    <string name="new_event_notifications">New event notifications</string>
+    <string name="facebook_login">Facebook</string>
+    <string name="eventbrite_login">Eventbrite</string>
+    <string name="google_login">Google</string>
+    <string name="accounts_login">ACCOUNTS LOGIN</string>
 
 </resources>
