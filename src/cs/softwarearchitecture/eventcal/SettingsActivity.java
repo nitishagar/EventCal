@@ -4,15 +4,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -22,14 +20,12 @@ import android.preference.RingtonePreference;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.facebook.android.AsyncFacebookRunner;
-import com.facebook.android.DialogError;
-import com.facebook.android.Facebook;
-import com.facebook.android.FacebookError;
 import com.facebook.android.AsyncFacebookRunner.RequestListener;
+import com.facebook.android.DialogError;
 import com.facebook.android.Facebook.DialogListener;
+import com.facebook.android.FacebookError;
 
-public class SettingsActivity extends PreferenceActivity {
+public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener{
 
 	// Permissions array
 	public static final String[] PERMS = { "user_events" };
@@ -37,6 +33,8 @@ public class SettingsActivity extends PreferenceActivity {
 	// Handler member variable
 	private Handler mHandler = new Handler();
 
+	SharedPreferences mSettings;
+	
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
@@ -47,6 +45,9 @@ public class SettingsActivity extends PreferenceActivity {
 
 		// Add 'general' preferences.
 		addPreferencesFromResource(R.xml.pref_general);
+		mSettings = PreferenceManager.getDefaultSharedPreferences(this);
+
+		mSettings.registerOnSharedPreferenceChangeListener(this);
 
 		// Add 'notifications' preferences, and a corresponding header.
 		PreferenceCategory preferenceHeader = new PreferenceCategory(this);
@@ -63,9 +64,6 @@ public class SettingsActivity extends PreferenceActivity {
 		// Bind the summaries of List/Dialog/Ringtone preferences to
 		// their values. When their values change, their summaries are updated
 		// to reflect the new value, per the Android Design guidelines.
-		bindPreferenceSummaryToValue(findPreference("facebook_login"));
-		bindPreferenceSummaryToValue(findPreference("eventbrite_login"));
-		bindPreferenceSummaryToValue(findPreference("google_login"));
 
 		bindPreferenceSummaryToValue(findPreference("notifications_new_event_ringtone"));
 		bindPreferenceSummaryToValue(findPreference("sync_frequency"));
@@ -127,31 +125,7 @@ public class SettingsActivity extends PreferenceActivity {
 	private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToCheckBoxListener = new Preference.OnPreferenceChangeListener() {
 		@Override
 		public boolean onPreferenceChange(Preference preference, Object value) {
-			String checkBoxKey = preference.getKey();
-			Boolean valueOfCheckBox = (Boolean)value;
-			if (checkBoxKey.equals("facebook_login")) {
-				if (valueOfCheckBox){
-					Log.d(DefaultView.TAG, "Facebook Login requested!");
-					LoginDialogListener loginComplete = new LoginDialogListener();
-					DefaultView.mFacebook.authorize(this, PERMS, loginComplete);
-					Log.d(DefaultView.TAG, "Facebook authorize called!");
-				}
-				else {
-					if(DefaultView.mFacebook.isSessionValid()){
-						Log.d(DefaultView.TAG, "Logging out...");
-						try{
-							DefaultView.mAsyncRunnner.logout(this, new LogoutRequestListener());
-						}
-						catch (Exception e){
-							Log.e(DefaultView.TAG, "Exception caught: " + e.getMessage());
-						}
-					}
-				}
-			} else if (checkBoxKey.equals("eventbrite_login")) {
-				Log.d(DefaultView.TAG, "Eventbrite Login clicked!");
-			} else if (checkBoxKey.equals("google_login")) {
-				Log.d(DefaultView.TAG, "Google Login clicked!");
-			}
+			
 			return true;
 		}
 	};
@@ -166,27 +140,17 @@ public class SettingsActivity extends PreferenceActivity {
 	 * @see #sBindPreferenceSummaryToValueListener
 	 */
 	private static void bindPreferenceSummaryToValue(Preference preference) {
-		if (preference instanceof CheckBoxPreference){
-			preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToCheckBoxListener);
-			sBindPreferenceSummaryToCheckBoxListener.onPreferenceChange(
-					preference,
-					PreferenceManager.getDefaultSharedPreferences(
-							preference.getContext()).getBoolean(preference.getKey(),
-									false));
-		}
-		else {
-			// Set the listener to watch for value changes.
-			preference
-			.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
+		// Set the listener to watch for value changes.
+		preference
+		.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
 
-			// Trigger the listener immediately with the preference's
-			// current value.
-			sBindPreferenceSummaryToValueListener.onPreferenceChange(
-					preference,
-					PreferenceManager.getDefaultSharedPreferences(
-							preference.getContext()).getString(preference.getKey(),
-									""));
-		}
+		// Trigger the listener immediately with the preference's
+		// current value.
+		sBindPreferenceSummaryToValueListener.onPreferenceChange(
+				preference,
+				PreferenceManager.getDefaultSharedPreferences(
+						preference.getContext()).getString(preference.getKey(),
+								""));
 	}
 
 	/**
@@ -312,6 +276,36 @@ public class SettingsActivity extends PreferenceActivity {
 
 		}
 
+	}
+
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String value) {
+		if (sharedPreferences.getBoolean("facebook_login", false)) {
+				Log.d(DefaultView.TAG, "Facebook Login requested!");
+				LoginDialogListener loginComplete = new LoginDialogListener();
+				DefaultView.mFacebook.authorize(this, PERMS, loginComplete);
+				Log.d(DefaultView.TAG, "Facebook authorize called!");
+		}
+		else {
+			if(DefaultView.mFacebook.isSessionValid()){
+				Log.d(DefaultView.TAG, "Logging out...");
+				try{
+					DefaultView.mAsyncRunnner.logout(this, new LogoutRequestListener());
+				}
+				catch (Exception e){
+					Log.e(DefaultView.TAG, "Exception caught: " + e.getMessage());
+				}
+			}
+		} 
+		
+		if (sharedPreferences.getBoolean("eventbrite_login", false)) {
+			Log.d(DefaultView.TAG, "Eventbrite Login clicked!");
+		} 
+		
+		if (sharedPreferences.getBoolean("google_login", false)) {
+			Log.d(DefaultView.TAG, "Google Login clicked!");
+		}
+		
 	}
 
 
