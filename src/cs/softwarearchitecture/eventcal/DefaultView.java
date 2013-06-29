@@ -110,6 +110,9 @@ public class DefaultView extends FragmentActivity {
 	@SuppressWarnings("deprecation")
 	public static AsyncFacebookRunner mAsyncRunnner;
 
+	// Notification broadcast
+	AsyncAlarmRunner mAlarmSetup = new AsyncAlarmRunner();
+	
 	/**
 	 * The {@link ViewPager} that will host the section contents.
 	 */
@@ -133,8 +136,7 @@ public class DefaultView extends FragmentActivity {
 		calChanging = Calendar.getInstance(Locale.getDefault());
 
 		// Notification setup
-		AsyncAlarmRunner alarmSetup = new AsyncAlarmRunner();
-		alarmSetup.execute();
+		mAlarmSetup.execute();
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
@@ -232,24 +234,31 @@ public class DefaultView extends FragmentActivity {
 					// scheduled properly.
 					notificationIntent.setData(Uri.parse("timer:" + _id));
 
+					// notification broadcast call
 					PendingIntent sender = PendingIntent.getBroadcast(
 							DefaultView.this, 0, notificationIntent,
 							Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
 					// getting notification time (Calculation)
-					cal.set(Integer.parseInt(start_date.substring(5, 9)), Integer.parseInt(start_date.substring(3, 5)), 
-							Integer.parseInt(start_date.substring(1,3)));
 					Date notificationTime = new Date();
 					notificationTime.setHours(Integer.parseInt(start_time.substring(1,3)));
 					notificationTime.setMinutes(Integer.parseInt(start_time.substring(3,5)));
-					cal.setTimeInMillis(((notificationTime.getHours() * 60) +  ((notificationTime.getMinutes() - reminder) * 60)) * 1000);
+//					cal.setTimeInMillis((( * 60) +  ((notificationTime.getMinutes() - reminder) * 60)) * 60 * 1000);
 
+					cal.set(Integer.parseInt(start_date.substring(5, 9)), Integer.parseInt(start_date.substring(3, 5)), 
+							Integer.parseInt(start_date.substring(1,3)), notificationTime.getHours(), 
+							(notificationTime.getMinutes() - reminder));
 					Log.d(TAG, "Time set: " + cal.getTime());
 
-					AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-					am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
-
-					notifIterator++;
+					// only broadcast event to come (event which have passed are ignored)
+					if(cal.getTimeInMillis() - calChanging.getTimeInMillis() > 0) {
+						Log.d(TAG, "Difference in time: " + (cal.getTimeInMillis() - calChanging.getTimeInMillis()));
+						AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+						am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
+						
+						// number of notification
+						notifIterator++;
+					}
 
 //					Toast mToast = Toast.makeText(
 //							DefaultView.this,
