@@ -56,10 +56,15 @@ public class FacebookService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		Log.d(DefaultView.TAG, "Handle Intent Activated!");
-		if(DefaultView.mFacebook.isSessionValid()){
-			Log.d(DefaultView.TAG, "Handle Intent with Async");
-			mAsyncRunner = new AsyncFacebookRunner(DefaultView.mFacebook);
-			mAsyncRunner.request("me/events", new EventRequenstListener());
+		try{
+			if(DefaultView.mFacebook.isSessionValid()){
+				Log.d(DefaultView.TAG, "Handle Intent with Async");
+				mAsyncRunner = new AsyncFacebookRunner(DefaultView.mFacebook);
+				mAsyncRunner.request("me/events", new EventRequenstListener());
+			}
+		}
+		catch(Exception e){
+			Log.e(DefaultView.TAG, "Exception caught: " + e.getMessage());
 		}
 	}
 
