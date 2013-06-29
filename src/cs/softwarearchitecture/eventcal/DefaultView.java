@@ -259,15 +259,6 @@ public class DefaultView extends FragmentActivity {
 						// number of notification
 						notifIterator++;
 					}
-
-//					Toast mToast = Toast.makeText(
-//							DefaultView.this,
-//							"Reminders added to the calendar successfully for "
-//									+ android.text.format.DateFormat.format(
-//											"MM/dd/yy h:mmaa",
-//											cal.getTimeInMillis()),
-//											Toast.LENGTH_LONG);
-//					mToast.show();
 				}
 			}
 			return null;
