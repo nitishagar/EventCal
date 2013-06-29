@@ -113,6 +113,9 @@ public class DefaultView extends FragmentActivity {
 	// Notification broadcast
 	AsyncAlarmRunner mAlarmSetup = new AsyncAlarmRunner();
 	
+	// Service start
+	AsyncServiceRunner mStartServices = new AsyncServiceRunner();
+	
 	/**
 	 * The {@link ViewPager} that will host the section contents.
 	 */
@@ -128,7 +131,7 @@ public class DefaultView extends FragmentActivity {
 		setContentView(R.layout.activity_default_view);
 
 		// Service Start Listener
-		startServices();
+		mStartServices.execute();
 
 		mEventContentResolver = getContentResolver();
 
@@ -265,46 +268,56 @@ public class DefaultView extends FragmentActivity {
 		}
 	}
 
-	private void startServices() {
-		servicesInit();
-		SharedPreferences settingsPreference = PreferenceManager.getDefaultSharedPreferences(this);
-		 if(settingsPreference.getBoolean("facebook_login", false)) {
-		     // Facebook service kickoff
-			 Log.d(TAG, "Facebook Logged in Kickoff the service...");
-			 String access_token = mPreference.getString("access_token", null);
-			 Long expires = mPreference.getLong("access_expires", 0);
+	private class AsyncServiceRunner extends AsyncTask<Void, Void, Void> {
 
-			 if(access_token != null){
-				 //mAsyncRunnner.request("me", new IDRequestListener());
-				 Log.d(TAG, "You are already logged in :)");
-				 mFacebook.setAccessToken(access_token);
-				 Intent intent = new Intent(this, FacebookService.class);
-				 startService(intent);
-			 }
-			 if(expires != 0)
-				 mFacebook.setAccessExpires(expires);
-		 }
-		 
-		 if(settingsPreference.getBoolean("google_login", false)) {
-		      // Google service kickoff
-		 }
-		 
-		 if(settingsPreference.getBoolean("eventbrite_login", false)) {
-		      // Eventbrite service kickoff
-		 }
-		 
-		 // UW service kickoff
-	}
-
-	private void servicesInit() {
-		/*
-		 *  Facebook service init
+		/* (non-Javadoc)
+		 * @see android.os.AsyncTask#onPreExecute()
 		 */
-		mPreference = getSharedPreferences("facebook-session", Context.MODE_PRIVATE);
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			/*
+			 *  Facebook service init
+			 */
+			mPreference = getSharedPreferences("facebook-session", Context.MODE_PRIVATE);
 
-		// Setup Facebook Session
-		mFacebook = new Facebook(getString(R.string.app_id));
-		mAsyncRunnner = new AsyncFacebookRunner(mFacebook);
+			// Setup Facebook Session
+			mFacebook = new Facebook(getString(R.string.app_id));
+			mAsyncRunnner = new AsyncFacebookRunner(mFacebook);
+		}
+		
+		@Override
+		protected Void doInBackground(Void... params) {
+			SharedPreferences settingsPreference = PreferenceManager.getDefaultSharedPreferences(DefaultView.this);
+			if(settingsPreference.getBoolean("facebook_login", false)) {
+				// Facebook service kickoff
+				Log.d(TAG, "Facebook Logged in Kickoff the service...");
+				String access_token = mPreference.getString("access_token", null);
+				Long expires = mPreference.getLong("access_expires", 0);
+
+				if(access_token != null){
+					//mAsyncRunnner.request("me", new IDRequestListener());
+					Log.d(TAG, "You are already logged in :)");
+					mFacebook.setAccessToken(access_token);
+					Intent intent = new Intent(DefaultView.this, FacebookService.class);
+					startService(intent);
+				}
+				if(expires != 0)
+					mFacebook.setAccessExpires(expires);
+			}
+
+			if(settingsPreference.getBoolean("google_login", false)) {
+				// Google service kickoff
+			}
+
+			if(settingsPreference.getBoolean("eventbrite_login", false)) {
+				// Eventbrite service kickoff
+			}
+
+			// UW service kickoff
+			return null;
+		}
+		
 	}
 
 	@Override
