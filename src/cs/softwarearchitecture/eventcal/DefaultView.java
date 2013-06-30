@@ -9,9 +9,11 @@ import java.util.Locale;
 
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -20,6 +22,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -45,6 +49,7 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.SearchView;
 import android.widget.SpinnerAdapter;
+import android.widget.Toast;
 
 import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.Facebook;
@@ -92,7 +97,7 @@ public class DefaultView extends FragmentActivity {
 	public static Calendar calChanging;
 
 	private static Values values;
-	
+
 	// Content Resolver
 	private static ContentResolver mEventContentResolver;
 
@@ -104,6 +109,12 @@ public class DefaultView extends FragmentActivity {
 	public static Facebook mFacebook;
 	@SuppressWarnings("deprecation")
 	public static AsyncFacebookRunner mAsyncRunnner;
+
+	// Notification broadcast
+	AsyncAlarmRunner mAlarmSetup = new AsyncAlarmRunner();
+	
+	// Service start
+	AsyncServiceRunner mStartServices = new AsyncServiceRunner();
 	
 	/**
 	 * The {@link ViewPager} that will host the section contents.
@@ -118,14 +129,17 @@ public class DefaultView extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_default_view);
-		
+
 		// Service Start Listener
-		startServices();
-		
+		mStartServices.execute();
+
 		mEventContentResolver = getContentResolver();
 
 		values = new Values();
 		calChanging = Calendar.getInstance(Locale.getDefault());
+
+		// Notification setup
+		mAlarmSetup.execute();
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the app.
@@ -138,10 +152,10 @@ public class DefaultView extends FragmentActivity {
 		pageIndicator = 
 				(TitlePageIndicator) findViewById(R.id.pageIndicator);
 		pageIndicator.setViewPager(dayViewPager,values.getCURRENT_PAGE());
-		
+
 		// set today's view
 		updateDate(0);
-		
+
 		pageIndicator.setOnPageChangeListener(new OnPageChangeListener(){
 
 			@Override
@@ -169,47 +183,141 @@ public class DefaultView extends FragmentActivity {
 
 		});
 	}
-	
-	private void startServices() {
-		servicesInit();
-		SharedPreferences settingsPreference = PreferenceManager.getDefaultSharedPreferences(this);
-		 if(settingsPreference.getBoolean("facebook_login", false)) {
-		     // Facebook service kickoff
-			 Log.d(TAG, "Facebook Logged in Kickoff the service...");
-			 String access_token = mPreference.getString("access_token", null);
-			 Long expires = mPreference.getLong("access_expires", 0);
 
-			 if(access_token != null){
-				 //mAsyncRunnner.request("me", new IDRequestListener());
-				 Log.d(TAG, "You are already logged in :)");
-				 mFacebook.setAccessToken(access_token);
-				 Intent intent = new Intent(this, FacebookService.class);
-				 startService(intent);
-			 }
-			 if(expires != 0)
-				 mFacebook.setAccessExpires(expires);
-		 }
-		 
-		 if(settingsPreference.getBoolean("google_login", false)) {
-		      // Google service kickoff
-		 }
-		 
-		 if(settingsPreference.getBoolean("eventbrite_login", false)) {
-		      // Eventbrite service kickoff
-		 }
-		 
-		 // UW service kickoff
+	private class AsyncAlarmRunner extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Void... arg0) {
+			// Calculate current date
+			calChanging.add(Calendar.DAY_OF_MONTH, 0);
+
+			currentDay = calChanging.get(Calendar.DATE);
+			currentMonth = calChanging.get(Calendar.MONTH);
+			currentYear = calChanging.get(Calendar.YEAR);
+
+			String[] dateString = { Integer.toString(CurrentDateTimeConverter.timeDateFormatter(currentDay, currentMonth, Integer.toString(currentYear))) };
+
+			Log.d(TAG, dateString[0] );
+
+			Cursor notifCursor = 
+					mEventContentResolver.query(
+							DBEventsContentProvider.CONTENT_URI, null, 
+							"START_DATE =? AND REMINDER_TIME IS NOT NULL", dateString, null);
+
+			Calendar cal = Calendar.getInstance();
+			int notifIterator = 0;
+
+			if (notifCursor.getCount() > 0) {
+				while (notifCursor.moveToNext()) {
+					Log.d(TAG, "EventCount : " + Integer.toString(notifCursor.getCount()));
+
+					int _id = notifCursor.getInt(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_ID));
+					String title = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_TITLE));
+					String start_time = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_TIME));
+					String end_time = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_END_TIME));
+					String start_date = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_DATE));
+					String location = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_LOCATION));
+					String group = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_TABLE));
+					int reminder = notifCursor.getInt(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_REMINDER_TIME));
+
+					Intent notificationIntent = new Intent(DefaultView.this,
+							EventNotificationReceiver.class);
+					notificationIntent.putExtra("title", title);
+					notificationIntent.putExtra("start_time", start_time);
+					notificationIntent.putExtra("end_time", end_time);
+					notificationIntent.putExtra("date", start_date);
+					notificationIntent.putExtra("reminder", reminder);
+					notificationIntent.putExtra("group", group);
+					notificationIntent.putExtra("id", _id);
+
+					// As the same intent cancels the previously set alarm having
+					// same intent
+					// changing the intent for every alarm event so that every alarm
+					// gets
+					// scheduled properly.
+					notificationIntent.setData(Uri.parse("timer:" + _id));
+
+					// notification broadcast call
+					PendingIntent sender = PendingIntent.getBroadcast(
+							DefaultView.this, 0, notificationIntent,
+							Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+					// getting notification time (Calculation)
+					Date notificationTime = new Date();
+					notificationTime.setHours(Integer.parseInt(start_time.substring(1,3)));
+					notificationTime.setMinutes(Integer.parseInt(start_time.substring(3,5)));
+//					cal.setTimeInMillis((( * 60) +  ((notificationTime.getMinutes() - reminder) * 60)) * 60 * 1000);
+
+					cal.set(Integer.parseInt(start_date.substring(5, 9)), Integer.parseInt(start_date.substring(3, 5)), 
+							Integer.parseInt(start_date.substring(1,3)), notificationTime.getHours(), 
+							(notificationTime.getMinutes() - reminder));
+					Log.d(TAG, "Time set: " + cal.getTime());
+
+					// only broadcast event to come (event which have passed are ignored)
+					if(cal.getTimeInMillis() - calChanging.getTimeInMillis() > 0) {
+						Log.d(TAG, "Difference in time: " + (cal.getTimeInMillis() - calChanging.getTimeInMillis()));
+						AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+						am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
+						
+						// number of notification
+						notifIterator++;
+					}
+				}
+			}
+			return null;
+		}
 	}
 
-	private void servicesInit() {
-		/*
-		 *  Facebook service init
-		 */
-		mPreference = getSharedPreferences("facebook-session", Context.MODE_PRIVATE);
+	private class AsyncServiceRunner extends AsyncTask<Void, Void, Void> {
 
-		// Setup Facebook Session
-		mFacebook = new Facebook(getString(R.string.app_id));
-		mAsyncRunnner = new AsyncFacebookRunner(mFacebook);
+		/* (non-Javadoc)
+		 * @see android.os.AsyncTask#onPreExecute()
+		 */
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			/*
+			 *  Facebook service init
+			 */
+			mPreference = getSharedPreferences("facebook-session", Context.MODE_PRIVATE);
+
+			// Setup Facebook Session
+			mFacebook = new Facebook(getString(R.string.app_id));
+			mAsyncRunnner = new AsyncFacebookRunner(mFacebook);
+		}
+		
+		@Override
+		protected Void doInBackground(Void... params) {
+			SharedPreferences settingsPreference = PreferenceManager.getDefaultSharedPreferences(DefaultView.this);
+			if(settingsPreference.getBoolean("facebook_login", false)) {
+				// Facebook service kickoff
+				Log.d(TAG, "Facebook Logged in Kickoff the service...");
+				String access_token = mPreference.getString("access_token", null);
+				Long expires = mPreference.getLong("access_expires", 0);
+
+				if(access_token != null){
+					//mAsyncRunnner.request("me", new IDRequestListener());
+					Log.d(TAG, "You are already logged in :)");
+					mFacebook.setAccessToken(access_token);
+					Intent intent = new Intent(DefaultView.this, FacebookService.class);
+					startService(intent);
+				}
+				if(expires != 0)
+					mFacebook.setAccessExpires(expires);
+			}
+
+			if(settingsPreference.getBoolean("google_login", false)) {
+				// Google service kickoff
+			}
+
+			if(settingsPreference.getBoolean("eventbrite_login", false)) {
+				// Eventbrite service kickoff
+			}
+
+			// UW service kickoff
+			return null;
+		}
+		
 	}
 
 	@Override
