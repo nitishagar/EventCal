@@ -1,5 +1,14 @@
 package cs.softwarearchitecture.eventcal;
 
+import java.util.Calendar;
+import java.util.Date;
+
+import com.squareup.timessquare.CalendarPickerView;
+import com.squareup.timessquare.CalendarPickerView.FluentInitializer;
+import com.squareup.timessquare.CalendarPickerView.SelectionMode;
+
+import cs.softwarearchitecture.eventcal.modify.AddEvent;
+
 import android.os.Bundle;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -14,12 +23,27 @@ import android.widget.SpinnerAdapter;
 
 public class MonthActivity extends DefaultView {
 
+	private static final String TAG = "MonthActivity";
+	private CalendarPickerView calendar;
+
 	public static int MONTH_VIEW = 1;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_month);
+		
+		final Calendar nextYear = Calendar.getInstance();
+		nextYear.add(Calendar.YEAR, 1);
+		
+		final Calendar lastYear = Calendar.getInstance();
+		lastYear.add(Calendar.YEAR, -1);
+		
+		calendar = (CalendarPickerView) findViewById(R.id.monthview);
+		calendar.init(lastYear.getTime(), nextYear.getTime())
+			.inMode(SelectionMode.SINGLE)
+			.withSelectedDate(new Date());
+		
 	}
 
 	@Override
@@ -30,7 +54,7 @@ public class MonthActivity extends DefaultView {
 		getActionBar().setSelectedNavigationItem(MONTH_VIEW);
 		return true;
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -77,5 +101,28 @@ public class MonthActivity extends DefaultView {
 		actionBar.setListNavigationCallbacks(mSpinnerAdapter, mOnNavigationListener);
 		
 	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item){
+		
+		switch(item.getItemId()){
+		case R.id.action_goto:
+			showDialog(R.id.action_goto);
+			break;
+		case R.id.action_settings:
+			Intent settingIntent = new Intent(this, SettingsActivity.class);
+			startActivity(settingIntent);
+			break;
+		case R.id.menu_add:
+			Intent addEventIntent = new Intent(this, AddEvent.class);
+			addEventIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(addEventIntent);
+			break;
+		case R.id.today:
+			calendar.selectDate(new Date());
+			break;
+		}
 
+		return true;
+	}
 }
