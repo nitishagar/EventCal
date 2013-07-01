@@ -43,7 +43,7 @@ public class AgendaCursorAdapter extends CursorAdapter {
 		
 		if (image_resource_type.equals("PERSONAL")) {
 			// TODO create a personal image
-			event_image.setImageResource(R.drawable.ic_action_google_event);
+			event_image.setImageResource(R.drawable.ic_action_personal);
 		}
 		
 		if (image_resource_type.equals("FACEBOOK")) {
