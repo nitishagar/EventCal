@@ -23,7 +23,6 @@ import android.widget.SpinnerAdapter;
 
 public class MonthActivity extends DefaultView {
 
-	private static final String TAG = "MonthActivity";
 	private CalendarPickerView calendar;
 
 	public static int MONTH_VIEW = 1;
