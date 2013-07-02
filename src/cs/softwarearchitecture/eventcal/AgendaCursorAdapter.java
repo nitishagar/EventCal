@@ -9,7 +9,6 @@ import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
 
@@ -62,6 +61,9 @@ public class AgendaCursorAdapter extends CursorAdapter {
 	 */
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
+		
+		if (mCellStates.length < cursor.getCount())
+			mCellStates = cursor == null ? null : new int[cursor.getCount()];
 		
 		TextView seperator_date = (TextView)view.findViewById(R.id.separator);
 		TextView event_title = (TextView)view.findViewById(R.id.event_title);

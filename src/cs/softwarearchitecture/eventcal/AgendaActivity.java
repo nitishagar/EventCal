@@ -55,14 +55,6 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 			mListView = (ListView) findViewById(R.id.event_list);
 			
 			mAdapter = new AgendaCursorAdapter(this, null);
-//					new SimpleCursorAdapter(
-//							this,                // Current context
-//							R.layout.agenda_item,  // Layout for a single row
-//							null,                // No Cursor yet
-//							mFromColumns,        // Cursor columns to use
-//							mToFields,           // Layout fields to use
-//							0                    // No flags
-//							);
 			
 			// Sets the adapter for the view
 			mListView.setAdapter(mAdapter);
@@ -186,7 +178,23 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 			}
 		}
 		
-		mListView.setSelection(desiredPosition);
+		Log.d(DefaultView.TAG, "Desired position: " + Integer.toString(desiredPosition));
+		
+		final int dPosition = desiredPosition;
+		
+		mListView.post(new Runnable() 
+	    {
+	        @Override
+	        public void run() 
+	        {
+	            mListView.setSelection(dPosition);
+	            View v = mListView.getChildAt(dPosition);
+	            if (v != null) 
+	            {
+	                v.requestFocus();
+	            }
+	        }
+	    });
 	}
 
 	@Override

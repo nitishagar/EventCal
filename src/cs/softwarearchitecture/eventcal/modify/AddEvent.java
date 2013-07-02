@@ -23,11 +23,11 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import cs.softwarearchitecture.eventcal.CurrentDateTimeConverter;
 import cs.softwarearchitecture.eventcal.DefaultView;
 import cs.softwarearchitecture.eventcal.R;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
 import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
-import cs.softwarearchitecture.eventcal.CurrentDateTimeConverter;
 
 public class AddEvent extends Activity implements OnClickListener {
 	
@@ -134,9 +134,9 @@ public class AddEvent extends Activity implements OnClickListener {
 //							+ Integer.toString(year);
 					
 					if (iD == R.id.toDate)
-						mToDate = CurrentDateTimeConverter.timeDateFormatter(dayOfMonth, monthOfYear, Integer.toString(year));
+						mToDate = CurrentDateTimeConverter.timeDateFormatter(dayOfMonth, monthOfYear + 1, Integer.toString(year));
 					else
-						mFromDate = CurrentDateTimeConverter.timeDateFormatter(dayOfMonth, monthOfYear, Integer.toString(year));
+						mFromDate = CurrentDateTimeConverter.timeDateFormatter(dayOfMonth, monthOfYear + 1, Integer.toString(year));
 
 					txtDate.setText(mDateFormatter.format(mDateTime.getTime()));
 				}
