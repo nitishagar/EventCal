@@ -14,13 +14,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
 import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
+import cs.softwarearchitecture.eventcal.modify.EditEvent;
 
-public class AgendaActivity extends DefaultView implements LoaderManager.LoaderCallbacks<Cursor>  {
+public class AgendaActivity extends DefaultView implements LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener  {
 
 	public static int AGENDA_VIEW = 2;
 	
@@ -62,7 +67,7 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 			// Sets the adapter for the view
 			mListView.setAdapter(mAdapter);
 			
-//			mListView.setOnItemClickListener(eventDetail);
+			mListView.setOnItemClickListener(this);
 		}
 		catch(Exception e){
 			Log.e(DefaultView.TAG, "Exception caught: " + e.getMessage());
@@ -191,6 +196,52 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 	     * This prevents memory leaks.
 	     */
 	    mAdapter.changeCursor(null);
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		TextView selectedEvent = (TextView) view.findViewById(R.id.event_title);
+		String selectedEventTitle = selectedEvent.getText().toString();
+		
+		// Get all the details about that event
+		String selection = DBSQLiteHelper.COLUMN_TITLE + " LIKE ? ";
+		String[] selectionArgs = new String[] { selectedEventTitle };
+		
+		Cursor cursor = 
+				getContentResolver().query(
+						DBEventsContentProvider.CONTENT_URI, null, 
+						selection, selectionArgs, DBSQLiteHelper.COLUMN_START_DATE + " ASC");
+		
+		// Intent for showing event details
+		Intent editEventIntent = 
+				new Intent(this, EditEvent.class);
+
+		if (cursor.moveToFirst()) {
+			Log.d(DefaultView.TAG, "loading selected events ");
+			while(!cursor.isAfterLast()){
+				int _id = cursor.getInt(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_ID));
+				String title = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TITLE));
+				String start_time = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_TIME));
+				String end_time = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_END_TIME));
+				String date = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_DATE));
+				String group = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TABLE));
+				int reminder = cursor.getInt(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_REMINDER_TIME));
+
+				editEventIntent.putExtra("title", title);
+				editEventIntent.putExtra("start_time", start_time);
+				editEventIntent.putExtra("end_time", end_time);
+				editEventIntent.putExtra("date", date);
+				editEventIntent.putExtra("reminder", reminder);
+				editEventIntent.putExtra("group", group);
+				editEventIntent.putExtra("id", _id);
+
+				cursor.moveToNext();
+			}
+			
+			// Start detail activity aka edit event
+			editEventIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(editEventIntent);
+		}
 	}
 
 }

@@ -30,8 +30,7 @@ public class Search extends ListActivity {
 		handleIntent(intent); 
 	} 
 
-	public void onListItemClick(ListView l, 
-			View v, int position, long id) { 
+	public void onListItemClick(ListView l, View v, int position, long id) { 
 		String selectedTitle = mSearchResults.get(position);
 		
 		// Get all the details about that event
