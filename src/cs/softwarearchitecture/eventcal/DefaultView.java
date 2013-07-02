@@ -111,7 +111,7 @@ public class DefaultView extends FragmentActivity {
 	public static AsyncFacebookRunner mAsyncRunnner;
 
 	// Notification broadcast
-	AsyncAlarmRunner mAlarmSetup = new AsyncAlarmRunner();
+	public AsyncAlarmRunner mAlarmSetup = new AsyncAlarmRunner();
 	
 	// Service start
 	AsyncServiceRunner mStartServices = new AsyncServiceRunner();
@@ -184,7 +184,7 @@ public class DefaultView extends FragmentActivity {
 		});
 	}
 
-	private class AsyncAlarmRunner extends AsyncTask<Void, Void, Void> {
+	public class AsyncAlarmRunner extends AsyncTask<Void, Void, Void> {
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
@@ -286,6 +286,7 @@ public class DefaultView extends FragmentActivity {
 			mAsyncRunnner = new AsyncFacebookRunner(mFacebook);
 		}
 		
+		@SuppressWarnings("deprecation")
 		@Override
 		protected Void doInBackground(Void... params) {
 			SharedPreferences settingsPreference = PreferenceManager.getDefaultSharedPreferences(DefaultView.this);
@@ -320,10 +321,12 @@ public class DefaultView extends FragmentActivity {
 		
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onResume(){
 		super.onResume();
 		mCalendarPagerAdapter.notifyDataSetChanged();
+		mFacebook.extendAccessTokenIfNeeded(this, null);
 	}
 
 	@SuppressWarnings("deprecation")
