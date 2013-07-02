@@ -106,10 +106,16 @@ public class DBEventsContentProvider extends ContentProvider {
 	    
 	    switch (uriType) {
 	    case DB_EVENTS:
-	      id = sqlDB.insert(DBSQLiteHelper.TABLE_NAME, null, values);
-	      break;
+	    	// reverse and add date as additional column value
+	    	String startDate = Integer.toString(values.getAsInteger(DBSQLiteHelper.COLUMN_START_DATE));
+	    	String reverseDate = startDate.substring(5, startDate.length()) 
+	    							+ startDate.substring(3, 5) + startDate.substring(0, 3); 
+	    	values.put(DBSQLiteHelper.COLUMN_REV_START_DATE, reverseDate);
+	    	
+	    	id = sqlDB.insert(DBSQLiteHelper.TABLE_NAME, null, values);
+	    	break;
 	    default:
-	      throw new IllegalArgumentException("Unknown URI: " + uri);
+	    	throw new IllegalArgumentException("Unknown URI: " + uri);
 	    }
 	    getContext().getContentResolver().notifyChange(uri, null);
 	    return Uri.parse(BASE_PATH + "/" + id);
@@ -164,7 +170,8 @@ public class DBEventsContentProvider extends ContentProvider {
 	private void checkColumns(String[] projection) {
 		String[] available = { DBSQLiteHelper.COLUMN_ID, DBSQLiteHelper.COLUMN_TABLE, DBSQLiteHelper.COLUMN_TITLE,
 				DBSQLiteHelper.COLUMN_START_TIME, DBSQLiteHelper.COLUMN_START_DATE, DBSQLiteHelper.COLUMN_END_TIME,
-				DBSQLiteHelper.COLUMN_END_DATE, DBSQLiteHelper.COLUMN_LOCATION, DBSQLiteHelper.COLUMN_REMINDER_TIME };
+				DBSQLiteHelper.COLUMN_END_DATE, DBSQLiteHelper.COLUMN_LOCATION, DBSQLiteHelper.COLUMN_REMINDER_TIME,
+				DBSQLiteHelper.COLUMN_REV_START_DATE};
 		if (projection != null) {
 			HashSet<String> requestedColumns = new HashSet<String>(Arrays.asList(projection));
 			HashSet<String> availableColumns = new HashSet<String>(Arrays.asList(available));
@@ -187,6 +194,12 @@ public class DBEventsContentProvider extends ContentProvider {
 	    
 	    int rowsUpdated = 0;
 	    
+	    // additional Column value
+	    String startDate = Integer.toString(values.getAsInteger(DBSQLiteHelper.COLUMN_START_DATE));
+	    String reverseDate = startDate.substring(5, startDate.length()) 
+				+ startDate.substring(3, 5) + startDate.substring(0, 3); 
+    	values.put(DBSQLiteHelper.COLUMN_REV_START_DATE, reverseDate);
+    	
 	    switch (uriType) {
 	    case DB_EVENTS:
 	      rowsUpdated = sqlDB.update(DBSQLiteHelper.TABLE_NAME, 
@@ -233,8 +246,8 @@ public class DBEventsContentProvider extends ContentProvider {
 								+ " ( " + DBSQLiteHelper.COLUMN_TABLE + ", " + DBSQLiteHelper.COLUMN_TITLE
 								+ ", " + DBSQLiteHelper.COLUMN_START_TIME + ", " + DBSQLiteHelper.COLUMN_START_DATE
 								+ ", " + DBSQLiteHelper.COLUMN_END_TIME + ", " + DBSQLiteHelper.COLUMN_END_DATE
-								+ ", " + DBSQLiteHelper.COLUMN_LOCATION + " )"
-								+" values " + "(?,?,?,?,?,?,?)");
+								+ ", " + DBSQLiteHelper.COLUMN_LOCATION + ", " + DBSQLiteHelper.COLUMN_REV_START_DATE + " )"
+								+" values " + "(?,?,?,?,?,?,?,?)");
 
 				for (ContentValues value : values){
 					//bind the 1-indexed ?'s to the values specified
@@ -245,7 +258,16 @@ public class DBEventsContentProvider extends ContentProvider {
 					insert.bindLong(5, value.getAsInteger(DBSQLiteHelper.COLUMN_END_TIME));
 					insert.bindLong(6, value.getAsInteger(DBSQLiteHelper.COLUMN_END_DATE));
 					insert.bindString(7, value.getAsString(DBSQLiteHelper.COLUMN_LOCATION));
-					insert.execute();
+					
+					// additional column reverse date
+					String startDate = Integer.toString(value.getAsInteger(DBSQLiteHelper.COLUMN_START_DATE));
+					String reverseDate = startDate.substring(5, startDate.length()) 
+							+ startDate.substring(3, 5) + startDate.substring(0, 3); 
+			    	value.put(DBSQLiteHelper.COLUMN_REV_START_DATE, reverseDate);
+			    	
+			    	insert.bindString(8, value.getAsString(DBSQLiteHelper.COLUMN_REV_START_DATE));
+					
+			    	insert.execute();
 				}
 				db.setTransactionSuccessful();
 				numInserted = values.length;

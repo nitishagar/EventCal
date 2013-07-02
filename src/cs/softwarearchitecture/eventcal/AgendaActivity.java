@@ -1,5 +1,8 @@
 package cs.softwarearchitecture.eventcal;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
 import android.app.LoaderManager;
@@ -11,10 +14,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
-import android.widget.AdapterViewFlipper;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.SpinnerAdapter;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
 import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
@@ -26,10 +27,12 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 	// Identifies a particular Loader being used in this component
     private static final int URL_LOADER = 0;
 
-    String[] mFromColumns = { DBSQLiteHelper.COLUMN_TITLE };
-    int[] mToFields = { R.id.event_title };
+//    String[] mFromColumns = { DBSQLiteHelper.COLUMN_TITLE };
+//    int[] mToFields = { R.id.event_title };
 
 	AgendaCursorAdapter mAdapter;
+	
+	ListView mListView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +47,7 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 
 	    // Gets a handle to a List View
 		try {
-			ListView mListView = (ListView) findViewById(R.id.event_list);
+			mListView = (ListView) findViewById(R.id.event_list);
 			
 			mAdapter = new AgendaCursorAdapter(this, null);
 //					new SimpleCursorAdapter(
@@ -131,7 +134,8 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 	    switch (loaderID) {
 	        case URL_LOADER:
 	            // Returns a new CursorLoader
-	        	String[] projection = { DBSQLiteHelper.COLUMN_ID, DBSQLiteHelper.COLUMN_TITLE, DBSQLiteHelper.COLUMN_TABLE };
+	        	String[] projection = { DBSQLiteHelper.COLUMN_ID, DBSQLiteHelper.COLUMN_TITLE, 
+	        			DBSQLiteHelper.COLUMN_TABLE, DBSQLiteHelper.COLUMN_START_DATE };
 	        	
 	            return new CursorLoader(
 	                        this,						    		     // Parent activity context
@@ -139,8 +143,8 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 	                        projection,                                // Projection to return
 	                        null,            						  // No selection clause
 	                        null,            									  // No selection arguments
-	                        DBSQLiteHelper.COLUMN_START_DATE + " ASC, " 
-	                        + DBSQLiteHelper.COLUMN_START_TIME + " ASC"			  // Default sort order
+	                        DBSQLiteHelper.COLUMN_REV_START_DATE + " ASC, " 
+	                        + DBSQLiteHelper.COLUMN_START_TIME + " ASC"			  // Sort order
 	        );
 	        default:
 	            // An invalid id was passed in
@@ -156,6 +160,28 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 	     * ListView fronting this adapter to re-display
 	     */
 	    mAdapter.changeCursor(cursor);
+	    
+	    // Set ListView position
+		SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy");
+		Date date = new Date();
+		String currentDate = "1" + dateFormat.format(date);
+		
+	    int desiredPosition = 0;
+
+		Log.d(DefaultView.TAG, "Current DATE: " + 
+				currentDate);
+		if (cursor.getCount() > 0) {
+			while (cursor.moveToNext()) {
+				Log.d(DefaultView.TAG, "Date current found: " + 
+						cursor.getInt(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_DATE)));
+				if(Integer.parseInt(currentDate) >= cursor.getInt(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_DATE))){
+					Log.d(DefaultView.TAG, "Position updated to: " + Integer.toString(desiredPosition));
+					desiredPosition = cursor.getPosition();
+				}
+			}
+		}
+		
+		mListView.setSelection(desiredPosition);
 	}
 
 	@Override
