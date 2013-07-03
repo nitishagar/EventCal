@@ -85,6 +85,7 @@
             	<data android:scheme="timer:" />
         	</intent-filter>
         </receiver>
+        
     </application>
 
 </manifest>
