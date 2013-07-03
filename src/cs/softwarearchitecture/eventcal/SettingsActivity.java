@@ -181,7 +181,9 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 		@Override
 		public void onFacebookError(FacebookError e) {
 			Log.e(DefaultView.TAG, "Facebook Login error! Message: " + e.getMessage());
-
+			if(DefaultView.mFacebook.isSessionValid()){
+				Log.d(DefaultView.TAG, "Session Already Valid");
+			}
 		}
 
 		/* (non-Javadoc)
@@ -286,6 +288,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 		DefaultView.mFacebook.authorizeCallback(requestCode, resultCode, data);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String value) {
 		if (sharedPreferences.getBoolean("facebook_login", false)) {
