@@ -622,13 +622,12 @@ public class DefaultView extends FragmentActivity {
 			Cursor cursor = 
 					mEventContentResolver.query(
 							DBEventsContentProvider.CONTENT_URI, null, 
-							"START_DATE =?", dateString, null);
+							"START_DATE =? AND END_TIME NOT NULL", dateString, null);
 			
 			//Log.v(TAG, "loading events");
 			if (cursor.moveToFirst()) {
-					Log.v(TAG, "loading events");
 				while(!cursor.isAfterLast()){
-					//Log.v(TAG, "loading events");
+					Log.d(TAG, "loading events" + cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TABLE)));
 					int _id = cursor.getInt(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_ID));
                     String title = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TITLE));
 					String start_time = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_TIME));
