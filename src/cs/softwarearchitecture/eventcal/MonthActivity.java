@@ -1,14 +1,11 @@
 package cs.softwarearchitecture.eventcal;
 
-import android.os.Bundle;
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.ActionBar.OnNavigationListener;
 import android.content.Intent;
-import android.util.Log;
+import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
 

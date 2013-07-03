@@ -19,19 +19,21 @@ public class Search extends ListActivity {
 	
 	private ArrayList<String> mSearchResults = new ArrayList<String>();
 	
+	@Override
 	public void onCreate(Bundle savedInstanceState) { 
 		super.onCreate(savedInstanceState); 
 		handleIntent(getIntent()); 
 		setTitle("Results");
 	} 
 
+	@Override
 	public void onNewIntent(Intent intent) { 
 		setIntent(intent); 
 		handleIntent(intent); 
 	} 
 
-	public void onListItemClick(ListView l, 
-			View v, int position, long id) { 
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) { 
 		String selectedTitle = mSearchResults.get(position);
 		
 		// Get all the details about that event

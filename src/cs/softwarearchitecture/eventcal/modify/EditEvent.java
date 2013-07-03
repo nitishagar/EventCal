@@ -27,11 +27,11 @@ import android.widget.RadioGroup;
 import android.widget.ShareActionProvider;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import cs.softwarearchitecture.eventcal.CurrentDateTimeConverter;
 import cs.softwarearchitecture.eventcal.DefaultView;
 import cs.softwarearchitecture.eventcal.R;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
 import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
-import cs.softwarearchitecture.eventcal.CurrentDateTimeConverter;
 
 @SuppressLint("SimpleDateFormat")
 public class EditEvent extends Activity implements OnClickListener {
@@ -149,7 +149,7 @@ public class EditEvent extends Activity implements OnClickListener {
 
 		// Setting the date
 		year = Integer.parseInt(date.substring(5,date.length()));
-		monthOfYear = Integer.parseInt(date.substring(3,5));
+		monthOfYear = Integer.parseInt(date.substring(3,5)) - 1;
 		dayOfMonth = Integer.parseInt(date.substring(1,3));
 		mDateTime.set(year, monthOfYear, dayOfMonth);
 		mFromDate = CurrentDateTimeConverter.timeDateFormatter(dayOfMonth, monthOfYear, Integer.toString(year));
@@ -255,9 +255,9 @@ public class EditEvent extends Activity implements OnClickListener {
 					//							+ Integer.toString(year);
 
 					if (iD == R.id.toDate)
-						mToDate = CurrentDateTimeConverter.timeDateFormatter(dayOfMonth, monthOfYear, Integer.toString(year));
+						mToDate = CurrentDateTimeConverter.timeDateFormatter(dayOfMonth, monthOfYear + 1, Integer.toString(year));
 					else
-						mFromDate = CurrentDateTimeConverter.timeDateFormatter(dayOfMonth, monthOfYear, Integer.toString(year));
+						mFromDate = CurrentDateTimeConverter.timeDateFormatter(dayOfMonth, monthOfYear + 1, Integer.toString(year));
 
 					txtDate.setText(mDateFormatter.format(mDateTime.getTime()));
 				}
