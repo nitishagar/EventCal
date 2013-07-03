@@ -1,10 +1,15 @@
 package cs.softwarearchitecture.eventcal;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import android.app.ActionBar;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.ActionBar.OnNavigationListener;
+import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -14,15 +19,18 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
 import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
+import cs.softwarearchitecture.eventcal.modify.AddEvent;
 import cs.softwarearchitecture.eventcal.modify.EditEvent;
 
 public class AgendaActivity extends DefaultView implements LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener  {
@@ -132,14 +140,16 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 	        case URL_LOADER:
 	            // Returns a new CursorLoader
 	        	String[] projection = { DBSQLiteHelper.COLUMN_ID, DBSQLiteHelper.COLUMN_TITLE, 
-	        			DBSQLiteHelper.COLUMN_TABLE, DBSQLiteHelper.COLUMN_START_DATE };
+	        								DBSQLiteHelper.COLUMN_TABLE, DBSQLiteHelper.COLUMN_START_DATE, 
+	        								DBSQLiteHelper.COLUMN_REV_START_DATE };
+	        	String[] argValue = { "0" };
 	        	
 	            return new CursorLoader(
 	                        this,						    		     // Parent activity context
 	                        DBEventsContentProvider.CONTENT_URI,        // Table to query
 	                        projection,                                // Projection to return
-	                        null,            						  // No selection clause
-	                        null,            									  // No selection arguments
+	                        DBSQLiteHelper.COLUMN_START_TIME + "!=?",            // Selection clause
+	                        argValue,            							    // Selection arguments
 	                        DBSQLiteHelper.COLUMN_REV_START_DATE + " ASC, " 
 	                        + DBSQLiteHelper.COLUMN_START_TIME + " ASC"			  // Sort order
 	        );
@@ -156,24 +166,35 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 	     * Moves the query results into the adapter, causing the
 	     * ListView fronting this adapter to re-display
 	     */
-	    mAdapter.changeCursor(cursor);
-	    
-	    // Set ListView position
+		mAdapter.changeCursor(cursor);
+
+		// Set ListView position
 		SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy");
 		Date date = new Date();
 		String currentDate = "1" + dateFormat.format(date);
 		
+		setDate(cursor, currentDate);
+	}
+
+	/**
+	 * @param cursor
+	 */
+	protected void setDate(Cursor cursor, String date) {
+		
 	    int desiredPosition = 0;
 
 		Log.d(DefaultView.TAG, "Current DATE: " + 
-				currentDate);
+				date);
+		cursor.moveToFirst();
 		if (cursor.getCount() > 0) {
 			while (cursor.moveToNext()) {
 				Log.d(DefaultView.TAG, "Date current found: " + 
 						cursor.getInt(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_DATE)));
-				if(Integer.parseInt(currentDate) >= cursor.getInt(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_DATE))){
+				String reverseDate = date.substring(5, date.length()) 
+						+ date.substring(3, 5) + date.substring(0, 3);
+				if(Integer.parseInt(reverseDate) >= cursor.getInt(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_REV_START_DATE))){
 					Log.d(DefaultView.TAG, "Position updated to: " + Integer.toString(desiredPosition));
-					desiredPosition = cursor.getPosition();
+					desiredPosition += 1;
 				}
 			}
 		}
@@ -208,6 +229,7 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		
 		TextView selectedEvent = (TextView) view.findViewById(R.id.event_title);
 		String selectedEventTitle = selectedEvent.getText().toString();
 		
@@ -250,6 +272,71 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 			editEventIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(editEventIntent);
 		}
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		switch(item.getItemId()){
+		case R.id.action_goto:
+			showDialog(R.id.action_goto);
+			break;
+		case R.id.action_settings:
+			Intent settingIntent = new Intent(this, SettingsActivity.class);
+			startActivity(settingIntent);
+			break;
+		case R.id.menu_add:
+			Intent addEventIntent = new Intent(this, AddEvent.class);
+			addEventIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(addEventIntent);
+			break;
+		case R.id.today:
+			SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy");
+			Date date = new Date();
+			String currentDate = "1" + dateFormat.format(date);
+			
+			try {
+				setDate(mAdapter.getCursor(), currentDate);
+			}
+			catch (Exception e){
+				Log.e(DefaultView.TAG, "Cursor empty: " + e.getMessage());
+			}
+			break;
+		}
+		return true;
+	}
+	
+	@Override
+	protected Dialog onCreateDialog(final int iD) {
+		
+		switch (iD)
+		{
+		case R.id.action_goto:
+			final Calendar calChanging = Calendar.getInstance(Locale.getDefault());
+			return new DatePickerDialog(this, new OnDateSetListener()
+			{
+				@Override
+				public void onDateSet(DatePicker view, int year,
+						int monthOfYear, int dayOfMonth)
+				{
+					calChanging.set(year, monthOfYear + 1, dayOfMonth);
+					String reqDate = Integer.toString(
+							CurrentDateTimeConverter.timeDateFormatter(calChanging.get(Calendar.DAY_OF_MONTH), 
+									calChanging.get(Calendar.MONTH), Integer.toString(calChanging.get(Calendar.YEAR))));
+					
+					try {
+						setDate(mAdapter.getCursor(), reqDate);
+					}
+					catch (Exception e){
+						Log.e(DefaultView.TAG, "Cursor empty: " + e.getMessage());
+					}
+				}
+			}, calChanging.get(Calendar.YEAR),
+			calChanging.get(Calendar.MONTH),
+			calChanging.get(Calendar.DAY_OF_MONTH));	
+		}
+		return null;
 	}
 
 }

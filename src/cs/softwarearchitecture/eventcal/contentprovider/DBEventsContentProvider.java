@@ -261,10 +261,15 @@ public class DBEventsContentProvider extends ContentProvider {
 					
 					// additional column reverse date
 					String startDate = Integer.toString(value.getAsInteger(DBSQLiteHelper.COLUMN_START_DATE));
-					String reverseDate = startDate.substring(5, startDate.length()) 
-							+ startDate.substring(3, 5) + startDate.substring(0, 3); 
-			    	value.put(DBSQLiteHelper.COLUMN_REV_START_DATE, reverseDate);
-			    	
+					if (startDate.length() > 5) {
+						String reverseDate = startDate.substring(5, startDate.length()) 
+												+ startDate.substring(3, 5) + startDate.substring(0, 3); 
+			    		value.put(DBSQLiteHelper.COLUMN_REV_START_DATE, reverseDate);
+					}
+					else {
+						value.put(DBSQLiteHelper.COLUMN_REV_START_DATE, 
+								new StringBuilder(startDate).reverse().toString());
+					}
 			    	insert.bindString(8, value.getAsString(DBSQLiteHelper.COLUMN_REV_START_DATE));
 					
 			    	insert.execute();

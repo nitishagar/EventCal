@@ -93,7 +93,7 @@ public class DefaultView extends FragmentActivity {
 
 
 	//Calendar calendar; 
-	public static Calendar calChanging;
+	public static Calendar mCalendarChanging;
 
 	private static Values values;
 
@@ -135,7 +135,7 @@ public class DefaultView extends FragmentActivity {
 		mEventContentResolver = getContentResolver();
 
 		values = new Values();
-		calChanging = Calendar.getInstance(Locale.getDefault());
+		mCalendarChanging = Calendar.getInstance(Locale.getDefault());
 
 		// Notification setup
 		mAlarmSetup.execute();
@@ -188,11 +188,11 @@ public class DefaultView extends FragmentActivity {
 		@Override
 		protected Void doInBackground(Void... arg0) {
 			// Calculate current date
-			calChanging.add(Calendar.DAY_OF_MONTH, 0);
+			mCalendarChanging.add(Calendar.DAY_OF_MONTH, 0);
 
-			currentDay = calChanging.get(Calendar.DATE);
-			currentMonth = calChanging.get(Calendar.MONTH);
-			currentYear = calChanging.get(Calendar.YEAR);
+			currentDay = mCalendarChanging.get(Calendar.DATE);
+			currentMonth = mCalendarChanging.get(Calendar.MONTH);
+			currentYear = mCalendarChanging.get(Calendar.YEAR);
 
 			String[] dateString = { Integer.toString(CurrentDateTimeConverter.timeDateFormatter(currentDay, currentMonth, Integer.toString(currentYear))) };
 
@@ -253,8 +253,8 @@ public class DefaultView extends FragmentActivity {
 					Log.d(TAG, "Time set: " + cal.getTime());
 
 					// only broadcast event to come (event which have passed are ignored)
-					if(cal.getTimeInMillis() - calChanging.getTimeInMillis() > 0) {
-						Log.d(TAG, "Difference in time: " + (cal.getTimeInMillis() - calChanging.getTimeInMillis()));
+					if(cal.getTimeInMillis() - mCalendarChanging.getTimeInMillis() > 0) {
+						Log.d(TAG, "Difference in time: " + (cal.getTimeInMillis() - mCalendarChanging.getTimeInMillis()));
 						AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
 						am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
 						
@@ -338,11 +338,11 @@ public class DefaultView extends FragmentActivity {
 	protected void updateDate(int changedDays) {
 
 		// Calculate current date
-		calChanging.add(Calendar.DAY_OF_MONTH, changedDays);
+		mCalendarChanging.add(Calendar.DAY_OF_MONTH, changedDays);
 
-		currentDay = calChanging.get(Calendar.DATE);
-		currentMonth = calChanging.get(Calendar.MONTH);
-		currentYear = calChanging.get(Calendar.YEAR);
+		currentDay = mCalendarChanging.get(Calendar.DATE);
+		currentMonth = mCalendarChanging.get(Calendar.MONTH);
+		currentYear = mCalendarChanging.get(Calendar.YEAR);
 
 		mCurrentDate = currentDay + " " 
 				+ values.getMONTH_VALUES()[currentMonth] +
@@ -351,29 +351,29 @@ public class DefaultView extends FragmentActivity {
 		Log.v(TAG, "current Date is " + mCurrentDate);
 
 		// Calculate previous date
-		calChanging.add(Calendar.DAY_OF_MONTH, -1);
+		mCalendarChanging.add(Calendar.DAY_OF_MONTH, -1);
 
-		previousDay = calChanging.get(Calendar.DATE);
-		previousMonth = calChanging.get(Calendar.MONTH);
-		previousYear = calChanging.get(Calendar.YEAR);
+		previousDay = mCalendarChanging.get(Calendar.DATE);
+		previousMonth = mCalendarChanging.get(Calendar.MONTH);
+		previousYear = mCalendarChanging.get(Calendar.YEAR);
 
 		mPreviousDate = previousDay + " " 
 				+ values.getMONTH_VALUES()[previousMonth] +
 				", " + previousYear;
 
 		// Calculate next date
-		calChanging.add(Calendar.DAY_OF_MONTH, +2);
+		mCalendarChanging.add(Calendar.DAY_OF_MONTH, +2);
 
-		nextDay = calChanging.get(Calendar.DATE);
-		nextMonth = calChanging.get(Calendar.MONTH);
-		nextYear = calChanging.get(Calendar.YEAR);
+		nextDay = mCalendarChanging.get(Calendar.DATE);
+		nextMonth = mCalendarChanging.get(Calendar.MONTH);
+		nextYear = mCalendarChanging.get(Calendar.YEAR);
 
 		mNextDate = nextDay + " " 
 				+ values.getMONTH_VALUES()[nextMonth] + 
 				", " + nextYear;
 
 		// Reset calChanging to current day
-		calChanging.add(Calendar.DAY_OF_MONTH, -1);
+		mCalendarChanging.add(Calendar.DAY_OF_MONTH, -1);
 		mCalendarPagerAdapter.notifyDataSetChanged();
 		pageIndicator.setCurrentItem(values.getCURRENT_PAGE(), false);
 	}
@@ -463,7 +463,7 @@ public class DefaultView extends FragmentActivity {
 			startActivity(addEventIntent);
 			break;
 		case R.id.today:
-			calChanging = Calendar.getInstance(Locale.getDefault());
+			mCalendarChanging = Calendar.getInstance(Locale.getDefault());
 			updateDate(0);
 			break;
 		}
@@ -482,12 +482,12 @@ public class DefaultView extends FragmentActivity {
 				public void onDateSet(DatePicker view, int year,
 						int monthOfYear, int dayOfMonth)
 				{
-					calChanging.set(year, monthOfYear, dayOfMonth);
+					mCalendarChanging.set(year, monthOfYear, dayOfMonth);
 					updateDate(0);
 				}
-			}, calChanging.get(Calendar.YEAR),
-			calChanging.get(Calendar.MONTH),
-			calChanging.get(Calendar.DAY_OF_MONTH));	
+			}, mCalendarChanging.get(Calendar.YEAR),
+			mCalendarChanging.get(Calendar.MONTH),
+			mCalendarChanging.get(Calendar.DAY_OF_MONTH));	
 		}
 		return null;
 	}
@@ -611,9 +611,9 @@ public class DefaultView extends FragmentActivity {
 			//Log.d(TAG, "Day of the Month: " + calChanging);
 			
 			ArrayList<Event> eventList = new ArrayList<Event>(); 
-			int currentDay = calChanging.get(Calendar.DATE);
-			int currentMonth = calChanging.get(Calendar.MONTH);
-			int currentYear = calChanging.get(Calendar.YEAR);
+			int currentDay = mCalendarChanging.get(Calendar.DATE);
+			int currentMonth = mCalendarChanging.get(Calendar.MONTH);
+			int currentYear = mCalendarChanging.get(Calendar.YEAR);
 
 			String[] dateString = { Integer.toString(CurrentDateTimeConverter.timeDateFormatter(currentDay, currentMonth, Integer.toString(currentYear))) };
 					
