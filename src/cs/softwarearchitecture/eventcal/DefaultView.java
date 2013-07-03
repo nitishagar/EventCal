@@ -583,7 +583,6 @@ public class DefaultView extends FragmentActivity {
 			return rootView;
 		}
 
-
 		private void loadDataForDay(){
 
 			// To load events data from database:
