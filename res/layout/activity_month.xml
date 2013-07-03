@@ -17,10 +17,14 @@
         android:scrollbarStyle="outsideOverlay" />
 
     <LinearLayout
+        android:id="@+id/monthListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.24" >
-
+        android:layout_weight="0.24"
+        android:orientation="vertical" >
     </LinearLayout>
-
+   	
+   	 
+    
+    
 </LinearLayout>
