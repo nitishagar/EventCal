@@ -92,7 +92,7 @@ public class DefaultView extends FragmentActivity {
 	private String mNextDate;
 
 
-	//Calendar calendar; 
+	//Calendar
 	public static Calendar mCalendarChanging;
 
 	private static Values values;
@@ -606,7 +606,7 @@ public class DefaultView extends FragmentActivity {
 			}
 		}
 
-		private ArrayList<Event> getCurrentDayEvents() {
+		public static ArrayList<Event> getCurrentDayEvents() {
 			//Log.d(TAG, "Day of the Month: " + calChanging);
 			
 			ArrayList<Event> eventList = new ArrayList<Event>(); 

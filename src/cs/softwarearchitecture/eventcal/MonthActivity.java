@@ -6,16 +6,23 @@ import java.util.Date;
 
 import com.squareup.timessquare.CalendarPickerView;
 import com.squareup.timessquare.CalendarPickerView.FluentInitializer;
+import com.squareup.timessquare.CalendarPickerView.OnDateSelectedListener;
 import com.squareup.timessquare.CalendarPickerView.SelectionMode;
 
+import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
+import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
+import cs.softwarearchitecture.eventcal.model.Event;
 import cs.softwarearchitecture.eventcal.modify.AddEvent;
 
 import android.os.Bundle;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,15 +40,21 @@ public class MonthActivity extends DefaultView {
 	private CalendarPickerView calendar;
 
 	public static int MONTH_VIEW = 1;
-	ListView eventList;
+	ListView eventListView;
 	EventListAdapter eventListAdapter;
-
-	private String[] eventNames;
+	
+	// Content Resolver
+	private static ContentResolver mEventContentResolver;
+	
+	
+	final String TAG = "MonthActivity";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_month);
+
+		mEventContentResolver = getContentResolver();
 
 		final Calendar nextYear = Calendar.getInstance();
 		nextYear.add(Calendar.YEAR, 1);
@@ -49,18 +62,30 @@ public class MonthActivity extends DefaultView {
 		final Calendar lastYear = Calendar.getInstance();
 		lastYear.add(Calendar.YEAR, -1);
 
+
 		calendar = (CalendarPickerView) findViewById(R.id.monthview);
 		calendar.init(lastYear.getTime(), nextYear.getTime())
 		.inMode(SelectionMode.SINGLE)
 		.withSelectedDate(new Date());
+		
+		calendar.setOnDateSelectedListener(new onDateSelect());
+		
 
 		eventListAdapter = new EventListAdapter(this);
-		
-		// change later
-		eventNames = null; 
+		eventListView = (ListView) findViewById(R.id.eventList);
+		eventListView.setAdapter(eventListAdapter);
+	}
 
-		eventList = (ListView) findViewById(R.id.eventList);
-		eventList.setAdapter(eventListAdapter);
+	public class onDateSelect implements OnDateSelectedListener{
+
+		@Override
+		public void onDateSelected(Date date) {
+			// TODO Auto-generated method stub
+			mCalendarChanging.setTime(date);
+			eventListAdapter.notifyDataSetChanged();
+			
+			Log.v(TAG, "in onDateSelected Listener");
+		}
 	}
 
 	@Override
@@ -155,10 +180,13 @@ public class MonthActivity extends DefaultView {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			
+			ArrayList<Event> eventList = DayViewFragment.getCurrentDayEvents();
+			Log.v(TAG, "in getView of list adapter");
+
 			View rowView = inflater.inflate(R.layout.rowview, parent, false);
 			TextView textView = (TextView) rowView.findViewById(R.id.eventname);
-			textView.setText(eventNames[position]);
-
+			textView.setText(eventList.get(position).getTitle());
 			return rowView;
 		}
 	} 
