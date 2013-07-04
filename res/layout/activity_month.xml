@@ -7,8 +7,8 @@
     <com.squareup.timessquare.CalendarPickerView
         android:id="@+id/monthview"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.34"
+        android:layout_height="274dp"
+        android:layout_weight="0.04"
         android:background="#FFFFFF"
         android:clipToPadding="false"
         android:paddingBottom="100dp"
@@ -22,9 +22,13 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.24"
         android:orientation="vertical" >
+
+        <ListView
+            android:id="@+id/eventList"
+            android:layout_width="fill_parent"
+            android:layout_height="201dp" >
+        </ListView>
+
     </LinearLayout>
-   	
-   	 
-    
-    
+
 </LinearLayout>

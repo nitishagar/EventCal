@@ -1,5 +1,6 @@
 package cs.softwarearchitecture.eventcal;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -12,13 +13,20 @@ import cs.softwarearchitecture.eventcal.modify.AddEvent;
 import android.os.Bundle;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 
 public class MonthActivity extends DefaultView {
 
@@ -26,23 +34,34 @@ public class MonthActivity extends DefaultView {
 	private CalendarPickerView calendar;
 
 	public static int MONTH_VIEW = 1;
-	
+	ListView eventList;
+	EventListAdapter eventListAdapter;
+
+	private String[] eventNames;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_month);
-		
+
 		final Calendar nextYear = Calendar.getInstance();
 		nextYear.add(Calendar.YEAR, 1);
-		
+
 		final Calendar lastYear = Calendar.getInstance();
 		lastYear.add(Calendar.YEAR, -1);
-		
+
 		calendar = (CalendarPickerView) findViewById(R.id.monthview);
 		calendar.init(lastYear.getTime(), nextYear.getTime())
-			.inMode(SelectionMode.SINGLE)
-			.withSelectedDate(new Date());
+		.inMode(SelectionMode.SINGLE)
+		.withSelectedDate(new Date());
+
+		eventListAdapter = new EventListAdapter(this);
 		
+		// change later
+		eventNames = null; 
+
+		eventList = (ListView) findViewById(R.id.eventList);
+		eventList.setAdapter(eventListAdapter);
 	}
 
 	@Override
@@ -62,7 +81,7 @@ public class MonthActivity extends DefaultView {
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowTitleEnabled(false);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		
+
 		SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(new ContextThemeWrapper(this, android.R.style.Theme_Holo), 
 				R.array.view_list, android.R.layout.simple_spinner_dropdown_item);
 
@@ -70,7 +89,7 @@ public class MonthActivity extends DefaultView {
 			// Get the same strings provided for the drop-down's ArrayAdapter
 			String[] viewList = getResources().getStringArray(R.array.view_list);
 			Intent targetIntent = new Intent();
-			
+
 			@Override
 			public boolean onNavigationItemSelected(int position, long itemId) {
 				switch(position){
@@ -98,12 +117,12 @@ public class MonthActivity extends DefaultView {
 		};
 
 		actionBar.setListNavigationCallbacks(mSpinnerAdapter, mOnNavigationListener);
-		
+
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item){
-		
+
 		switch(item.getItemId()){
 		case R.id.action_goto:
 			showDialog(R.id.action_goto);
@@ -124,4 +143,24 @@ public class MonthActivity extends DefaultView {
 
 		return true;
 	}
+
+	public class EventListAdapter extends ArrayAdapter<String> {
+		private final Context context;
+
+		public EventListAdapter(Context context){
+			super(context, R.layout.rowview);
+			this.context = context;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			LayoutInflater inflater = (LayoutInflater) context
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			View rowView = inflater.inflate(R.layout.rowview, parent, false);
+			TextView textView = (TextView) rowView.findViewById(R.id.eventname);
+			textView.setText(eventNames[position]);
+
+			return rowView;
+		}
+	} 
 }
