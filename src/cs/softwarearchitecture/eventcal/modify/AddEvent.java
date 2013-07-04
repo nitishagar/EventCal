@@ -23,11 +23,11 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import cs.softwarearchitecture.eventcal.CurrentDateTimeConverter;
 import cs.softwarearchitecture.eventcal.DefaultView;
 import cs.softwarearchitecture.eventcal.R;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
 import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
-import cs.softwarearchitecture.eventcal.CurrentDateTimeConverter;
 
 public class AddEvent extends Activity implements OnClickListener {
 	
@@ -67,28 +67,28 @@ public class AddEvent extends Activity implements OnClickListener {
 		Button txtDate = (Button) findViewById(R.id.fromDate);
 		Button txtTime = (Button) findViewById(R.id.fromTime);
 
-		txtDate.setText(mDateFormatter.format(DefaultView.calChanging.getTime()));   
-		txtTime.setText(mTimeFormatter.format(DefaultView.calChanging.getTime()));
+		txtDate.setText(mDateFormatter.format(DefaultView.mCalendarChanging.getTime()));   
+		txtTime.setText(mTimeFormatter.format(DefaultView.mCalendarChanging.getTime()));
 		
 		txtDate = (Button) findViewById(R.id.toDate);
 		txtTime = (Button) findViewById(R.id.toTime);
 		
 		// Setting initial value of variables
 		mFromDate = CurrentDateTimeConverter.timeDateFormatter(
-				DefaultView.calChanging.get(Calendar.DATE),
-				DefaultView.calChanging.get(Calendar.MONTH), 
-				Integer.toString(DefaultView.calChanging.get(Calendar.YEAR)));
+				DefaultView.mCalendarChanging.get(Calendar.DATE),
+				DefaultView.mCalendarChanging.get(Calendar.MONTH), 
+				Integer.toString(DefaultView.mCalendarChanging.get(Calendar.YEAR)));
 		
 		mFromTime = CurrentDateTimeConverter.timeDateFormatter(
-				DefaultView.calChanging.get(Calendar.HOUR_OF_DAY), 
-				DefaultView.calChanging.get(Calendar.MINUTE), 
+				DefaultView.mCalendarChanging.get(Calendar.HOUR_OF_DAY), 
+				DefaultView.mCalendarChanging.get(Calendar.MINUTE), 
 				"00");
 		
 		Log.v(TAG, "From Date: " + Integer.toString(mFromDate));
 		Log.v(TAG, "From Time: " + Integer.toString(mFromTime));
 		
-		txtDate.setText(mDateFormatter.format(DefaultView.calChanging.getTime()));   
-		txtTime.setText(mTimeFormatter.format(DefaultView.calChanging.getTime()));
+		txtDate.setText(mDateFormatter.format(DefaultView.mCalendarChanging.getTime()));   
+		txtTime.setText(mTimeFormatter.format(DefaultView.mCalendarChanging.getTime()));
 		
 		((Button) findViewById(R.id.fromDate)).setOnClickListener(this);
 		((Button) findViewById(R.id.fromTime)).setOnClickListener(this);
@@ -134,9 +134,9 @@ public class AddEvent extends Activity implements OnClickListener {
 //							+ Integer.toString(year);
 					
 					if (iD == R.id.toDate)
-						mToDate = CurrentDateTimeConverter.timeDateFormatter(dayOfMonth, monthOfYear, Integer.toString(year));
+						mToDate = CurrentDateTimeConverter.timeDateFormatter(dayOfMonth, monthOfYear + 1, Integer.toString(year));
 					else
-						mFromDate = CurrentDateTimeConverter.timeDateFormatter(dayOfMonth, monthOfYear, Integer.toString(year));
+						mFromDate = CurrentDateTimeConverter.timeDateFormatter(dayOfMonth, monthOfYear + 1, Integer.toString(year));
 
 					txtDate.setText(mDateFormatter.format(mDateTime.getTime()));
 				}

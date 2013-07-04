@@ -29,7 +29,7 @@ import com.facebook.android.FacebookError;
 public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener{
 
 	// Permissions array
-	public static final String[] PERMS = { "user_events" };
+	public static final String[] PERMS = { "user_events", "offline_access" };
 
 	// Handler member variable
 	private Handler mHandler = new Handler();
@@ -178,10 +178,10 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 		/* (non-Javadoc)
 		 * @see com.facebook.android.Facebook.DialogListener#onFacebookError(com.facebook.android.FacebookError)
 		 */
+		@SuppressWarnings("deprecation")
 		@Override
 		public void onFacebookError(FacebookError e) {
 			Log.e(DefaultView.TAG, "Facebook Login error! Message: " + e.getMessage());
-
 		}
 
 		/* (non-Javadoc)
@@ -286,13 +286,15 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 		DefaultView.mFacebook.authorizeCallback(requestCode, resultCode, data);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String value) {
 		if (sharedPreferences.getBoolean("facebook_login", false)) {
-				Log.d(DefaultView.TAG, "Facebook Login requested!");
-				LoginDialogListener loginComplete = new LoginDialogListener();
-				DefaultView.mFacebook.authorize(this, PERMS, loginComplete);
-				Log.d(DefaultView.TAG, "Facebook authorize called!");
+			int FORCE_DIALOG_AUTH =-1;
+			Log.d(DefaultView.TAG, "Facebook Login requested!");
+			LoginDialogListener loginComplete = new LoginDialogListener();
+			DefaultView.mFacebook.authorize(this, PERMS, loginComplete);
+			Log.d(DefaultView.TAG, "Facebook authorize called!");
 		}
 		else {
 			if(DefaultView.mFacebook.isSessionValid()){
