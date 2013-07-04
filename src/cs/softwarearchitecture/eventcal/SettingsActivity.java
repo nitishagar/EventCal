@@ -4,6 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+import android.accounts.AccountManager;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -25,6 +28,8 @@ import com.facebook.android.AsyncFacebookRunner.RequestListener;
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
+
+import cs.softwarearchitecture.eventcal.googleservice.GoogleService;
 
 public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener{
 
@@ -283,6 +288,23 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+	    switch (requestCode) {
+	      case DefaultView.REQUEST_ACCOUNT_PICKER:
+	        if (resultCode == Activity.RESULT_OK && data != null && data.getExtras() != null) {
+	          String accountName = data.getExtras().getString(AccountManager.KEY_ACCOUNT_NAME);
+	          if (accountName != null) {
+	            credential.setSelectedAccountName(accountName);
+	            SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
+	            SharedPreferences.Editor editor = settings.edit();
+	            editor.putString(PREF_ACCOUNT_NAME, accountName);
+	            editor.commit();
+	            // start google calendar service
+	            
+	            
+	          }
+	        }
+	        break;
+	    }
 		DefaultView.mFacebook.authorizeCallback(requestCode, resultCode, data);
 	}
 
@@ -311,6 +333,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 		} 
 		
 		if (sharedPreferences.getBoolean("google_login", false)) {
+			// no need
 			Log.d(DefaultView.TAG, "Google Login clicked!");
 		}
 		

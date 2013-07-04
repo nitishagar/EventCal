@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 
@@ -56,6 +57,8 @@ import com.facebook.android.Facebook;
 
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
 import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
+import cs.softwarearchitecture.eventcal.googleservice.GoogleAccountCredential;
+import cs.softwarearchitecture.eventcal.googleservice.GoogleService;
 import cs.softwarearchitecture.eventcal.model.Event;
 import cs.softwarearchitecture.eventcal.modify.AddEvent;
 import cs.softwarearchitecture.eventcal.modify.EditEvent;
@@ -92,7 +95,11 @@ public class DefaultView extends FragmentActivity {
 	private String mPreviousDate;
 	private String mNextDate;
 
-
+    //For google calendar service
+	GoogleAccountCredential credential;
+	
+	static final int REQUEST_ACCOUNT_PICKER = 2;
+	
 	//Calendar calendar; 
 	public static Calendar calChanging;
 
@@ -308,6 +315,17 @@ public class DefaultView extends FragmentActivity {
 
 			if(settingsPreference.getBoolean("google_login", false)) {
 				// Google service kickoff
+				Log.d(TAG,"Google calendar log in kickoff the service");
+				credential = GoogleAccountCredential.usingOAuth2(this, Collections.singleton(CalendarScopes.CALENDAR));
+				
+			    if (checkGooglePlayServicesAvailable()){
+			    	if (credential.getSelectedAccountName() != null) {
+			    		startService(new Intent(this,GoogleService.class));
+			    	}
+			    	else{
+			    		chooseAccount();
+			    	}
+			    }
 			}
 
 			if(settingsPreference.getBoolean("eventbrite_login", false)) {
@@ -319,6 +337,18 @@ public class DefaultView extends FragmentActivity {
 		}
 		
 	}
+	
+	  private boolean checkGooglePlayServicesAvailable() {
+		    final int connectionStatusCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+		    if (GooglePlayServicesUtil.isUserRecoverableError(connectionStatusCode)) {
+		      return false;
+		    }
+		    return true;
+	  }
+		  
+	  private void chooseAccount() {
+		    startActivityForResult(credential.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER);
+	  }
 
 	@Override
 	protected void onResume(){
