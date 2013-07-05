@@ -47,7 +47,7 @@ public class FacebookService extends IntentService {
 		super("FacebookService");
 	}
 
-	/*
+	/**
 	 * Retrieve Session token and launch event data request thread
 	 * @pre mFacebook != null (session token)
 	 * @post mAsyncRunner(request)
@@ -72,7 +72,7 @@ public class FacebookService extends IntentService {
 	 * @author nitishagarwal
 	 *
 	 */
-	/*
+	/**
 	 * Callback function to interact with Content Provider
 	 * @post bulkInsert(ContentValues)
 	 */

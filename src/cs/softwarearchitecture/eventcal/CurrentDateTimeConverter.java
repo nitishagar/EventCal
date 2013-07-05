@@ -21,8 +21,10 @@ public class CurrentDateTimeConverter {
 	private Date mDateTime;
 	private int mDate;
 	private int mTime;
+	
 	/**
-	 * 
+	 * Constructor takes in input date time in String (UTC time as input)
+	 * @param inputDateTime
 	 */
 	@SuppressLint("SimpleDateFormat")
 	@SuppressWarnings("deprecation")
@@ -67,6 +69,20 @@ public class CurrentDateTimeConverter {
 		}
 	}
 	
+	/**
+	 * Takes in the current date in day, month, year format or time in hr, min, sec format
+	 * and returns the formatted time for database
+	 * @param firstVal
+	 * @param secondVal
+	 * @param thirdVal
+	 * @return formatted time or date 
+	 */
+	/**
+	 * @param firstVal
+	 * @param secondVal
+	 * @param thirdVal
+	 * @return
+	 */
 	public static int timeDateFormatter(int firstVal, int secondVal, String thirdVal) {
 		int formattedValue = 0;
 		String firstString = "";
@@ -88,10 +104,18 @@ public class CurrentDateTimeConverter {
 		return formattedValue;
 	}
 	
+	/**
+	 * Getter for Date
+	 * @return Date
+	 */
 	public int getDate(){
 		return mDate;
 	}
 	
+	/**
+	 * Getter for Time
+	 * @return Time
+	 */
 	public int getTime(){
 		return mTime;
 	}

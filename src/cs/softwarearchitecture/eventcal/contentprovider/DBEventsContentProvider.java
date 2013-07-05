@@ -230,7 +230,12 @@ public class DBEventsContentProvider extends ContentProvider {
 	    return rowsUpdated;
 	}
 	
-	// Bulk insert does not have reminder built in
+	/**
+	 *  Bulk insert 
+	 */
+	/* (non-Javadoc)
+	 * @see android.content.ContentProvider#bulkInsert(android.net.Uri, android.content.ContentValues[])
+	 */
 	@Override
 	public int bulkInsert(Uri uri, ContentValues[] values) {
 		final SQLiteDatabase db = eventDatabase.getWritableDatabase();

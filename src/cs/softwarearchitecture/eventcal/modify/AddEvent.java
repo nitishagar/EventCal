@@ -103,6 +103,9 @@ public class AddEvent extends Activity implements OnClickListener {
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()){
@@ -113,6 +116,9 @@ public class AddEvent extends Activity implements OnClickListener {
 		return true;
 	}
 	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreateDialog(int)
+	 */
 	@Override
 	protected Dialog onCreateDialog(final int iD)
 	{
@@ -173,6 +179,10 @@ public class AddEvent extends Activity implements OnClickListener {
 		return null;
 	}
 
+	/**
+	 * Radio Button selection for time
+	 * @param view
+	 */
 	public void onRadioButtonClicked(View view) {
 	    // Is the button now checked?
 	    boolean checked = ((RadioButton) view).isChecked();
@@ -194,6 +204,9 @@ public class AddEvent extends Activity implements OnClickListener {
 	    }
 	}
 	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -201,6 +214,9 @@ public class AddEvent extends Activity implements OnClickListener {
 		return true;
 	}
 
+	/* (non-Javadoc)
+	 * @see android.view.View.OnClickListener#onClick(android.view.View)
+	 */
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onClick(View viewArg) {
@@ -249,7 +265,11 @@ public class AddEvent extends Activity implements OnClickListener {
 		}
 	}
 
-	private boolean mandatoryValuesSpecified() {
+	/**
+	 * Check the Event validity
+	 * @return event validity
+	 */
+	protected boolean mandatoryValuesSpecified() {
 		if (mTitle == ""){
 			Toast toast = Toast.makeText(this, "Title for event must be provided!", Toast.LENGTH_LONG);
 			toast.show();

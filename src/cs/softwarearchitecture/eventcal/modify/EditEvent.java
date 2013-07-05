@@ -182,6 +182,9 @@ public class EditEvent extends Activity implements OnClickListener {
 		txtTime.setText(mTimeFormatter.format(mDateTime.getTime()));
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -224,6 +227,9 @@ public class EditEvent extends Activity implements OnClickListener {
 		return shareIntent;
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()){
@@ -240,6 +246,11 @@ public class EditEvent extends Activity implements OnClickListener {
 	}
 
 
+	/**
+	 * Formatted Time String for Share 
+	 * @param time
+	 * @return time (String)
+	 */
 	private String timeFormatted(String time) {
 		Log.d(DefaultView.TAG, "Unformatted String: " + time);
 
@@ -252,6 +263,9 @@ public class EditEvent extends Activity implements OnClickListener {
 		return time;
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreateDialog(int)
+	 */
 	@Override
 	protected Dialog onCreateDialog(final int iD)
 	{
@@ -312,6 +326,9 @@ public class EditEvent extends Activity implements OnClickListener {
 		return null;
 	}
 
+	/**
+	 * @param view
+	 */
 	public void onRadioButtonClicked(View view) {
 		// Is the button now checked?
 		boolean checked = ((RadioButton) view).isChecked();
@@ -385,6 +402,10 @@ public class EditEvent extends Activity implements OnClickListener {
 		}
 	}
 
+	/**
+	 * Check the Event validity
+	 * @return event validity
+	 */
 	private boolean mandatoryValuesSpecified() {
 		if (mTitle == ""){
 			Toast toast = Toast.makeText(this, "Title for event must be provided!", Toast.LENGTH_LONG);

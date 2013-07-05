@@ -59,6 +59,9 @@ public class MonthActivity extends DefaultView {
 		eventList.setAdapter(eventListAdapter);
 	}
 
+	/* (non-Javadoc)
+	 * @see cs.softwarearchitecture.eventcal.DefaultView#onCreateOptionsMenu(android.view.Menu)
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -85,6 +88,9 @@ public class MonthActivity extends DefaultView {
 			String[] viewList = getResources().getStringArray(R.array.view_list);
 			Intent targetIntent = new Intent();
 
+			/* (non-Javadoc)
+			 * @see android.app.ActionBar.OnNavigationListener#onNavigationItemSelected(int, long)
+			 */
 			@Override
 			public boolean onNavigationItemSelected(int position, long itemId) {
 				switch(position){
