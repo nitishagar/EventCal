@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
 
@@ -86,32 +87,32 @@ public class AgendaCursorAdapter extends CursorAdapter {
 					cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_TIME)))));
 		}
 		
-//		ImageView event_image = (ImageView)view.findViewById(R.id.list_image);
-//		
-//		
-//		String image_resource_type = cursor.getString(
-//				cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TABLE));
-//		
-//		if (image_resource_type.equals("PERSONAL")) {
-//			event_image.setImageResource(R.drawable.ic_action_personal);
-//		}
-//		
-//		if (image_resource_type.equals("FACEBOOK")) {
-//			event_image.setImageResource(R.drawable.ic_action_facebook_event);
-//		}
-//		
-//		if (image_resource_type.equals("EVENTBRITE")) {
-//			event_image.setImageResource(R.drawable.ic_action_eventbrite_event);
-//		}
-//		
-//		if (image_resource_type.equals("UW")) {
-//			event_image.setImageResource(R.drawable.ic_action_uw_event);
-//		}
-//		
-//		if (image_resource_type.equals("GOOGLE")) {
-//			event_image.setImageResource(R.drawable.ic_action_google_event);
-//		}
-//		
+		ImageView event_image = (ImageView)view.findViewById(R.id.event_image);
+
+
+		String image_resource_type = cursor.getString(
+				cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TABLE));
+
+		if (image_resource_type.equals("PERSONAL")) {
+			event_image.setImageResource(R.drawable.ic_action_personal);
+		}
+
+		if (image_resource_type.equals("FACEBOOK")) {
+			event_image.setImageResource(R.drawable.ic_action_facebook_event);
+		}
+
+		if (image_resource_type.equals("EVENTBRITE")) {
+			event_image.setImageResource(R.drawable.ic_action_eventbrite_event);
+		}
+
+		if (image_resource_type.equals("UW")) {
+			event_image.setImageResource(R.drawable.ic_action_uw_event);
+		}
+
+		if (image_resource_type.equals("GOOGLE")) {
+			event_image.setImageResource(R.drawable.ic_action_google_event);
+		}
+
 		/*
          * Separator
          */
