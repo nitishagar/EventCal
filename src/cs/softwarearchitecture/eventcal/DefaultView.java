@@ -191,7 +191,7 @@ public class DefaultView extends FragmentActivity {
 			mCalendarChanging.add(Calendar.DAY_OF_MONTH, 0);
 
 			currentDay = mCalendarChanging.get(Calendar.DATE);
-			currentMonth = mCalendarChanging.get(Calendar.MONTH);
+			currentMonth = mCalendarChanging.get(Calendar.MONTH) + 1;
 			currentYear = mCalendarChanging.get(Calendar.YEAR);
 
 			String[] dateString = { Integer.toString(CurrentDateTimeConverter.timeDateFormatter(currentDay, currentMonth, Integer.toString(currentYear))) };
@@ -606,12 +606,21 @@ public class DefaultView extends FragmentActivity {
 			}
 		}
 
+		/**
+		 * @return Event List
+		 */
+		/**
+		 * @return
+		 */
+		/**
+		 * @return
+		 */
 		private ArrayList<Event> getCurrentDayEvents() {
 			//Log.d(TAG, "Day of the Month: " + calChanging);
 			
 			ArrayList<Event> eventList = new ArrayList<Event>(); 
 			int currentDay = mCalendarChanging.get(Calendar.DATE);
-			int currentMonth = mCalendarChanging.get(Calendar.MONTH);
+			int currentMonth = mCalendarChanging.get(Calendar.MONTH) + 1;
 			int currentYear = mCalendarChanging.get(Calendar.YEAR);
 
 			String[] dateString = { Integer.toString(CurrentDateTimeConverter.timeDateFormatter(currentDay, currentMonth, Integer.toString(currentYear))) };
