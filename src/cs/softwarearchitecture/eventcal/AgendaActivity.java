@@ -150,7 +150,8 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 	            // Returns a new CursorLoader
 	        	String[] projection = { DBSQLiteHelper.COLUMN_ID, DBSQLiteHelper.COLUMN_TITLE, 
 	        								DBSQLiteHelper.COLUMN_TABLE, DBSQLiteHelper.COLUMN_START_DATE, 
-	        								DBSQLiteHelper.COLUMN_REV_START_DATE };
+	        								DBSQLiteHelper.COLUMN_REV_START_DATE, DBSQLiteHelper.COLUMN_START_TIME,
+	        								DBSQLiteHelper.COLUMN_END_TIME };
 	        	String[] argValue = { "0" };
 	        	
 	            return new CursorLoader(

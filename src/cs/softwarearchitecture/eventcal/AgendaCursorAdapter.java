@@ -6,6 +6,7 @@ package cs.softwarearchitecture.eventcal;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,13 +66,28 @@ public class AgendaCursorAdapter extends CursorAdapter {
 		if (mCellStates.length < cursor.getCount())
 			mCellStates = cursor == null ? null : new int[cursor.getCount()];
 		
+		// Setting the TextViews
 		TextView seperator_date = (TextView)view.findViewById(R.id.separator);
 		TextView event_title = (TextView)view.findViewById(R.id.event_title);
+		TextView subtitle_time =  (TextView)view.findViewById(R.id.event_subtitle);
+		
+		event_title.setText(cursor.getString(
+				cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TITLE)));
+		
+		if (!(cursor.isNull(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_END_TIME))) 
+				|| cursor.getInt(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_END_TIME)) != 0) {
+			subtitle_time.setText(timeFormatted(Integer.toString(cursor.getInt(
+					cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_TIME)))) + "-" 
+					+ timeFormatted(Integer.toString(cursor.getInt(
+							cursor.getColumnIndex(DBSQLiteHelper.COLUMN_END_TIME)))));
+		} 
+		else {
+			subtitle_time.setText(timeFormatted(Integer.toString(cursor.getInt(
+					cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_TIME)))));
+		}
 		
 //		ImageView event_image = (ImageView)view.findViewById(R.id.list_image);
 //		
-		event_title.setText(cursor.getString(
-				cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TITLE)));
 //		
 //		String image_resource_type = cursor.getString(
 //				cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TABLE));
@@ -166,4 +182,20 @@ public class AgendaCursorAdapter extends CursorAdapter {
 		return view;
 	}
 
+	/**
+	 * Formatted Time String for Share 
+	 * @param time
+	 * @return time (String)
+	 */
+	private String timeFormatted(String time) {
+		Log.d(DefaultView.TAG, "Unformatted String: " + time);
+
+		try{
+			time = time.substring(1, 3) + ":" + time.substring(3, 5);
+		}
+		catch (NullPointerException e){
+			Log.e(DefaultView.TAG, "Exception caught: (NullPointer) " + e.getMessage());
+		}
+		return time;
+	}
 }
