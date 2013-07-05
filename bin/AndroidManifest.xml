@@ -44,7 +44,8 @@
         <activity
             android:name=".Search"
             android:label="@string/app_name"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTop" 
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
           
@@ -63,19 +64,23 @@
 
         <activity
             android:name="cs.softwarearchitecture.eventcal.modify.AddEvent"
-            android:label="@string/add_event" >
+            android:label="@string/add_event" 
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="cs.softwarearchitecture.eventcal.modify.EditEvent"
-            android:label="@string/edit_event" >
+            android:label="@string/edit_event" 
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="cs.softwarearchitecture.eventcal.AgendaActivity"
-            android:label="@string/title_activity_agenda" >
+            android:label="@string/title_activity_agenda" 
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="cs.softwarearchitecture.eventcal.MonthActivity"
-            android:label="@string/title_activity_month" >
+            android:label="@string/title_activity_month" 
+            android:screenOrientation="portrait" >
         </activity>
         
         <service android:name="cs.softwarearchitecture.eventcal.services.FacebookService"></service>
