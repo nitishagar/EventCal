@@ -1518,18 +1518,30 @@ public class Values {
 
 	}
 
+	/**
+	 * @return
+	 */
 	public int getPAGE_NUMBER (){
 		return PAGE_NUMBER;
 	}
 
+	/**
+	 * @return
+	 */
 	public int getCURRENT_PAGE(){
 		return CURRENT_PAGE;
 	}
 
+	/**
+	 * @return
+	 */
 	public String[] getTIME_VALUES(){
 		return TIME_VALUES;
 	}
 
+	/**
+	 * @return
+	 */
 	public String[] getMONTH_VALUES(){
 		return MONTH_VALUES;
 	}

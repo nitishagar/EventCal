@@ -165,10 +165,15 @@ public class EditEvent extends Activity implements OnClickListener {
 			mFromTime = CurrentDateTimeConverter.timeDateFormatter(hourOfDay, minute, "00");
 			break;
 		case R.id.toTime:
-			hourOfDay = Integer.parseInt(end_time.substring(0, 2));
-			minute = Integer.parseInt(end_time.substring(2, 4));
+			if (end_time != null){
+				hourOfDay = Integer.parseInt(end_time.substring(0, 2));
+				minute = Integer.parseInt(end_time.substring(2, 4));
 			
-			mToTime = CurrentDateTimeConverter.timeDateFormatter(hourOfDay, minute, "00");
+				mToTime = CurrentDateTimeConverter.timeDateFormatter(hourOfDay, minute, "00");
+			}
+			else{
+				mToTime = mFromTime;
+			}
 			break;
 		}
 
@@ -177,6 +182,9 @@ public class EditEvent extends Activity implements OnClickListener {
 		txtTime.setText(mTimeFormatter.format(mDateTime.getTime()));
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -199,9 +207,17 @@ public class EditEvent extends Activity implements OnClickListener {
 		Bundle extras = getIntent().getExtras();
 		String title = extras.getString("title");
 		String start_time = timeFormatted(extras.getString("start_time"));
-		String end_time = timeFormatted(extras.getString("end_time"));
+		
+		String shareEventDetails;
+		
+		if(extras.getString("end_time") != null) {
+			String end_time = timeFormatted(extras.getString("end_time"));
 
-		String shareEventDetails = title + " @ " + start_time + " to " + end_time;
+			shareEventDetails = title + " @ " + start_time + " to " + end_time;
+		}
+		else {
+			shareEventDetails = title + " @ " + start_time;
+		}
 
 		Intent shareIntent = new Intent(Intent.ACTION_SEND);
 		shareIntent.setType("text/plain");
@@ -211,6 +227,9 @@ public class EditEvent extends Activity implements OnClickListener {
 		return shareIntent;
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()){
@@ -227,13 +246,26 @@ public class EditEvent extends Activity implements OnClickListener {
 	}
 
 
+	/**
+	 * Formatted Time String for Share 
+	 * @param time
+	 * @return time (String)
+	 */
 	private String timeFormatted(String time) {
 		Log.d(DefaultView.TAG, "Unformatted String: " + time);
 
-		time = time.substring(0, 2) + ":" + time.substring(2, 4);
+		try{
+			time = time.substring(0, 2) + ":" + time.substring(2, 4);
+		}
+		catch (NullPointerException e){
+			Log.e(DefaultView.TAG, "Exception caught: (NullPointer) " + e.getMessage());
+		}
 		return time;
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onCreateDialog(int)
+	 */
 	@Override
 	protected Dialog onCreateDialog(final int iD)
 	{
@@ -294,6 +326,9 @@ public class EditEvent extends Activity implements OnClickListener {
 		return null;
 	}
 
+	/**
+	 * @param view
+	 */
 	public void onRadioButtonClicked(View view) {
 		// Is the button now checked?
 		boolean checked = ((RadioButton) view).isChecked();
@@ -367,6 +402,10 @@ public class EditEvent extends Activity implements OnClickListener {
 		}
 	}
 
+	/**
+	 * Check the Event validity
+	 * @return event validity
+	 */
 	private boolean mandatoryValuesSpecified() {
 		if (mTitle == ""){
 			Toast toast = Toast.makeText(this, "Title for event must be provided!", Toast.LENGTH_LONG);

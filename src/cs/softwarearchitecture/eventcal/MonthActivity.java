@@ -4,17 +4,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.squareup.timessquare.CalendarPickerView;
-import com.squareup.timessquare.CalendarPickerView.FluentInitializer;
-import com.squareup.timessquare.CalendarPickerView.OnDateSelectedListener;
-import com.squareup.timessquare.CalendarPickerView.SelectionMode;
-
-import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
-import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
-import cs.softwarearchitecture.eventcal.model.Event;
-import cs.softwarearchitecture.eventcal.modify.AddEvent;
-
-import android.os.Bundle;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
 import android.app.DatePickerDialog;
@@ -23,7 +12,6 @@ import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
@@ -34,10 +22,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+
+import com.squareup.timessquare.CalendarPickerView;
+import com.squareup.timessquare.CalendarPickerView.OnDateSelectedListener;
+import com.squareup.timessquare.CalendarPickerView.SelectionMode;
+
+import cs.softwarearchitecture.eventcal.model.Event;
+import cs.softwarearchitecture.eventcal.modify.AddEvent;
 
 public class MonthActivity extends DefaultView {
 
@@ -94,6 +88,9 @@ public class MonthActivity extends DefaultView {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see cs.softwarearchitecture.eventcal.DefaultView#onCreateOptionsMenu(android.view.Menu)
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -120,6 +117,9 @@ public class MonthActivity extends DefaultView {
 			String[] viewList = getResources().getStringArray(R.array.view_list);
 			Intent targetIntent = new Intent();
 
+			/* (non-Javadoc)
+			 * @see android.app.ActionBar.OnNavigationListener#onNavigationItemSelected(int, long)
+			 */
 			@Override
 			public boolean onNavigationItemSelected(int position, long itemId) {
 				switch(position){

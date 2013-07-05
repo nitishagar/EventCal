@@ -6,10 +6,10 @@ import java.util.Date;
 import java.util.Locale;
 
 import android.app.ActionBar;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.ActionBar.OnNavigationListener;
+import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
+import android.app.Dialog;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -43,6 +43,9 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 //    String[] mFromColumns = { DBSQLiteHelper.COLUMN_TITLE };
 //    int[] mToFields = { R.id.event_title };
 
+	/**
+	 * 
+	 */
 	AgendaCursorAdapter mAdapter;
 	
 	ListView mListView;
@@ -75,6 +78,9 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 
 	}
 
+	/* (non-Javadoc)
+	 * @see cs.softwarearchitecture.eventcal.DefaultView#onCreateOptionsMenu(android.view.Menu)
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -85,7 +91,7 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 	}
 	
 	/**
-	 * 
+	 * Main View selection
 	 */
 	private void actionBarViewSelector() {
 		// View Selection aka Spinner
@@ -131,6 +137,9 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.LoaderManager.LoaderCallbacks#onCreateLoader(int, android.os.Bundle)
+	 */
 	@Override
 	public Loader<Cursor> onCreateLoader(int loaderID, Bundle bundle) {
 		/*
@@ -141,7 +150,8 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 	            // Returns a new CursorLoader
 	        	String[] projection = { DBSQLiteHelper.COLUMN_ID, DBSQLiteHelper.COLUMN_TITLE, 
 	        								DBSQLiteHelper.COLUMN_TABLE, DBSQLiteHelper.COLUMN_START_DATE, 
-	        								DBSQLiteHelper.COLUMN_REV_START_DATE };
+	        								DBSQLiteHelper.COLUMN_REV_START_DATE, DBSQLiteHelper.COLUMN_START_TIME,
+	        								DBSQLiteHelper.COLUMN_END_TIME };
 	        	String[] argValue = { "0" };
 	        	
 	            return new CursorLoader(
@@ -227,6 +237,9 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 	    mAdapter.changeCursor(null);
 	}
 
+	/* (non-Javadoc)
+	 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
+	 */
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		
@@ -274,6 +287,9 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see cs.softwarearchitecture.eventcal.DefaultView#onOptionsItemSelected(android.view.MenuItem)
+	 */
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {

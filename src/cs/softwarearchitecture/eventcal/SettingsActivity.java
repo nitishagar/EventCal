@@ -314,6 +314,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 		
 		if (sharedPreferences.getBoolean("google_login", false)) {
 			Log.d(DefaultView.TAG, "Google Login clicked!");
+			
 		}
 		
 	}

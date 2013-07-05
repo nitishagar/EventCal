@@ -32,6 +32,9 @@ public class Search extends ListActivity {
 		handleIntent(intent); 
 	} 
 
+	/* (non-Javadoc)
+	 * @see android.app.ListActivity#onListItemClick(android.widget.ListView, android.view.View, int, long)
+	 */
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) { 
 		String selectedTitle = mSearchResults.get(position);
@@ -89,6 +92,10 @@ public class Search extends ListActivity {
 		} 
 	}    
 
+	/**
+	 * Search string taken as input
+	 * @param queryStr
+	 */
 	private void doSearch(String queryStr) {
 		mSearchResults = new ArrayList<String>();
 		String[] columnsReturn = new String[] { DBSQLiteHelper.COLUMN_TITLE };
@@ -111,6 +118,9 @@ public class Search extends ListActivity {
 		}
 	}
 
+	/**
+	 * Result display on a Simple List
+	 */
 	private void displayResultList() {
 		setListAdapter(new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, mSearchResults));
