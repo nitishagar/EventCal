@@ -606,6 +606,9 @@ public class DefaultView extends FragmentActivity {
 			}
 		}
 
+		/**
+		 * @return Event List
+		 */
 		private ArrayList<Event> getCurrentDayEvents() {
 			//Log.d(TAG, "Day of the Month: " + calChanging);
 			

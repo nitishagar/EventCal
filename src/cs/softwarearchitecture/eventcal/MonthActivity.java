@@ -1,16 +1,8 @@
 package cs.softwarearchitecture.eventcal;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.squareup.timessquare.CalendarPickerView;
-import com.squareup.timessquare.CalendarPickerView.FluentInitializer;
-import com.squareup.timessquare.CalendarPickerView.SelectionMode;
-
-import cs.softwarearchitecture.eventcal.modify.AddEvent;
-
-import android.os.Bundle;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
 import android.content.Context;
@@ -23,10 +15,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+
+import com.squareup.timessquare.CalendarPickerView;
+import com.squareup.timessquare.CalendarPickerView.SelectionMode;
+
+import cs.softwarearchitecture.eventcal.modify.AddEvent;
 
 public class MonthActivity extends DefaultView {
 

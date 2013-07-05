@@ -6,10 +6,10 @@ import java.util.Date;
 import java.util.Locale;
 
 import android.app.ActionBar;
-import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.ActionBar.OnNavigationListener;
+import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
+import android.app.Dialog;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Intent;
