@@ -197,7 +197,7 @@ public class MonthActivity extends DefaultView {
 		return null;
 	}
 
-
+	// List fragment adapter
 	public class EventListAdapter extends ArrayAdapter<Event> {
 		private final Context context;
 		private ArrayList<Event> events;
