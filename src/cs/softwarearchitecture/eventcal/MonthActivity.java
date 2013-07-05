@@ -17,6 +17,9 @@ import cs.softwarearchitecture.eventcal.modify.AddEvent;
 import android.os.Bundle;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
+import android.app.DatePickerDialog;
+import android.app.DatePickerDialog.OnDateSetListener;
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +33,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SpinnerAdapter;
@@ -42,12 +46,13 @@ public class MonthActivity extends DefaultView {
 	public static int MONTH_VIEW = 1;
 	ListView eventListView;
 	EventListAdapter eventListAdapter;
-	
+
 	// Content Resolver
 	private static ContentResolver mEventContentResolver;
-	
-	
-	final String TAG = "MonthActivity";
+	//private Event[] eventList;
+
+
+	final static String TAG = "MonthActivity";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,9 +72,10 @@ public class MonthActivity extends DefaultView {
 		calendar.init(lastYear.getTime(), nextYear.getTime())
 		.inMode(SelectionMode.SINGLE)
 		.withSelectedDate(new Date());
-		
+
 		calendar.setOnDateSelectedListener(new onDateSelect());
-		
+
+		//eventList = getCurrentDayEvents();
 
 		eventListAdapter = new EventListAdapter(this);
 		eventListView = (ListView) findViewById(R.id.eventList);
@@ -83,7 +89,7 @@ public class MonthActivity extends DefaultView {
 			// TODO Auto-generated method stub
 			mCalendarChanging.setTime(date);
 			eventListAdapter.notifyDataSetChanged();
-			
+
 			Log.v(TAG, "in onDateSelected Listener");
 		}
 	}
@@ -141,7 +147,6 @@ public class MonthActivity extends DefaultView {
 		};
 
 		actionBar.setListNavigationCallbacks(mSpinnerAdapter, mOnNavigationListener);
-
 	}
 
 	@Override
@@ -164,30 +169,68 @@ public class MonthActivity extends DefaultView {
 			calendar.selectDate(new Date());
 			break;
 		}
-
 		return true;
 	}
 
-	public class EventListAdapter extends ArrayAdapter<String> {
+
+	@Override
+	protected Dialog onCreateDialog(final int iD)
+	{
+		switch (iD)
+		{
+		case R.id.action_goto:
+			return new DatePickerDialog(this, new OnDateSetListener()
+
+			{
+				@Override
+				public void onDateSet(DatePicker view, int year,
+						int monthOfYear, int dayOfMonth)
+				{
+					mCalendarChanging.set(year, monthOfYear, dayOfMonth);
+					calendar.selectDate(mCalendarChanging.getTime());
+				}
+			}, mCalendarChanging.get(Calendar.YEAR),
+			mCalendarChanging.get(Calendar.MONTH),
+			mCalendarChanging.get(Calendar.DAY_OF_MONTH));	
+		}
+
+		return null;
+	}
+
+
+	public class EventListAdapter extends ArrayAdapter<Event> {
 		private final Context context;
+		private ArrayList<Event> events;
 
 		public EventListAdapter(Context context){
 			super(context, R.layout.rowview);
 			this.context = context;
+			Log.v(TAG, "in adpter constructor");
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			
-			ArrayList<Event> eventList = DayViewFragment.getCurrentDayEvents();
+
+			//ArrayList<Event> eventList = getCurrentDayEvents();
 			Log.v(TAG, "in getView of list adapter");
 
 			View rowView = inflater.inflate(R.layout.rowview, parent, false);
 			TextView textView = (TextView) rowView.findViewById(R.id.eventname);
-			textView.setText(eventList.get(position).getTitle());
+
+
+			if (events.size()>0){
+				textView.setText(((Event) events.get(position)).getTitle());
+			}
 			return rowView;
+		}
+
+		@Override
+		public int getCount(){
+			events = DayViewFragment.getCurrentDayEvents();
+			Log.v(TAG, "list adapter getCount: " + events.size());
+			return events.size();
 		}
 	} 
 }
