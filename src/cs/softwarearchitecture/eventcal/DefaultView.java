@@ -626,8 +626,9 @@ public class DefaultView extends FragmentActivity {
 			Cursor cursor = 
 					mEventContentResolver.query(
 							DBEventsContentProvider.CONTENT_URI, null, 
-							"START_DATE =? AND END_TIME NOT NULL", dateString, null);
-
+							"START_DATE =? AND END_TIME NOT NULL", dateString, 
+							DBSQLiteHelper.COLUMN_START_TIME + " ASC");
+			
 			//Log.v(TAG, "loading events");
 			if (cursor.moveToFirst()) {
 				while(!cursor.isAfterLast()){
