@@ -76,7 +76,7 @@ public class AddEvent extends Activity implements OnClickListener {
 		// Setting initial value of variables
 		mFromDate = CurrentDateTimeConverter.timeDateFormatter(
 				DefaultView.mCalendarChanging.get(Calendar.DATE),
-				DefaultView.mCalendarChanging.get(Calendar.MONTH), 
+				DefaultView.mCalendarChanging.get(Calendar.MONTH) + 1, 
 				Integer.toString(DefaultView.mCalendarChanging.get(Calendar.YEAR)));
 		
 		mFromTime = CurrentDateTimeConverter.timeDateFormatter(
