@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
@@ -30,23 +31,23 @@ import com.squareup.timessquare.CalendarPickerView;
 import com.squareup.timessquare.CalendarPickerView.OnDateSelectedListener;
 import com.squareup.timessquare.CalendarPickerView.SelectionMode;
 
+import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
 import cs.softwarearchitecture.eventcal.model.Event;
 import cs.softwarearchitecture.eventcal.modify.AddEvent;
 
 public class MonthActivity extends DefaultView {
 
-	private CalendarPickerView calendar;
+	private CalendarPickerView mCalendar;
 
 	public static int MONTH_VIEW = 1;
-	ListView eventListView;
-	EventListAdapter eventListAdapter;
+	
+	ListView mEventListView;
+	
+	EventListAdapter mEventListAdapter;
 
 	// Content Resolver
 	private static ContentResolver mEventContentResolver;
 	//private Event[] eventList;
-
-
-	final static String TAG = "MonthActivity";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,27 +63,26 @@ public class MonthActivity extends DefaultView {
 		lastYear.add(Calendar.YEAR, -1);
 
 
-		calendar = (CalendarPickerView) findViewById(R.id.monthview);
-		calendar.init(lastYear.getTime(), nextYear.getTime())
+		mCalendar = (CalendarPickerView) findViewById(R.id.monthview);
+		mCalendar.init(lastYear.getTime(), nextYear.getTime())
 		.inMode(SelectionMode.SINGLE)
 		.withSelectedDate(new Date());
 
-		calendar.setOnDateSelectedListener(new onDateSelect());
+		mCalendar.setOnDateSelectedListener(new onDateSelect());
 
 		//eventList = getCurrentDayEvents();
 
-		eventListAdapter = new EventListAdapter(this);
-		eventListView = (ListView) findViewById(R.id.eventList);
-		eventListView.setAdapter(eventListAdapter);
+		mEventListAdapter = new EventListAdapter(this);
+		mEventListView = (ListView) findViewById(R.id.eventList);
+		mEventListView.setAdapter(mEventListAdapter);
 	}
 
 	public class onDateSelect implements OnDateSelectedListener{
 
 		@Override
 		public void onDateSelected(Date date) {
-			// TODO Auto-generated method stub
 			mCalendarChanging.setTime(date);
-			eventListAdapter.notifyDataSetChanged();
+			mEventListAdapter.notifyDataSetChanged();
 
 			Log.v(TAG, "in onDateSelected Listener");
 		}
@@ -166,7 +166,7 @@ public class MonthActivity extends DefaultView {
 			startActivity(addEventIntent);
 			break;
 		case R.id.today:
-			calendar.selectDate(new Date());
+			mCalendar.selectDate(new Date());
 			break;
 		}
 		return true;
@@ -187,7 +187,7 @@ public class MonthActivity extends DefaultView {
 						int monthOfYear, int dayOfMonth)
 				{
 					mCalendarChanging.set(year, monthOfYear, dayOfMonth);
-					calendar.selectDate(mCalendarChanging.getTime());
+					mCalendar.selectDate(mCalendarChanging.getTime());
 				}
 			}, mCalendarChanging.get(Calendar.YEAR),
 			mCalendarChanging.get(Calendar.MONTH),
@@ -203,9 +203,9 @@ public class MonthActivity extends DefaultView {
 		private ArrayList<Event> events;
 
 		public EventListAdapter(Context context){
-			super(context, R.layout.rowview);
+			super(context, R.layout.agenda_item);
 			this.context = context;
-			Log.v(TAG, "in adpter constructor");
+			Log.v(TAG, "in adapter constructor");
 		}
 
 		@Override
@@ -216,14 +216,55 @@ public class MonthActivity extends DefaultView {
 			//ArrayList<Event> eventList = getCurrentDayEvents();
 			Log.v(TAG, "in getView of list adapter");
 
-			View rowView = inflater.inflate(R.layout.rowview, parent, false);
-			TextView textView = (TextView) rowView.findViewById(R.id.eventname);
+			View listViewItem = inflater.inflate(R.layout.agenda_item, parent, false);
+			
+			TextView seperatorDate = (TextView) listViewItem.findViewById(R.id.separator);
+			TextView eventTitle = (TextView) listViewItem.findViewById(R.id.event_title);
+			TextView eventTime = (TextView) listViewItem.findViewById(R.id.event_subtitle);
 
+			// Event Image setup
+			ImageView eventImage = (ImageView) listViewItem.findViewById(R.id.event_image);
+			
+			if (events.size() > 0) {
+				
+				// Seperator not needed for this view
+				seperatorDate.setVisibility(View.GONE);
+				
+				eventTitle.setText(((Event) events.get(position)).getTitle());
+				
+				String startTime = ((Event) events.get(position)).getStartTime();
+				String endTime = ((Event) events.get(position)).getEndTime();
+				
+				if(endTime != null)
+					eventTime.setText(timeFormatted(startTime) + "-" 
+												+ timeFormatted(endTime));
+				else
+					eventTime.setText(timeFormatted(startTime));
 
-			if (events.size()>0){
-				textView.setText(((Event) events.get(position)).getTitle());
+				String imageResourceType = ((Event) events.get(position)).getGroup();
+				
+				if (imageResourceType.equals("PERSONAL")) {
+					eventImage.setImageResource(R.drawable.ic_action_personal);
+				}
+
+				if (imageResourceType.equals("FACEBOOK")) {
+					eventImage.setImageResource(R.drawable.ic_action_facebook_event);
+				}
+
+				if (imageResourceType.equals("EVENTBRITE")) {
+					eventImage.setImageResource(R.drawable.ic_action_eventbrite_event);
+				}
+
+				if (imageResourceType.equals("UW")) {
+					eventImage.setImageResource(R.drawable.ic_action_uw_event);
+				}
+
+				if (imageResourceType.equals("GOOGLE")) {
+					eventImage.setImageResource(R.drawable.ic_action_google_event);
+				}
 			}
-			return rowView;
+			
+			return listViewItem;
 		}
 
 		@Override
@@ -231,6 +272,23 @@ public class MonthActivity extends DefaultView {
 			events = DayViewFragment.getCurrentDayEvents();
 			Log.v(TAG, "list adapter getCount: " + events.size());
 			return events.size();
+		}
+		
+		/**
+		 * Formatted Time String for Share 
+		 * @param time
+		 * @return time (String)
+		 */
+		protected String timeFormatted(String time) {
+			Log.d(DefaultView.TAG, "Unformatted String: " + time);
+
+			try{
+				time = time.substring(0, 2) + ":" + time.substring(2, 4);
+			}
+			catch (NullPointerException e){
+				Log.e(DefaultView.TAG, "Exception caught: (NullPointer) " + e.getMessage());
+			}
+			return time;
 		}
 	} 
 }

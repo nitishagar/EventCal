@@ -26,8 +26,7 @@
         <ListView
             android:id="@+id/eventList"
             android:layout_width="fill_parent"
-            android:layout_height="172dp"
-            android:dividerHeight="10.0sp" />
+            android:layout_height="172dp" />
 
     </LinearLayout>
 
