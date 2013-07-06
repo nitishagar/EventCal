@@ -205,8 +205,8 @@ int drawable vpi__tab_selected_pressed_holo 0x7f020047
 int drawable vpi__tab_unselected_focused_holo 0x7f020048
 int drawable vpi__tab_unselected_holo 0x7f020049
 int drawable vpi__tab_unselected_pressed_holo 0x7f02004a
-int id action_goto 0x7f090043
-int id action_settings 0x7f090042
+int id action_goto 0x7f090042
+int id action_settings 0x7f090041
 int id bottom 0x7f090006
 int id calendar_grid 0x7f090040
 int id cancelButton 0x7f090015
@@ -233,7 +233,7 @@ int id currentDate 0x7f090037
 int id dayEventRelative 0x7f09003e
 int id dayViewPager 0x7f090019
 int id dayViewScroll 0x7f090039
-int id delete_event 0x7f090048
+int id delete_event 0x7f090047
 int id editTitle 0x7f090009
 int id eventList 0x7f09001c
 int id event_details 0x7f09001f
@@ -241,7 +241,6 @@ int id event_image 0x7f09001e
 int id event_list 0x7f090017
 int id event_subtitle 0x7f090021
 int id event_title 0x7f090020
-int id eventname 0x7f090041
 int id flipper 0x7f090038
 int id fromDate 0x7f09000b
 int id fromDateTime 0x7f09000a
@@ -251,8 +250,8 @@ int id linearLayout2 0x7f09003b
 int id linearLayout3 0x7f09003d
 int id maxReminder 0x7f090014
 int id medReminder 0x7f090013
-int id menu_add 0x7f090044
-int id menu_item_share 0x7f090047
+int id menu_add 0x7f090043
+int id menu_item_share 0x7f090046
 int id minReminder 0x7f090012
 int id monthListView 0x7f09001b
 int id monthview 0x7f09001a
@@ -265,7 +264,7 @@ int id relativeLayout3 0x7f09003c
 int id reminder 0x7f090010
 int id reminderRadio 0x7f090011
 int id saveButton 0x7f090016
-int id search 0x7f090046
+int id search 0x7f090045
 int id search_box 0x7f090032
 int id section_label 0x7f09003f
 int id separator 0x7f09001d
@@ -274,7 +273,7 @@ int id title 0x7f090008
 int id toDate 0x7f09000e
 int id toDateTime 0x7f09000d
 int id toTime 0x7f09000f
-int id today 0x7f090045
+int id today 0x7f090044
 int id top 0x7f090007
 int id triangle 0x7f090004
 int id underline 0x7f090005
@@ -304,8 +303,7 @@ int layout com_facebook_usersettingsfragment 0x7f030011
 int layout dayview 0x7f030012
 int layout fragment_default_view_dummy 0x7f030013
 int layout month 0x7f030014
-int layout rowview 0x7f030015
-int layout week 0x7f030016
+int layout week 0x7f030015
 int menu add_event 0x7f0d0000
 int menu default_view 0x7f0d0001
 int menu edit_event 0x7f0d0002

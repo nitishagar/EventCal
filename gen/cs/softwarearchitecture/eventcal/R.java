@@ -653,8 +653,8 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int vpi__tab_unselected_pressed_holo=0x7f02004a;
     }
     public static final class id {
-        public static final int action_goto=0x7f090043;
-        public static final int action_settings=0x7f090042;
+        public static final int action_goto=0x7f090042;
+        public static final int action_settings=0x7f090041;
         public static final int bottom=0x7f090006;
         public static final int calendar_grid=0x7f090040;
         public static final int cancelButton=0x7f090015;
@@ -681,7 +681,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int dayEventRelative=0x7f09003e;
         public static final int dayViewPager=0x7f090019;
         public static final int dayViewScroll=0x7f090039;
-        public static final int delete_event=0x7f090048;
+        public static final int delete_event=0x7f090047;
         public static final int editTitle=0x7f090009;
         public static final int eventList=0x7f09001c;
         public static final int event_details=0x7f09001f;
@@ -689,7 +689,6 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int event_list=0x7f090017;
         public static final int event_subtitle=0x7f090021;
         public static final int event_title=0x7f090020;
-        public static final int eventname=0x7f090041;
         public static final int flipper=0x7f090038;
         public static final int fromDate=0x7f09000b;
         public static final int fromDateTime=0x7f09000a;
@@ -699,8 +698,8 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int linearLayout3=0x7f09003d;
         public static final int maxReminder=0x7f090014;
         public static final int medReminder=0x7f090013;
-        public static final int menu_add=0x7f090044;
-        public static final int menu_item_share=0x7f090047;
+        public static final int menu_add=0x7f090043;
+        public static final int menu_item_share=0x7f090046;
         public static final int minReminder=0x7f090012;
         public static final int monthListView=0x7f09001b;
         public static final int monthview=0x7f09001a;
@@ -713,7 +712,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int reminder=0x7f090010;
         public static final int reminderRadio=0x7f090011;
         public static final int saveButton=0x7f090016;
-        public static final int search=0x7f090046;
+        public static final int search=0x7f090045;
         public static final int search_box=0x7f090032;
         public static final int section_label=0x7f09003f;
         public static final int separator=0x7f09001d;
@@ -722,7 +721,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int toDate=0x7f09000e;
         public static final int toDateTime=0x7f09000d;
         public static final int toTime=0x7f09000f;
-        public static final int today=0x7f090045;
+        public static final int today=0x7f090044;
         public static final int top=0x7f090007;
         public static final int triangle=0x7f090004;
         public static final int underline=0x7f090005;
@@ -756,8 +755,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int dayview=0x7f030012;
         public static final int fragment_default_view_dummy=0x7f030013;
         public static final int month=0x7f030014;
-        public static final int rowview=0x7f030015;
-        public static final int week=0x7f030016;
+        public static final int week=0x7f030015;
     }
     public static final class menu {
         public static final int add_event=0x7f0d0000;

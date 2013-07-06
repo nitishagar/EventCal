@@ -92,7 +92,7 @@ public class DefaultView extends FragmentActivity {
 	private String mNextDate;
 
 
-	//Calendar calendar; 
+	//Calendar
 	public static Calendar mCalendarChanging;
 
 	private static Values values;
@@ -609,7 +609,7 @@ public class DefaultView extends FragmentActivity {
 		/**
 		 * @return Event List
 		 */
-		private ArrayList<Event> getCurrentDayEvents() {
+		protected static ArrayList<Event> getCurrentDayEvents() {
 			//Log.d(TAG, "Day of the Month: " + calChanging);
 			
 			ArrayList<Event> eventList = new ArrayList<Event>(); 
@@ -624,7 +624,8 @@ public class DefaultView extends FragmentActivity {
 			Cursor cursor = 
 					mEventContentResolver.query(
 							DBEventsContentProvider.CONTENT_URI, null, 
-							"START_DATE =? AND END_TIME NOT NULL", dateString, null);
+							"START_DATE =? AND END_TIME NOT NULL", dateString, 
+							DBSQLiteHelper.COLUMN_START_TIME + " ASC");
 			
 			//Log.v(TAG, "loading events");
 			if (cursor.moveToFirst()) {
@@ -754,4 +755,5 @@ public class DefaultView extends FragmentActivity {
 		}
 		
 	}
+
 }

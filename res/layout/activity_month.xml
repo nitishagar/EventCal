@@ -8,7 +8,7 @@
         android:id="@+id/monthview"
         android:layout_width="match_parent"
         android:layout_height="274dp"
-        android:layout_weight="0.04"
+        android:layout_weight="0.34"
         android:background="#FFFFFF"
         android:clipToPadding="false"
         android:paddingBottom="100dp"
@@ -26,8 +26,7 @@
         <ListView
             android:id="@+id/eventList"
             android:layout_width="fill_parent"
-            android:layout_height="201dp" >
-        </ListView>
+            android:layout_height="172dp" />
 
     </LinearLayout>
 
