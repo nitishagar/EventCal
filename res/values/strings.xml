@@ -39,7 +39,11 @@
     <string name="facebook_login">Facebook</string>
     <string name="eventbrite_login">Eventbrite</string>
     <string name="google_login">Google</string>
+    <string name="uw_login">University Of Waterloo</string>
     <string name="accounts_login">ACCOUNTS LOGIN</string>
     <string name="app_id">377349995710558</string>
+    <string name="ok">OK</string>
+    <string name="user_id">User ID</string>
+    <string name="eventbrite_user_id">Eventbrite User ID</string>
 
 </resources>

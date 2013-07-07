@@ -4,19 +4,28 @@
         android:title="@string/accounts_login" >
         
         <CheckBoxPreference
+            android:id="@+id/facebook_login"
             android:defaultValue="false"
             android:key="facebook_login"
             android:title="@string/facebook_login" />
         
         <CheckBoxPreference
+            android:id="@+id/eventbrite_login"
             android:defaultValue="false"
             android:key="eventbrite_login"
             android:title="@string/eventbrite_login" />
         
         <CheckBoxPreference
+            android:id="@+id/google_login"
             android:defaultValue="false"
             android:key="google_login"
             android:title="@string/google_login" />
+    
+        <CheckBoxPreference
+            android:id="@+id/uw_login"
+            android:defaultValue="false"
+            android:key="uw_login"
+            android:title="@string/uw_login" />
     
     </PreferenceCategory>
 
