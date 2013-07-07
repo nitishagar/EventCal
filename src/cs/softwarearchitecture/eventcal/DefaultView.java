@@ -61,6 +61,7 @@ import cs.softwarearchitecture.eventcal.model.Event;
 import cs.softwarearchitecture.eventcal.modify.AddEvent;
 import cs.softwarearchitecture.eventcal.modify.EditEvent;
 import cs.softwarearchitecture.eventcal.services.FacebookService;
+import cs.softwarearchitecture.eventcal.services.getEventBriteEventService;
 import cs.softwarearchitecture.eventcal.viewpagerindicator.TitlePageIndicator;
 
 public class DefaultView extends FragmentActivity {  
@@ -324,6 +325,8 @@ public class DefaultView extends FragmentActivity {
 
 			if(settingsPreference.getBoolean("eventbrite_login", false)) {
 				// Eventbrite service kickoff
+				Intent intent = new Intent(DefaultView.this, getEventBriteEventService.class);
+				startService(intent);
 			}
 
 			// UW service kickoff
