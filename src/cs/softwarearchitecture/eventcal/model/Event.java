@@ -2,6 +2,7 @@ package cs.softwarearchitecture.eventcal.model;
 
 public class Event {
 	
+	private String type;
 	private String title;
 	private String start_time;
 	private String end_time;
@@ -27,6 +28,7 @@ public class Event {
 	 * @param _id
 	 */
 	public Event(
+			String type,
 			String title, 
 			String start_time, 
 			String end_time,
@@ -36,6 +38,7 @@ public class Event {
 			int reminder,
 			int _id
 			){
+		this.type = type;
 		this.title = title;
 		this.start_time = start_time;
 		this.end_time = end_time;
@@ -46,6 +49,15 @@ public class Event {
 		this._id = _id;
 	}
 
+	
+	public String getType(){
+		return type;
+	}
+	
+	public void setType(String type){
+		this.type = type;
+	}
+	
 	/**
 	 * @return title
 	 */
