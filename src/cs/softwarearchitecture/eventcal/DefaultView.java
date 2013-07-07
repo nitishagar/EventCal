@@ -35,6 +35,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils.TruncateAt;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -111,10 +112,10 @@ public class DefaultView extends FragmentActivity {
 
 	// Notification broadcast
 	public AsyncAlarmRunner mAlarmSetup = new AsyncAlarmRunner();
-	
+
 	// Service start
 	AsyncServiceRunner mStartServices = new AsyncServiceRunner();
-	
+
 	/**
 	 * The {@link ViewPager} that will host the section contents.
 	 */
@@ -151,6 +152,7 @@ public class DefaultView extends FragmentActivity {
 		pageIndicator = 
 				(TitlePageIndicator) findViewById(R.id.pageIndicator);
 		pageIndicator.setViewPager(dayViewPager,values.getCURRENT_PAGE());
+		pageIndicator.setSelectedColor(Color.BLACK);
 
 		// set today's view
 		updateDate(0);
@@ -245,7 +247,7 @@ public class DefaultView extends FragmentActivity {
 					Date notificationTime = new Date();
 					notificationTime.setHours(Integer.parseInt(start_time.substring(1,3)));
 					notificationTime.setMinutes(Integer.parseInt(start_time.substring(3,5)));
-//					cal.setTimeInMillis((( * 60) +  ((notificationTime.getMinutes() - reminder) * 60)) * 60 * 1000);
+					//					cal.setTimeInMillis((( * 60) +  ((notificationTime.getMinutes() - reminder) * 60)) * 60 * 1000);
 
 					cal.set(Integer.parseInt(start_date.substring(5, 9)), Integer.parseInt(start_date.substring(3, 5)), 
 							Integer.parseInt(start_date.substring(1,3)), notificationTime.getHours(), 
@@ -257,7 +259,7 @@ public class DefaultView extends FragmentActivity {
 						Log.d(TAG, "Difference in time: " + (cal.getTimeInMillis() - mCalendarChanging.getTimeInMillis()));
 						AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
 						am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
-						
+
 						// number of notification
 						notifIterator++;
 					}
@@ -284,7 +286,7 @@ public class DefaultView extends FragmentActivity {
 			mFacebook = new Facebook(getString(R.string.app_id));
 			mAsyncRunnner = new AsyncFacebookRunner(mFacebook);
 		}
-		
+
 		@SuppressWarnings("deprecation")
 		@Override
 		protected Void doInBackground(Void... params) {
@@ -317,7 +319,7 @@ public class DefaultView extends FragmentActivity {
 			// UW service kickoff
 			return null;
 		}
-		
+
 	}
 
 	@SuppressWarnings("deprecation")
@@ -347,7 +349,7 @@ public class DefaultView extends FragmentActivity {
 		mCurrentDate = currentDay + " " 
 				+ values.getMONTH_VALUES()[currentMonth] +
 				", " + currentYear;
-		
+
 		Log.v(TAG, "current Date is " + mCurrentDate);
 
 		// Calculate previous date
@@ -383,7 +385,7 @@ public class DefaultView extends FragmentActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.default_view, menu);
-		
+
 		// Associate searchable configuration with the SearchView
 		SearchManager searchManager =
 				(SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -391,7 +393,7 @@ public class DefaultView extends FragmentActivity {
 				(SearchView) menu.findItem(R.id.search).getActionView();
 		searchView.setSearchableInfo(
 				searchManager.getSearchableInfo(getComponentName()));
-		
+
 		actionBarViewSelector();
 		return true;
 	}
@@ -404,7 +406,7 @@ public class DefaultView extends FragmentActivity {
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowTitleEnabled(false);
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		
+
 		SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(new ContextThemeWrapper(this, android.R.style.Theme_Holo), 
 				R.array.view_list, android.R.layout.simple_spinner_dropdown_item);
 
@@ -412,7 +414,7 @@ public class DefaultView extends FragmentActivity {
 			// Get the same strings provided for the drop-down's ArrayAdapter
 			String[] viewList = getResources().getStringArray(R.array.view_list);
 			Intent targetIntent = new Intent();
-			
+
 			@Override
 			public boolean onNavigationItemSelected(int position, long itemId) {
 				switch(position){
@@ -442,9 +444,9 @@ public class DefaultView extends FragmentActivity {
 		};
 
 		actionBar.setListNavigationCallbacks(mSpinnerAdapter, mOnNavigationListener);
-		
+
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -469,7 +471,7 @@ public class DefaultView extends FragmentActivity {
 		}
 		return true;
 	}
-	
+
 	@Override
 	protected Dialog onCreateDialog(final int iD)
 	{
@@ -497,7 +499,7 @@ public class DefaultView extends FragmentActivity {
 	 */
 	private void startIntent(String className) {
 		String targetClass = className + ".class"; 
-		
+
 	}
 
 	/**
@@ -519,7 +521,7 @@ public class DefaultView extends FragmentActivity {
 			Bundle args = new Bundle();
 			args.putInt(DayViewFragment.ARG_SECTION_NUMBER, position + 1);
 			fragment.setArguments(args);
-			
+
 			return fragment;
 		}
 
@@ -528,16 +530,16 @@ public class DefaultView extends FragmentActivity {
 			// Show 3 total pages.
 			return values.getPAGE_NUMBER();
 		}
-		
+
 		@Override
 		public int getItemPosition(Object object) {
-		    return POSITION_NONE;
+			return POSITION_NONE;
 		}
 
 		@Override
 		public CharSequence getPageTitle(int position) {
 			Locale l = Locale.getDefault();
-			
+
 			switch (position) {
 			case 0:
 				return mPreviousDate.toUpperCase(l);
@@ -560,7 +562,7 @@ public class DefaultView extends FragmentActivity {
 		 * fragment.
 		 */
 		public static final String ARG_SECTION_NUMBER = "section_number";
-		
+
 		private Context mContext;
 		RelativeLayout dayEventRelative;
 
@@ -572,31 +574,31 @@ public class DefaultView extends FragmentActivity {
 				Bundle savedInstanceState) {
 			ViewGroup rootView = (ViewGroup) inflater.inflate(
 					R.layout.dayview, container, false);
-			
+
 			mContext = getActivity().getApplicationContext();	
-			
+
 			dayEventRelative = 
 					(RelativeLayout) rootView.findViewById(R.id.dayEventRelative);
-			
+
 			//Log.v(TAG, "onCreateView");
-			
+
 			loadDataForDay();
-			
+
 			return rootView;
 		}
 
 		private void loadDataForDay(){
 
 			// To load events data from database:
-		
+
 			ArrayList<Event> events = getCurrentDayEvents();
-			
+
 			Log.d(TAG,"events length = " + events.size());
 
 			for (Event event : events){
 				Log.d(TAG,"event start time: " + 
-								event.getStartTime() + 
-								" end time: " + event.getEndTime());
+						event.getStartTime() + 
+						" end time: " + event.getEndTime());
 				for (int i = 0; i < values.getTIME_VALUES().length; i++){
 					String start_time = event.getStartTime();
 
@@ -611,16 +613,16 @@ public class DefaultView extends FragmentActivity {
 		 */
 		protected static ArrayList<Event> getCurrentDayEvents() {
 			//Log.d(TAG, "Day of the Month: " + calChanging);
-			
+
 			ArrayList<Event> eventList = new ArrayList<Event>(); 
 			int currentDay = mCalendarChanging.get(Calendar.DATE);
 			int currentMonth = mCalendarChanging.get(Calendar.MONTH) + 1;
 			int currentYear = mCalendarChanging.get(Calendar.YEAR);
 
 			String[] dateString = { Integer.toString(CurrentDateTimeConverter.timeDateFormatter(currentDay, currentMonth, Integer.toString(currentYear))) };
-					
+
 			Log.v(TAG, dateString[0] );
-			
+
 			Cursor cursor = 
 					mEventContentResolver.query(
 							DBEventsContentProvider.CONTENT_URI, null, 
@@ -630,32 +632,42 @@ public class DefaultView extends FragmentActivity {
 			//Log.v(TAG, "loading events");
 			if (cursor.moveToFirst()) {
 				while(!cursor.isAfterLast()){
-					Log.d(TAG, "loading events" + cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TABLE)));
+					String type = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TABLE));
+					Log.d(TAG, "loading events " + type);
+
 					int _id = cursor.getInt(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_ID));
-                    String title = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TITLE));
+					String title = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TITLE));
 					String start_time = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_TIME));
 					String end_time = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_END_TIME));
 					String start_date = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_DATE));
 					String location = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_LOCATION));
 					String group = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TABLE));
 					int reminder = cursor.getInt(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_REMINDER_TIME));
-					
+
 					Log.v(TAG, "before start_time is " +  start_time);
 					Log.v(TAG, "before end_time is " + end_time);
-				
+
 					// remove "1" at the beginning
 					start_time = start_time.substring(1);
 					end_time = end_time.substring(1);
-					
+
 					Log.v(TAG, "start_time is " +  start_time);
 					Log.v(TAG, "end_time is " + end_time);
-					
+
 					Event event = 
-							new Event(title, start_time, end_time, start_date, location, group, reminder, _id);
+							new Event(type, 
+									title, 
+									start_time, 
+									end_time, 
+									start_date, 
+									location, 
+									group, 
+									reminder, 
+									_id);
 					eventList.add(event);
 					cursor.moveToNext();
 				}
-		    }
+			}
 			cursor.close();
 			return eventList;
 		}
@@ -668,7 +680,7 @@ public class DefaultView extends FragmentActivity {
 			final String group = event.getGroup();
 			final int reminder = event.getReminder();
 			final int _id = event.getID();
-			
+
 			int marginTop = calculateMargin(start_time);
 			int height = (int) calculateDiffInTime(start_time, end_time);
 			height = (int) (1.375 * height);
@@ -682,14 +694,39 @@ public class DefaultView extends FragmentActivity {
 
 			Button button = new Button(mContext);
 			button.setId(_id);
-			button.setBackgroundResource(R.drawable.appointment_new);
+
+			String type = event.getType();
+
+			if (type.equals("PERSONAL")) {
+				button.setBackgroundColor(0xa0db8e00);
+			}
+
+			if (type.equals("FACEBOOK")) {
+				button.setBackgroundColor(Color.CYAN);
+			}
+
+			if (type.equals("EVENTBRITE")) {
+				button.setBackgroundColor(0xfbf2a300);
+			}
+
+			if (type.equals("UW")) {
+				button.setBackgroundColor(0xdee4fa00);
+			}
+
+			if (type.equals("GOOGLE")) {
+				button.setBackgroundColor(Color.YELLOW);
+			}
+
 			button.setLayoutParams(lprams);
 			button.setTextColor(Color.BLACK);
 			button.setTextAppearance(mContext, R.style.ButtonFontStyle);
 			button.setText(title);
+			button.setTextSize(15);
+
 			if (height <= 18) {
 				button.setSingleLine();
 			}
+
 			button.setEllipsize(TruncateAt.END);
 			dayEventRelative.addView(button);
 			button.setOnClickListener(new OnClickListener() {
@@ -698,7 +735,7 @@ public class DefaultView extends FragmentActivity {
 				public void onClick(View v) {
 					Intent editEventIntent = 
 							new Intent(getActivity(), EditEvent.class);
-					
+
 					editEventIntent.putExtra("title", title);
 					editEventIntent.putExtra("start_time", start_time);
 					editEventIntent.putExtra("end_time", end_time);
@@ -706,9 +743,9 @@ public class DefaultView extends FragmentActivity {
 					editEventIntent.putExtra("reminder", reminder);
 					editEventIntent.putExtra("group", group);
 					editEventIntent.putExtra("id", _id);
-					
+
 					Log.d(TAG, "Event start_time: " + start_time);
-					
+
 					editEventIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					startActivity(editEventIntent);
 				}
@@ -718,10 +755,10 @@ public class DefaultView extends FragmentActivity {
 		private long calculateDiffInTime(String start_time, String end_time) {
 			String startTimeEvent = start_time;
 			String endTimeEvent = end_time;
-			
+
 			Log.v(TAG, "startTime = " + start_time);
 			Log.v(TAG, "endTime = " + end_time);
-			
+
 			long diffMinutes = 0;
 			SimpleDateFormat format = new SimpleDateFormat("HHmmss");
 			Date d1 = null;
@@ -732,9 +769,9 @@ public class DefaultView extends FragmentActivity {
 
 				long diff = d2.getTime() - d1.getTime();
 				diffMinutes = diff / (60 * 1000);
-				
+
 				Log.v(TAG, "diffMinutes = " + diffMinutes);
-				
+
 
 			} catch (ParseException e) {
 				e.printStackTrace();
@@ -753,7 +790,6 @@ public class DefaultView extends FragmentActivity {
 
 			return (int) margin;
 		}
-		
-	}
 
+	}
 }
