@@ -84,7 +84,8 @@
         </activity>
         
         <service android:name="cs.softwarearchitecture.eventcal.services.FacebookService"></service>
-        
+        <service android:enabled="true"
+                 android:name="cs.softwarearchitecture.eventcal.services.getEventBriteEventService"></service>
         <receiver android:name="cs.softwarearchitecture.eventcal.EventNotificationReceiver" >
             <intent-filter>
             	<data android:scheme="timer:" />
