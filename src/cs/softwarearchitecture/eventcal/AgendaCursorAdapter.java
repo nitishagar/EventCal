@@ -68,55 +68,41 @@ public class AgendaCursorAdapter extends CursorAdapter {
 			mCellStates = cursor == null ? null : new int[cursor.getCount()];
 		
 		// Setting the TextViews
-		TextView seperator_date = (TextView)view.findViewById(R.id.separator);
-		TextView event_title = (TextView)view.findViewById(R.id.event_title);
-		TextView subtitle_time =  (TextView)view.findViewById(R.id.event_subtitle);
+		TextView seperatorDate = (TextView)view.findViewById(R.id.separator);
+		TextView eventTitle = (TextView)view.findViewById(R.id.event_title);
+		TextView subtitleTime =  (TextView)view.findViewById(R.id.event_subtitle);
 		
-		event_title.setText(cursor.getString(
+		eventTitle.setText(cursor.getString(
 				cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TITLE)));
 		
 		if (!(cursor.isNull(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_END_TIME))) 
 				|| cursor.getInt(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_END_TIME)) != 0) {
-			subtitle_time.setText(timeFormatted(Integer.toString(cursor.getInt(
+			subtitleTime.setText(timeFormatted(Integer.toString(cursor.getInt(
 					cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_TIME)))) + "-" 
 					+ timeFormatted(Integer.toString(cursor.getInt(
 							cursor.getColumnIndex(DBSQLiteHelper.COLUMN_END_TIME)))));
 		} 
 		else {
-			subtitle_time.setText(timeFormatted(Integer.toString(cursor.getInt(
+			subtitleTime.setText(timeFormatted(Integer.toString(cursor.getInt(
 					cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_TIME)))));
 		}
 		
-		ImageView event_image = (ImageView)view.findViewById(R.id.event_image);
-
-
-		String image_resource_type = cursor.getString(
-				cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TABLE));
-
-		if (image_resource_type.equals("PERSONAL")) {
-			event_image.setImageResource(R.drawable.ic_action_personal);
-		}
-
-		if (image_resource_type.equals("FACEBOOK")) {
-			event_image.setImageResource(R.drawable.ic_action_facebook_event);
-		}
-
-		if (image_resource_type.equals("EVENTBRITE")) {
-			event_image.setImageResource(R.drawable.ic_action_eventbrite_event);
-		}
-
-		if (image_resource_type.equals("UW")) {
-			event_image.setImageResource(R.drawable.ic_action_uw_event);
-		}
-
-		if (image_resource_type.equals("GOOGLE")) {
-			event_image.setImageResource(R.drawable.ic_action_google_event);
-		}
+		// Image for each event type/group
+		imageViewSetting(view, cursor);
 
 		/*
          * Separator
          */
-        boolean needSeparator = false;
+        seperatorImplementation(cursor, seperatorDate);
+
+	}
+
+	/**
+	 * @param cursor
+	 * @param seperatorDate
+	 */
+	protected void seperatorImplementation(Cursor cursor, TextView seperatorDate) {
+		boolean needSeparator = false;
 
         final int position = cursor.getPosition();
 
@@ -162,14 +148,45 @@ public class AgendaCursorAdapter extends CursorAdapter {
         	String dateRaw = Integer.toString(cursor.getInt(
     				cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_DATE)));
         	
-        	seperator_date.setText(dateRaw.substring(1, 3) + "-" + dateRaw.substring(3,5) + "-"
+        	seperatorDate.setText(dateRaw.substring(1, 3) + "-" + dateRaw.substring(3,5) + "-"
         			+ dateRaw.substring(5, dateRaw.length()));
            
-            seperator_date.setVisibility(View.VISIBLE);
+            seperatorDate.setVisibility(View.VISIBLE);
         } else {
-            seperator_date.setVisibility(View.GONE);
+            seperatorDate.setVisibility(View.GONE);
         }
+	}
 
+	/**
+	 * @param view
+	 * @param cursor
+	 */
+	protected void imageViewSetting(View view, Cursor cursor) {
+		ImageView eventImage = (ImageView)view.findViewById(R.id.event_image);
+
+
+		String imageResourceType = cursor.getString(
+				cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TABLE));
+
+		if (imageResourceType.equals("PERSONAL")) {
+			eventImage.setImageResource(R.drawable.ic_action_personal);
+		}
+
+		if (imageResourceType.equals("FACEBOOK")) {
+			eventImage.setImageResource(R.drawable.ic_action_facebook_event);
+		}
+
+		if (imageResourceType.equals("EVENTBRITE")) {
+			eventImage.setImageResource(R.drawable.ic_action_eventbrite_event);
+		}
+
+		if (imageResourceType.equals("UW")) {
+			eventImage.setImageResource(R.drawable.ic_action_uw_event);
+		}
+
+		if (imageResourceType.equals("GOOGLE")) {
+			eventImage.setImageResource(R.drawable.ic_action_google_event);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -188,7 +205,7 @@ public class AgendaCursorAdapter extends CursorAdapter {
 	 * @param time
 	 * @return time (String)
 	 */
-	private String timeFormatted(String time) {
+	protected static String timeFormatted(String time) {
 		Log.d(DefaultView.TAG, "Unformatted String: " + time);
 
 		try{

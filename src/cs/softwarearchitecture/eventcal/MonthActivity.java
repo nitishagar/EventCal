@@ -1,13 +1,19 @@
 package cs.softwarearchitecture.eventcal;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
+import android.app.DatePickerDialog;
+import android.app.DatePickerDialog.OnDateSetListener;
+import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,29 +21,40 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.squareup.timessquare.CalendarPickerView;
+import com.squareup.timessquare.CalendarPickerView.OnDateSelectedListener;
 import com.squareup.timessquare.CalendarPickerView.SelectionMode;
 
+import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
+import cs.softwarearchitecture.eventcal.model.Event;
 import cs.softwarearchitecture.eventcal.modify.AddEvent;
 
 public class MonthActivity extends DefaultView {
 
-	private CalendarPickerView calendar;
+	private CalendarPickerView mCalendar;
 
 	public static int MONTH_VIEW = 1;
-	ListView eventList;
-	EventListAdapter eventListAdapter;
+	
+	ListView mEventListView;
+	
+	EventListAdapter mEventListAdapter;
 
-	private String[] eventNames;
+	// Content Resolver
+	private static ContentResolver mEventContentResolver;
+	//private Event[] eventList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_month);
+
+		mEventContentResolver = getContentResolver();
 
 		final Calendar nextYear = Calendar.getInstance();
 		nextYear.add(Calendar.YEAR, 1);
@@ -45,18 +62,30 @@ public class MonthActivity extends DefaultView {
 		final Calendar lastYear = Calendar.getInstance();
 		lastYear.add(Calendar.YEAR, -1);
 
-		calendar = (CalendarPickerView) findViewById(R.id.monthview);
-		calendar.init(lastYear.getTime(), nextYear.getTime())
+
+		mCalendar = (CalendarPickerView) findViewById(R.id.monthview);
+		mCalendar.init(lastYear.getTime(), nextYear.getTime())
 		.inMode(SelectionMode.SINGLE)
 		.withSelectedDate(new Date());
 
-		eventListAdapter = new EventListAdapter(this);
-		
-		// change later
-		eventNames = null; 
+		mCalendar.setOnDateSelectedListener(new onDateSelect());
 
-		eventList = (ListView) findViewById(R.id.eventList);
-		eventList.setAdapter(eventListAdapter);
+		//eventList = getCurrentDayEvents();
+
+		mEventListAdapter = new EventListAdapter(this);
+		mEventListView = (ListView) findViewById(R.id.eventList);
+		mEventListView.setAdapter(mEventListAdapter);
+	}
+
+	public class onDateSelect implements OnDateSelectedListener{
+
+		@Override
+		public void onDateSelected(Date date) {
+			mCalendarChanging.setTime(date);
+			mEventListAdapter.notifyDataSetChanged();
+
+			Log.v(TAG, "in onDateSelected Listener");
+		}
 	}
 
 	/* (non-Javadoc)
@@ -118,7 +147,6 @@ public class MonthActivity extends DefaultView {
 		};
 
 		actionBar.setListNavigationCallbacks(mSpinnerAdapter, mOnNavigationListener);
-
 	}
 
 	@Override
@@ -138,30 +166,129 @@ public class MonthActivity extends DefaultView {
 			startActivity(addEventIntent);
 			break;
 		case R.id.today:
-			calendar.selectDate(new Date());
+			mCalendar.selectDate(new Date());
 			break;
 		}
-
 		return true;
 	}
 
-	public class EventListAdapter extends ArrayAdapter<String> {
+
+	@Override
+	protected Dialog onCreateDialog(final int iD)
+	{
+		switch (iD)
+		{
+		case R.id.action_goto:
+			return new DatePickerDialog(this, new OnDateSetListener()
+
+			{
+				@Override
+				public void onDateSet(DatePicker view, int year,
+						int monthOfYear, int dayOfMonth)
+				{
+					mCalendarChanging.set(year, monthOfYear, dayOfMonth);
+					mCalendar.selectDate(mCalendarChanging.getTime());
+				}
+			}, mCalendarChanging.get(Calendar.YEAR),
+			mCalendarChanging.get(Calendar.MONTH),
+			mCalendarChanging.get(Calendar.DAY_OF_MONTH));	
+		}
+
+		return null;
+	}
+
+	// List fragment adapter
+	public class EventListAdapter extends ArrayAdapter<Event> {
 		private final Context context;
+		private ArrayList<Event> events;
 
 		public EventListAdapter(Context context){
-			super(context, R.layout.rowview);
+			super(context, R.layout.agenda_item);
 			this.context = context;
+			Log.v(TAG, "in adapter constructor");
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View rowView = inflater.inflate(R.layout.rowview, parent, false);
-			TextView textView = (TextView) rowView.findViewById(R.id.eventname);
-			textView.setText(eventNames[position]);
 
-			return rowView;
+			//ArrayList<Event> eventList = getCurrentDayEvents();
+			Log.v(TAG, "in getView of list adapter");
+
+			View listViewItem = inflater.inflate(R.layout.agenda_item, parent, false);
+			
+			TextView seperatorDate = (TextView) listViewItem.findViewById(R.id.separator);
+			TextView eventTitle = (TextView) listViewItem.findViewById(R.id.event_title);
+			TextView eventTime = (TextView) listViewItem.findViewById(R.id.event_subtitle);
+
+			// Event Image setup
+			ImageView eventImage = (ImageView) listViewItem.findViewById(R.id.event_image);
+			
+			if (events.size() > 0) {
+				
+				// Seperator not needed for this view
+				seperatorDate.setVisibility(View.GONE);
+				
+				eventTitle.setText(((Event) events.get(position)).getTitle());
+				
+				String startTime = ((Event) events.get(position)).getStartTime();
+				String endTime = ((Event) events.get(position)).getEndTime();
+				
+				if(endTime != null)
+					eventTime.setText(timeFormatted(startTime) + "-" 
+												+ timeFormatted(endTime));
+				else
+					eventTime.setText(timeFormatted(startTime));
+
+				String imageResourceType = ((Event) events.get(position)).getGroup();
+				
+				if (imageResourceType.equals("PERSONAL")) {
+					eventImage.setImageResource(R.drawable.ic_action_personal);
+				}
+
+				if (imageResourceType.equals("FACEBOOK")) {
+					eventImage.setImageResource(R.drawable.ic_action_facebook_event);
+				}
+
+				if (imageResourceType.equals("EVENTBRITE")) {
+					eventImage.setImageResource(R.drawable.ic_action_eventbrite_event);
+				}
+
+				if (imageResourceType.equals("UW")) {
+					eventImage.setImageResource(R.drawable.ic_action_uw_event);
+				}
+
+				if (imageResourceType.equals("GOOGLE")) {
+					eventImage.setImageResource(R.drawable.ic_action_google_event);
+				}
+			}
+			
+			return listViewItem;
+		}
+
+		@Override
+		public int getCount(){
+			events = DayViewFragment.getCurrentDayEvents();
+			Log.v(TAG, "list adapter getCount: " + events.size());
+			return events.size();
+		}
+		
+		/**
+		 * Formatted Time String for Share 
+		 * @param time
+		 * @return time (String)
+		 */
+		protected String timeFormatted(String time) {
+			Log.d(DefaultView.TAG, "Unformatted String: " + time);
+
+			try{
+				time = time.substring(0, 2) + ":" + time.substring(2, 4);
+			}
+			catch (NullPointerException e){
+				Log.e(DefaultView.TAG, "Exception caught: (NullPointer) " + e.getMessage());
+			}
+			return time;
 		}
 	} 
 }

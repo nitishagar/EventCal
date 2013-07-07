@@ -149,9 +149,9 @@ public class EditEvent extends Activity implements OnClickListener {
 
 		// Setting the date
 		year = Integer.parseInt(date.substring(5,date.length()));
-		monthOfYear = Integer.parseInt(date.substring(3,5)) - 1;
+		monthOfYear = Integer.parseInt(date.substring(3,5));
 		dayOfMonth = Integer.parseInt(date.substring(1,3));
-		mDateTime.set(year, monthOfYear, dayOfMonth);
+		mDateTime.set(year, monthOfYear - 1, dayOfMonth);
 		mFromDate = CurrentDateTimeConverter.timeDateFormatter(dayOfMonth, monthOfYear, Integer.toString(year));
 		mToDate = CurrentDateTimeConverter.timeDateFormatter(dayOfMonth, monthOfYear, Integer.toString(year));
 		txtDate.setText(mDateFormatter.format(mDateTime.getTime()));

@@ -8,7 +8,7 @@
         android:id="@+id/monthview"
         android:layout_width="match_parent"
         android:layout_height="274dp"
-        android:layout_weight="0.04"
+        android:layout_weight="0.34"
         android:background="#FFFFFF"
         android:clipToPadding="false"
         android:paddingBottom="100dp"
@@ -16,19 +16,23 @@
         android:paddingRight="16dp"
         android:scrollbarStyle="outsideOverlay" />
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray" />
+
     <LinearLayout
         android:id="@+id/monthListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.24"
-        android:orientation="vertical" >
+        android:orientation="vertical" 
+        android:background="@drawable/gradient_month_view" >
 
         <ListView
             android:id="@+id/eventList"
             android:layout_width="fill_parent"
-            android:layout_height="201dp" >
-        </ListView>
-
+            android:layout_height="172dp" />
     </LinearLayout>
 
 </LinearLayout>
