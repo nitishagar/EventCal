@@ -9,7 +9,11 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import cs.softwarearchitecture.eventcal.modify.EditEvent;
 
 /**
@@ -24,6 +28,9 @@ public class EventNotificationReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Bundle extras = intent.getExtras();
+		
+		Log.d("NOTIFICATION", "notification receiver hooked!");
+		
         if (extras != null) {
             String title = extras.getString("title");
             String start_time = extras.getString("start_time");
@@ -52,6 +59,12 @@ public class EventNotificationReceiver extends BroadcastReceiver {
             mNotification.setLatestEventInfo(context, context.getString(R.string.app_name), title, pi);
             mNotification.flags |= Notification.FLAG_AUTO_CANCEL | Notification.DEFAULT_SOUND;
             mNotificationManager.notify(1, mNotification);
+            
+            // ringtone for notification
+            String notification_ring_URI = extras.getString("notification_tone", null);
+//          Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Ringtone ringtone = RingtoneManager.getRingtone(context, Uri.parse(notification_ring_URI));
+            ringtone.play();
         }
 	}
 

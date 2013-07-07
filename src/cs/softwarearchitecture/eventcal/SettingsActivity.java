@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -36,6 +37,10 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 
 	SharedPreferences mSettings;
 	
+	// Pref. storage
+	protected static SharedPreferences mSettingPreference;
+	protected static Editor mSettingEditor;
+	
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
@@ -47,8 +52,9 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 		// Add 'general' preferences.
 		addPreferencesFromResource(R.xml.pref_general);
 		mSettings = PreferenceManager.getDefaultSharedPreferences(this);
-
 		mSettings.registerOnSharedPreferenceChangeListener(this);
+		
+		mSettingPreference = getSharedPreferences("setting-pref", 0);
 
 		// Add 'notifications' preferences, and a corresponding header.
 		PreferenceCategory preferenceHeader = new PreferenceCategory(this);
@@ -97,7 +103,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 				if (TextUtils.isEmpty(stringValue)) {
 					// Empty values correspond to 'silent' (no ringtone).
 					preference.setSummary(R.string.pref_ringtone_silent);
-
+					
 				} else {
 					Ringtone ringtone = RingtoneManager.getRingtone(
 							preference.getContext(), Uri.parse(stringValue));
@@ -111,6 +117,10 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 						String name = ringtone
 								.getTitle(preference.getContext());
 						preference.setSummary(name);
+						
+						mSettingEditor = mSettingPreference.edit();
+						mSettingEditor.putString("notification_tone", stringValue);
+						mSettingEditor.commit();
 					}
 				}
 
@@ -168,7 +178,8 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 		public void onComplete(Bundle values) {
 			Log.d(DefaultView.TAG, "Facebook Login successful!");
 			//			mText.setText("Facebook Login successful. Press Menu...");
-			DefaultView.mEditor = DefaultView.mPreference.edit();
+			SharedPreferences preference = getSharedPreferences("facebook-session", 0);
+			DefaultView.mEditor = preference.edit();
 			DefaultView.mEditor.putString("access_token", DefaultView.mFacebook.getAccessToken());
 			DefaultView.mEditor.putLong("access_expires", DefaultView.mFacebook.getAccessExpires());
 			DefaultView.mEditor.commit();
