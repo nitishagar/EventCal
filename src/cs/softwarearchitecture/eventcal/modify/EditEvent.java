@@ -47,7 +47,7 @@ public class EditEvent extends Activity implements OnClickListener {
 	private String[] mIdArgs = new String[1];
 
 	SimpleDateFormat mDateFormatter = new SimpleDateFormat("MMMM dd yyyy");
-	SimpleDateFormat mTimeFormatter = new SimpleDateFormat("hh:mm a");
+	SimpleDateFormat mTimeFormatter = new SimpleDateFormat("hh:mm aa");
 
 	// Share event provider
 	private ShareActionProvider mShareActionProvider;
@@ -159,17 +159,19 @@ public class EditEvent extends Activity implements OnClickListener {
 		// setting the time
 		switch(txtTime.getId()){
 		case R.id.fromTime:
-			hourOfDay = Integer.parseInt(start_time.substring(0, 2));
-			minute = Integer.parseInt(start_time.substring(2, 4));
+			hourOfDay = Integer.parseInt(start_time.substring(1, 3));
+			minute = Integer.parseInt(start_time.substring(3, 5));
 			
 			mFromTime = CurrentDateTimeConverter.timeDateFormatter(hourOfDay, minute, "00");
+			Log.d("TIME VALUE", "Time: " + Integer.toString(hourOfDay) + ":" + Integer.toString(minute) + "--" + start_time);
 			break;
 		case R.id.toTime:
 			if (end_time != null){
-				hourOfDay = Integer.parseInt(end_time.substring(0, 2));
-				minute = Integer.parseInt(end_time.substring(2, 4));
+				hourOfDay = Integer.parseInt(end_time.substring(1, 3));
+				minute = Integer.parseInt(end_time.substring(3, 5));
 			
 				mToTime = CurrentDateTimeConverter.timeDateFormatter(hourOfDay, minute, "00");
+				Log.d("TIME VALUE", "Time: " + Integer.toString(hourOfDay) + ":" + Integer.toString(minute) + "--" + end_time);
 			}
 			else{
 				mToTime = mFromTime;
@@ -179,6 +181,7 @@ public class EditEvent extends Activity implements OnClickListener {
 
 		mDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
 		mDateTime.set(Calendar.MINUTE, minute);
+		mDateTime.set(Calendar.SECOND, 0);
 		txtTime.setText(mTimeFormatter.format(mDateTime.getTime()));
 	}
 
