@@ -61,6 +61,7 @@ import cs.softwarearchitecture.eventcal.model.Event;
 import cs.softwarearchitecture.eventcal.modify.AddEvent;
 import cs.softwarearchitecture.eventcal.modify.EditEvent;
 import cs.softwarearchitecture.eventcal.services.FacebookService;
+import cs.softwarearchitecture.eventcal.services.GoogleService;
 import cs.softwarearchitecture.eventcal.services.getEventBriteEventService;
 import cs.softwarearchitecture.eventcal.viewpagerindicator.TitlePageIndicator;
 
@@ -321,6 +322,9 @@ public class DefaultView extends FragmentActivity {
 
 			if(settingsPreference.getBoolean("google_login", false)) {
 				// Google service kickoff
+				Log.d(TAG, "Google Service kickoff!");
+				Intent intent = new Intent(DefaultView.this, GoogleService.class);
+				startService(intent);
 			}
 
 			if(settingsPreference.getBoolean("eventbrite_login", false)) {

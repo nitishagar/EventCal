@@ -255,6 +255,7 @@ public class DBEventsContentProvider extends ContentProvider {
 								+" values " + "(?,?,?,?,?,?,?,?)");
 
 				for (ContentValues value : values){
+					try {
 					//bind the 1-indexed ?'s to the values specified
 					insert.bindString(1, value.getAsString(DBSQLiteHelper.COLUMN_TABLE));
 					insert.bindString(2, value.getAsString(DBSQLiteHelper.COLUMN_TITLE));
@@ -278,10 +279,18 @@ public class DBEventsContentProvider extends ContentProvider {
 			    	insert.bindString(8, value.getAsString(DBSQLiteHelper.COLUMN_REV_START_DATE));
 					
 			    	insert.execute();
+					}
+					catch (Exception e) {
+						Log.e(DefaultView.TAG, "Exception caught: " + e.getMessage());
+					}
 				}
 				db.setTransactionSuccessful();
 				numInserted = values.length;
-			} finally {
+			} 
+			catch (Exception e) {
+				Log.e(DefaultView.TAG, "Exception caught: " + e.getMessage());
+			}
+			finally {
 				db.endTransaction();
 			}
 			Log.d(DefaultView.TAG, "Number of insertions: " + Integer.toString(numInserted));
