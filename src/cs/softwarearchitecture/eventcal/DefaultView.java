@@ -63,6 +63,7 @@ import cs.softwarearchitecture.eventcal.modify.EditEvent;
 import cs.softwarearchitecture.eventcal.services.FacebookService;
 import cs.softwarearchitecture.eventcal.services.GoogleService;
 import cs.softwarearchitecture.eventcal.services.getEventBriteEventService;
+import cs.softwarearchitecture.eventcal.services.getUWEventService;
 import cs.softwarearchitecture.eventcal.viewpagerindicator.TitlePageIndicator;
 
 public class DefaultView extends FragmentActivity {  
@@ -334,6 +335,8 @@ public class DefaultView extends FragmentActivity {
 			}
 
 			// UW service kickoff
+			Intent intent = new Intent(DefaultView.this, getUWEventService.class);
+			startService(intent);
 			return null;
 		}
 

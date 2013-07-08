@@ -88,7 +88,9 @@
         <service android:name="cs.softwarearchitecture.eventcal.services.GoogleService"></service>
         <service android:enabled="true"
                  android:name="cs.softwarearchitecture.eventcal.services.getEventBriteEventService"></service>
-        
+        <service android:enabled="true"
+                 android:name="cs.softwarearchitecture.eventcal.services.getUWEventService"></service>
+
         <receiver android:name="cs.softwarearchitecture.eventcal.EventNotificationReceiver" >
             <intent-filter>
             	<data android:scheme="timer:" />
