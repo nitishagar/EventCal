@@ -488,6 +488,10 @@ public class DefaultView extends FragmentActivity {
 			mCalendarChanging = Calendar.getInstance(Locale.getDefault());
 			updateDate(0);
 			break;
+		case R.id.menu_location:
+			Intent locationIntent = new Intent(this, MapActivity.class);
+			startActivity(locationIntent);
+			break;
 		}
 		return true;
 	}
