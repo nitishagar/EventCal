@@ -33,7 +33,7 @@ public interface Consts {
   /**
    * Set your Web Client ID for authentication at backend.
    */
-  public static final String WEB_CLIENT_ID = "955250827266.apps.googleusercontent.com";
+  public static final String WEB_CLIENT_ID = "955250827266-v8r9vuecj6r82q7o6tdl02q81aprruna.apps.googleusercontent.com";
 
   /**
    * Set default user authentication enabled or disabled.
