@@ -29,9 +29,10 @@ import android.widget.ListView;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
-import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
 import cs.softwarearchitecture.eventcal.modify.AddEvent;
 import cs.softwarearchitecture.eventcal.modify.EditEvent;
+import cs.softwarearchitecture.eventcal.utility.ColumnNames;
+import cs.softwarearchitecture.eventcal.utility.CurrentDateTimeConverter;
 
 public class AgendaActivity extends DefaultView implements LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener  {
 
@@ -148,20 +149,20 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 	    switch (loaderID) {
 	        case URL_LOADER:
 	            // Returns a new CursorLoader
-	        	String[] projection = { DBSQLiteHelper.COLUMN_ID, DBSQLiteHelper.COLUMN_TITLE, 
-	        								DBSQLiteHelper.COLUMN_TABLE, DBSQLiteHelper.COLUMN_START_DATE, 
-	        								DBSQLiteHelper.COLUMN_REV_START_DATE, DBSQLiteHelper.COLUMN_START_TIME,
-	        								DBSQLiteHelper.COLUMN_END_TIME };
+	        	String[] projection = { ColumnNames.COLUMN_ID, ColumnNames.COLUMN_TITLE, 
+	        								ColumnNames.COLUMN_TABLE, ColumnNames.COLUMN_START_DATE, 
+	        								ColumnNames.COLUMN_REV_START_DATE, ColumnNames.COLUMN_START_TIME,
+	        								ColumnNames.COLUMN_END_TIME };
 	        	String[] argValue = { "0" };
 	        	
 	            return new CursorLoader(
 	                        this,						    		     // Parent activity context
 	                        DBEventsContentProvider.CONTENT_URI,        // Table to query
 	                        projection,                                // Projection to return
-	                        DBSQLiteHelper.COLUMN_START_TIME + "!=?",            // Selection clause
+	                        ColumnNames.COLUMN_START_TIME + "!=?",            // Selection clause
 	                        argValue,            							    // Selection arguments
-	                        DBSQLiteHelper.COLUMN_REV_START_DATE + " ASC, " 
-	                        + DBSQLiteHelper.COLUMN_START_TIME + " ASC"			  // Sort order
+	                        ColumnNames.COLUMN_REV_START_DATE + " ASC, " 
+	                        + ColumnNames.COLUMN_START_TIME + " ASC"			  // Sort order
 	        );
 	        default:
 	            // An invalid id was passed in
@@ -199,10 +200,10 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 		if (cursor.getCount() > 0) {
 			while (cursor.moveToNext()) {
 				Log.d(DefaultView.TAG, "Date current found: " + 
-						cursor.getInt(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_DATE)));
+						cursor.getInt(cursor.getColumnIndex(ColumnNames.COLUMN_START_DATE)));
 				String reverseDate = date.substring(5, date.length()) 
 						+ date.substring(3, 5) + date.substring(0, 3);
-				if(Integer.parseInt(reverseDate) >= cursor.getInt(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_REV_START_DATE))){
+				if(Integer.parseInt(reverseDate) > cursor.getInt(cursor.getColumnIndex(ColumnNames.COLUMN_REV_START_DATE))){
 					Log.d(DefaultView.TAG, "Position updated to: " + Integer.toString(desiredPosition));
 					desiredPosition += 1;
 				}
@@ -247,13 +248,13 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 		String selectedEventTitle = selectedEvent.getText().toString();
 		
 		// Get all the details about that event
-		String selection = DBSQLiteHelper.COLUMN_TITLE + " LIKE ? ";
+		String selection = ColumnNames.COLUMN_TITLE + " LIKE ? ";
 		String[] selectionArgs = new String[] { selectedEventTitle };
 		
 		Cursor cursor = 
 				getContentResolver().query(
 						DBEventsContentProvider.CONTENT_URI, null, 
-						selection, selectionArgs, DBSQLiteHelper.COLUMN_START_DATE + " ASC");
+						selection, selectionArgs, ColumnNames.COLUMN_START_DATE + " ASC");
 		
 		// Intent for showing event details
 		Intent editEventIntent = 
@@ -262,13 +263,13 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 		if (cursor.moveToFirst()) {
 			Log.d(DefaultView.TAG, "loading selected events ");
 			while(!cursor.isAfterLast()){
-				int _id = cursor.getInt(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_ID));
-				String title = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TITLE));
-				String start_time = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_TIME));
-				String end_time = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_END_TIME));
-				String date = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_DATE));
-				String group = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TABLE));
-				int reminder = cursor.getInt(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_REMINDER_TIME));
+				int _id = cursor.getInt(cursor.getColumnIndex(ColumnNames.COLUMN_ID));
+				String title = cursor.getString(cursor.getColumnIndex(ColumnNames.COLUMN_TITLE));
+				String start_time = cursor.getString(cursor.getColumnIndex(ColumnNames.COLUMN_START_TIME));
+				String end_time = cursor.getString(cursor.getColumnIndex(ColumnNames.COLUMN_END_TIME));
+				String date = cursor.getString(cursor.getColumnIndex(ColumnNames.COLUMN_START_DATE));
+				String group = cursor.getString(cursor.getColumnIndex(ColumnNames.COLUMN_TABLE));
+				int reminder = cursor.getInt(cursor.getColumnIndex(ColumnNames.COLUMN_REMINDER_TIME));
 
 				editEventIntent.putExtra("title", title);
 				editEventIntent.putExtra("start_time", start_time);
@@ -318,6 +319,10 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 			catch (Exception e){
 				Log.e(DefaultView.TAG, "Cursor empty: " + e.getMessage());
 			}
+			break;
+		case R.id.menu_location:
+			Intent locationIntent = new Intent(this, MapActivity.class);
+			startActivity(locationIntent);
 			break;
 		}
 		return true;

@@ -14,9 +14,9 @@ import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
 import android.text.format.DateFormat;
 import android.util.Log;
-import cs.softwarearchitecture.eventcal.CurrentDateTimeConverter;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
-import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
+import cs.softwarearchitecture.eventcal.utility.ColumnNames;
+import cs.softwarearchitecture.eventcal.utility.CurrentDateTimeConverter;
 
 /**
  * @author nitishagarwal
@@ -136,27 +136,27 @@ public class GoogleService extends IntentService {
 						try {
 							values[i] = new ContentValues();
 
-							values[i].put(DBSQLiteHelper.COLUMN_TABLE, "GOOGLE");
-							values[i].put(DBSQLiteHelper.COLUMN_TITLE, event_title);
+							values[i].put(ColumnNames.COLUMN_TABLE, "GOOGLE");
+							values[i].put(ColumnNames.COLUMN_TITLE, event_title);
 
 							if (location != null)
-								values[i].put(DBSQLiteHelper.COLUMN_LOCATION, location);
+								values[i].put(ColumnNames.COLUMN_LOCATION, location);
 							else
-								values[i].put(DBSQLiteHelper.COLUMN_LOCATION, " ");
+								values[i].put(ColumnNames.COLUMN_LOCATION, " ");
 
-							values[i].put(DBSQLiteHelper.COLUMN_START_DATE, 
+							values[i].put(ColumnNames.COLUMN_START_DATE, 
 									CurrentDateTimeConverter.timeDateFormatter(Integer.parseInt(start_date.substring(3, 5)), 
 											Integer.parseInt(start_date.substring(0, 2)), start_date.substring(6, start_date.length())));
-							values[i].put(DBSQLiteHelper.COLUMN_START_TIME, timeFormat(start_time));
+							values[i].put(ColumnNames.COLUMN_START_TIME, timeFormat(start_time));
 
 							if (end_date != null)
-								values[i].put(DBSQLiteHelper.COLUMN_END_DATE, CurrentDateTimeConverter.timeDateFormatter(Integer.parseInt(end_date.substring(3, 5)), 
+								values[i].put(ColumnNames.COLUMN_END_DATE, CurrentDateTimeConverter.timeDateFormatter(Integer.parseInt(end_date.substring(3, 5)), 
 										Integer.parseInt(end_date.substring(0, 2)), end_date.substring(6, end_date.length())));
 
 							if(end_time != null)
-								values[i].put(DBSQLiteHelper.COLUMN_END_TIME, timeFormat(end_time));
+								values[i].put(ColumnNames.COLUMN_END_TIME, timeFormat(end_time));
 
-							values[i].put(DBSQLiteHelper.COLUMN_REMINDER_TIME, reminder);
+							values[i].put(ColumnNames.COLUMN_REMINDER_TIME, reminder);
 
 						}
 						catch(Exception e) {

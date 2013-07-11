@@ -29,8 +29,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="4" language="java" name="cs.softwarearchitecture.eventcal.Values" project="EventCal" 
-    file="/EventCal/src/cs/softwarearchitecture/eventcal/Values.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="4" language="java" name="cs.softwarearchitecture.eventcal.utility.Values" project="EventCal" 
+    file="/EventCal/src/cs/softwarearchitecture/eventcal/utility/Values.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="-21" y="101"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      
@@ -100,8 +100,8 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="12" language="java" name="cs.softwarearchitecture.eventcal.model.Event" project="EventCal" 
-    file="/EventCal/src/cs/softwarearchitecture/eventcal/model/Event.java" binary="false" corner="BOTTOM_RIGHT">    
+  <class id="12" language="java" name="cs.softwcs.softwarearchitecture.eventcal.utility.Eventect="EventCal" 
+    file="/EventCal/src/cs/softwarearchitecture/eventcal/utility/Event.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="201" y="639"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
       visibility="true">      

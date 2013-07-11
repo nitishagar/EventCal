@@ -4,14 +4,16 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.ContentValues;
+import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,13 +25,19 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TimePicker;
 import android.widget.Toast;
-import cs.softwarearchitecture.eventcal.CurrentDateTimeConverter;
+
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
+import com.google.android.gms.maps.SupportMapFragment;
+
 import cs.softwarearchitecture.eventcal.DefaultView;
 import cs.softwarearchitecture.eventcal.R;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
-import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
+import cs.softwarearchitecture.eventcal.utility.ColumnNames;
+import cs.softwarearchitecture.eventcal.utility.CurrentDateTimeConverter;
+import cs.softwarearchitecture.eventcal.utility.Geohasher;
 
-public class AddEvent extends Activity implements OnClickListener {
+public class AddEvent extends FragmentActivity implements OnClickListener, OnMyLocationChangeListener {
 	
 	// Event Group
 	public static final String PERSONAL = "PERSONAL";
@@ -48,6 +56,15 @@ public class AddEvent extends Activity implements OnClickListener {
 	private int mReminder = 0;
 	
 	public static String TAG = "Add Event";
+	
+	// Map for location 
+	private GoogleMap mMap;
+
+	private static final Geohasher mGeoHasher = new Geohasher();
+
+	private String mLocation;
+
+	private boolean mLocationAvailable = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +118,29 @@ public class AddEvent extends Activity implements OnClickListener {
 		save.setOnClickListener(this);
 		cancel.setOnClickListener(this);
 		
+		// Maps setup
+		setUpMapIfNeeded();
+		
 	}
+	
+	private void setUpMapIfNeeded() {
+        // Do a null check to confirm that we have not already instantiated the
+        // map.
+        if (mMap == null) {
+            // Try to obtain the map from the SupportMapFragment.
+            mMap = ((SupportMapFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.map)).getMap();
+            // Check if we were successful in obtaining the map.
+            if (mMap != null) {
+                setUpMap();
+            }
+        }
+    }
+	
+	private void setUpMap() {
+        mMap.setMyLocationEnabled(true);
+        mMap.setOnMyLocationChangeListener(this);
+    }
 	
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
@@ -239,16 +278,19 @@ public class AddEvent extends Activity implements OnClickListener {
 				Log.v(TAG, "from : " + mFromTime + " to: " + mToTime);
 				Log.v(TAG, "from date: " + mFromDate);
 				ContentValues values = new ContentValues();
-				values.put(DBSQLiteHelper.COLUMN_TABLE, PERSONAL);
-				values.put(DBSQLiteHelper.COLUMN_TITLE, mTitle);
-				values.put(DBSQLiteHelper.COLUMN_START_DATE, mFromDate);
-				values.put(DBSQLiteHelper.COLUMN_START_TIME, mFromTime);
+				values.put(ColumnNames.COLUMN_TABLE, PERSONAL);
+				values.put(ColumnNames.COLUMN_TITLE, mTitle);
+				values.put(ColumnNames.COLUMN_START_DATE, mFromDate);
+				values.put(ColumnNames.COLUMN_START_TIME, mFromTime);
 				if (mToTime != 0){
-					values.put(DBSQLiteHelper.COLUMN_END_TIME, mToTime);
-					values.put(DBSQLiteHelper.COLUMN_END_DATE, mFromDate);
+					values.put(ColumnNames.COLUMN_END_TIME, mToTime);
+					values.put(ColumnNames.COLUMN_END_DATE, mFromDate);
 				}
 				if (mReminder != 0)
-					values.put(DBSQLiteHelper.COLUMN_REMINDER_TIME, mReminder);
+					values.put(ColumnNames.COLUMN_REMINDER_TIME, mReminder);
+				
+				if (mLocationAvailable)
+					values.put(ColumnNames.COLUMN_LOCATION, mLocation);
 				
 				Log.d(TAG, "from : " + Integer.toString(mFromTime) + 
 						" to: " + Integer.toString(mToTime));
@@ -288,5 +330,11 @@ public class AddEvent extends Activity implements OnClickListener {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public void onMyLocationChange(Location location) {
+		mLocation = mGeoHasher.encode(location);
+		mLocationAvailable  = true;
 	}
 }

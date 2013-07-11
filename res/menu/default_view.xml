@@ -13,18 +13,23 @@
     <item
         android:id="@+id/menu_add"
         android:icon="@android:drawable/ic_menu_add"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="always"
         android:title="@string/add_event"/>
 	<item
         android:id="@+id/today"
         android:icon="@android:drawable/ic_menu_today"
-        android:showAsAction="ifRoom"
+        android:showAsAction="always"
         android:title="@string/today"/>
-	
-	<item android:id="@+id/search"
-          android:title="@string/event_search"
-          android:icon="@android:drawable/ic_menu_search"
-          android:showAsAction="collapseActionView|ifRoom"
-          android:actionViewClass="android.widget.SearchView" />
+	<item
+	    android:id="@+id/search"
+	    android:actionViewClass="android.widget.SearchView"
+	    android:icon="@android:drawable/ic_menu_search"
+	    android:showAsAction="collapseActionView|ifRoom"
+	    android:title="@string/event_search"/>
+	<item
+        android:id="@+id/menu_location"
+        android:icon="@android:drawable/ic_menu_compass"
+        android:showAsAction="always"
+        android:title="@string/location"/>
 	
 </menu>

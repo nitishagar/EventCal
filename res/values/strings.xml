@@ -45,5 +45,7 @@
     <string name="ok">OK</string>
     <string name="user_id">User ID</string>
     <string name="eventbrite_user_id">Eventbrite User ID</string>
+    <string name="location">Location</string>
+    <string name="title_activity_map">Location</string>
 
 </resources>
