@@ -15,8 +15,8 @@ import android.content.Intent;
 import android.util.JsonReader;
 import android.util.Log;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
-import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
-import cs.softwarearchitecture.eventcal.CurrentDateTimeConverter;
+import cs.softwarearchitecture.eventcal.utility.ColumnNames;
+import cs.softwarearchitecture.eventcal.utility.CurrentDateTimeConverter;
 
 
 public class getEventBriteEventService extends IntentService {
@@ -175,13 +175,13 @@ public class getEventBriteEventService extends IntentService {
 	    		int insertEndTime = Integer.parseInt(insertEvent.endTime);
 	    		int insertEndDate = Integer.parseInt(insertEvent.endDate);*/
 	    		
-	            values.put(DBSQLiteHelper.COLUMN_TABLE, "EVENTBRITE");
-	            values.put(DBSQLiteHelper.COLUMN_TITLE, insertEvent.title);
-	            values.put(DBSQLiteHelper.COLUMN_START_DATE,  insertEvent.startDate);
-	            values.put(DBSQLiteHelper.COLUMN_START_TIME, insertEvent.startTime);
-	            values.put(DBSQLiteHelper.COLUMN_END_TIME,  insertEvent.endTime);
-	            values.put(DBSQLiteHelper.COLUMN_END_DATE,  insertEvent.endDate);
-	            values.put(DBSQLiteHelper.COLUMN_LOCATION, insertEvent.location);
+	            values.put(ColumnNames.COLUMN_TABLE, "EVENTBRITE");
+	            values.put(ColumnNames.COLUMN_TITLE, insertEvent.title);
+	            values.put(ColumnNames.COLUMN_START_DATE,  insertEvent.startDate);
+	            values.put(ColumnNames.COLUMN_START_TIME, insertEvent.startTime);
+	            values.put(ColumnNames.COLUMN_END_TIME,  insertEvent.endTime);
+	            values.put(ColumnNames.COLUMN_END_DATE,  insertEvent.endDate);
+	            values.put(ColumnNames.COLUMN_LOCATION, insertEvent.location);
 
 	            getContentResolver().insert(DBEventsContentProvider.CONTENT_URI, values);
 	            j += 1;

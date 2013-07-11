@@ -18,8 +18,8 @@ import android.util.JsonReader;
 import android.util.Log;
 
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
-import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
-import cs.softwarearchitecture.eventcal.CurrentDateTimeConverter;
+import cs.softwarearchitecture.eventcal.utility.ColumnNames;
+import cs.softwarearchitecture.eventcal.utility.CurrentDateTimeConverter;
 
 public class getUWEventService extends IntentService {
 	public class Event{
@@ -308,14 +308,14 @@ public class getUWEventService extends IntentService {
 	    		//int insertStartDate = Integer.parseInt(insertEvent.startDate);
 	    		//int insertEndTime = Integer.parseInt(insertEvent.endTime);
 	    		//int insertEndDate = Integer.parseInt(insertEvent.endDate);
-	            values.put(DBSQLiteHelper.COLUMN_TABLE, "UW");
-	            values.put(DBSQLiteHelper.COLUMN_TITLE, insertEvent.title);
-	            values.put(DBSQLiteHelper.COLUMN_START_DATE, insertEvent.startDate);
-	            values.put(DBSQLiteHelper.COLUMN_START_TIME, insertEvent.startTime);
-	            values.put(DBSQLiteHelper.COLUMN_END_TIME, insertEvent.endTime);
-	            values.put(DBSQLiteHelper.COLUMN_END_DATE, insertEvent.endDate);
-	            values.put(DBSQLiteHelper.COLUMN_LOCATION, insertEvent.location);
-	            values.put(DBSQLiteHelper.COLUMN_REMINDER_TIME,"");
+	            values.put(ColumnNames.COLUMN_TABLE, "UW");
+	            values.put(ColumnNames.COLUMN_TITLE, insertEvent.title);
+	            values.put(ColumnNames.COLUMN_START_DATE, insertEvent.startDate);
+	            values.put(ColumnNames.COLUMN_START_TIME, insertEvent.startTime);
+	            values.put(ColumnNames.COLUMN_END_TIME, insertEvent.endTime);
+	            values.put(ColumnNames.COLUMN_END_DATE, insertEvent.endDate);
+	            values.put(ColumnNames.COLUMN_LOCATION, insertEvent.location);
+	            values.put(ColumnNames.COLUMN_REMINDER_TIME,"");
 	            getContentResolver().insert(DBEventsContentProvider.CONTENT_URI, values);
 	            j += 1;
     		}
