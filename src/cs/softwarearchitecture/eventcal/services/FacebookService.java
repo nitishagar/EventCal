@@ -21,10 +21,10 @@ import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.AsyncFacebookRunner.RequestListener;
 import com.facebook.android.FacebookError;
 
-import cs.softwarearchitecture.eventcal.CurrentDateTimeConverter;
 import cs.softwarearchitecture.eventcal.DefaultView;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
-import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
+import cs.softwarearchitecture.eventcal.utility.ColumnNames;
+import cs.softwarearchitecture.eventcal.utility.CurrentDateTimeConverter;
 
 /**
  * @author nitishagarwal
@@ -103,18 +103,18 @@ public class FacebookService extends IntentService {
 					//					FacebookEvent newEvent;
 					values[i] = new ContentValues();
 					
-					values[i].put(DBSQLiteHelper.COLUMN_TABLE, "FACEBOOK");
-					values[i].put(DBSQLiteHelper.COLUMN_TITLE, event.getString("name"));
-					values[i].put(DBSQLiteHelper.COLUMN_LOCATION, event.getString("location"));
+					values[i].put(ColumnNames.COLUMN_TABLE, "FACEBOOK");
+					values[i].put(ColumnNames.COLUMN_TITLE, event.getString("name"));
+					values[i].put(ColumnNames.COLUMN_LOCATION, event.getString("location"));
 
 					try{
 						String end_time = event.getString("end_time");
-						values[i].put(DBSQLiteHelper.COLUMN_START_DATE, currentDateTimeConverter.getDate());
-						values[i].put(DBSQLiteHelper.COLUMN_START_TIME, currentDateTimeConverter.getTime());
+						values[i].put(ColumnNames.COLUMN_START_DATE, currentDateTimeConverter.getDate());
+						values[i].put(ColumnNames.COLUMN_START_TIME, currentDateTimeConverter.getTime());
 						
 						CurrentDateTimeConverter endCurrentTimeConverter = new CurrentDateTimeConverter(end_time);
-						values[i].put(DBSQLiteHelper.COLUMN_END_DATE, endCurrentTimeConverter.getDate());
-						values[i].put(DBSQLiteHelper.COLUMN_END_TIME, endCurrentTimeConverter.getTime());
+						values[i].put(ColumnNames.COLUMN_END_DATE, endCurrentTimeConverter.getDate());
+						values[i].put(ColumnNames.COLUMN_END_TIME, endCurrentTimeConverter.getTime());
 						
 						//						newEvent = new FacebookEvent(event.getString("id"),
 						//								event.getString("name"),
@@ -122,14 +122,14 @@ public class FacebookService extends IntentService {
 						//								event.getString("location"));
 					}catch (JSONException e){
 
-						values[i].put(DBSQLiteHelper.COLUMN_START_DATE, currentDateTimeConverter.getDate());
-						values[i].put(DBSQLiteHelper.COLUMN_START_TIME, currentDateTimeConverter.getTime());
-						values[i].put(DBSQLiteHelper.COLUMN_END_DATE, currentDateTimeConverter.getDate());
+						values[i].put(ColumnNames.COLUMN_START_DATE, currentDateTimeConverter.getDate());
+						values[i].put(ColumnNames.COLUMN_START_TIME, currentDateTimeConverter.getTime());
+						values[i].put(ColumnNames.COLUMN_END_DATE, currentDateTimeConverter.getDate());
 						if (currentDateTimeConverter.getDate() != 0)
-							values[i].put(DBSQLiteHelper.COLUMN_END_TIME, 
+							values[i].put(ColumnNames.COLUMN_END_TIME, 
 									((currentDateTimeConverter.getTime() + 30000) > 1240000) ?(currentDateTimeConverter.getTime() + 30000 - 240000):(currentDateTimeConverter.getTime() + 30000) );
 						else
-							values[i].put(DBSQLiteHelper.COLUMN_END_TIME, 0);
+							values[i].put(ColumnNames.COLUMN_END_TIME, 0);
 						
 					
 						//						newEvent = new FacebookEvent(event.getString("id"),

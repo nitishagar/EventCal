@@ -1,4 +1,4 @@
-package cs.softwarearchitecture.eventcal;
+package cs.softwarearchitecture.eventcal.utility;
 
 import java.util.BitSet;
 import java.util.HashMap;

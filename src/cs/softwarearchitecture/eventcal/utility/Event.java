@@ -1,4 +1,4 @@
-package cs.softwarearchitecture.eventcal.model;
+package cs.softwarearchitecture.eventcal.utility;
 
 public class Event {
 	

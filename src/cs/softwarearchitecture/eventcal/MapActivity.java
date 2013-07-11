@@ -24,6 +24,9 @@ import com.google.cloud.backend.android.CloudEntity;
 import com.google.cloud.backend.android.CloudQuery;
 import com.google.cloud.backend.android.CloudQuery.Order;
 import com.google.cloud.backend.android.CloudQuery.Scope;
+
+import cs.softwarearchitecture.eventcal.utility.Geohasher;
+import cs.softwarearchitecture.eventcal.utility.User;
  
 public class MapActivity extends CloudBackendActivity implements OnMyLocationChangeListener{
  

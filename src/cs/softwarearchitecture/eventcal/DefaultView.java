@@ -56,14 +56,16 @@ import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.Facebook;
 
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
-import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
-import cs.softwarearchitecture.eventcal.model.Event;
 import cs.softwarearchitecture.eventcal.modify.AddEvent;
 import cs.softwarearchitecture.eventcal.modify.EditEvent;
 import cs.softwarearchitecture.eventcal.services.FacebookService;
 import cs.softwarearchitecture.eventcal.services.GoogleService;
 import cs.softwarearchitecture.eventcal.services.getEventBriteEventService;
 import cs.softwarearchitecture.eventcal.services.getUWEventService;
+import cs.softwarearchitecture.eventcal.utility.ColumnNames;
+import cs.softwarearchitecture.eventcal.utility.CurrentDateTimeConverter;
+import cs.softwarearchitecture.eventcal.utility.Event;
+import cs.softwarearchitecture.eventcal.utility.Values;
 import cs.softwarearchitecture.eventcal.viewpagerindicator.TitlePageIndicator;
 
 public class DefaultView extends FragmentActivity {  
@@ -221,14 +223,14 @@ public class DefaultView extends FragmentActivity {
 					while (notifCursor.moveToNext()) {
 						Log.d("NOTIFICATION", "EventCount : " + Integer.toString(notifCursor.getCount()));
 
-						int _id = notifCursor.getInt(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_ID));
-						String title = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_TITLE));
-						String start_time = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_TIME));
-						String end_time = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_END_TIME));
-						String start_date = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_DATE));
-						String location = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_LOCATION));
-						String group = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_TABLE));
-						int reminder = notifCursor.getInt(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_REMINDER_TIME));
+						int _id = notifCursor.getInt(notifCursor.getColumnIndex(ColumnNames.COLUMN_ID));
+						String title = notifCursor.getString(notifCursor.getColumnIndex(ColumnNames.COLUMN_TITLE));
+						String start_time = notifCursor.getString(notifCursor.getColumnIndex(ColumnNames.COLUMN_START_TIME));
+						String end_time = notifCursor.getString(notifCursor.getColumnIndex(ColumnNames.COLUMN_END_TIME));
+						String start_date = notifCursor.getString(notifCursor.getColumnIndex(ColumnNames.COLUMN_START_DATE));
+						String location = notifCursor.getString(notifCursor.getColumnIndex(ColumnNames.COLUMN_LOCATION));
+						String group = notifCursor.getString(notifCursor.getColumnIndex(ColumnNames.COLUMN_TABLE));
+						int reminder = notifCursor.getInt(notifCursor.getColumnIndex(ColumnNames.COLUMN_REMINDER_TIME));
 
 						Intent notificationIntent = new Intent(DefaultView.this,
 								EventNotificationReceiver.class);
@@ -651,22 +653,22 @@ public class DefaultView extends FragmentActivity {
 					mEventContentResolver.query(
 							DBEventsContentProvider.CONTENT_URI, null, 
 							"START_DATE =? AND END_TIME NOT NULL", dateString, 
-							DBSQLiteHelper.COLUMN_START_TIME + " ASC");
+							ColumnNames.COLUMN_START_TIME + " ASC");
 			
 			//Log.v(TAG, "loading events");
 			if (cursor.moveToFirst()) {
 				while(!cursor.isAfterLast()){
-					String type = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TABLE));
+					String type = cursor.getString(cursor.getColumnIndex(ColumnNames.COLUMN_TABLE));
 					Log.d(TAG, "loading events " + type);
 
-					int _id = cursor.getInt(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_ID));
-					String title = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TITLE));
-					String start_time = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_TIME));
-					String end_time = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_END_TIME));
-					String start_date = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_DATE));
-					String location = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_LOCATION));
-					String group = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TABLE));
-					int reminder = cursor.getInt(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_REMINDER_TIME));
+					int _id = cursor.getInt(cursor.getColumnIndex(ColumnNames.COLUMN_ID));
+					String title = cursor.getString(cursor.getColumnIndex(ColumnNames.COLUMN_TITLE));
+					String start_time = cursor.getString(cursor.getColumnIndex(ColumnNames.COLUMN_START_TIME));
+					String end_time = cursor.getString(cursor.getColumnIndex(ColumnNames.COLUMN_END_TIME));
+					String start_date = cursor.getString(cursor.getColumnIndex(ColumnNames.COLUMN_START_DATE));
+					String location = cursor.getString(cursor.getColumnIndex(ColumnNames.COLUMN_LOCATION));
+					String group = cursor.getString(cursor.getColumnIndex(ColumnNames.COLUMN_TABLE));
+					int reminder = cursor.getInt(cursor.getColumnIndex(ColumnNames.COLUMN_REMINDER_TIME));
 
 					Log.v(TAG, "before start_time is " +  start_time);
 					Log.v(TAG, "before end_time is " + end_time);

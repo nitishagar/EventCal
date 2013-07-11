@@ -1,4 +1,4 @@
-package cs.softwarearchitecture.eventcal;
+package cs.softwarearchitecture.eventcal.utility;
 
 public class Values {
 
