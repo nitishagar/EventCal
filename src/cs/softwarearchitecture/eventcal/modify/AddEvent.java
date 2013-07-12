@@ -363,6 +363,9 @@ public class AddEvent extends FragmentActivity implements OnClickListener, OnMyL
 					searchResults.add(addressVal);
 					index = 0;
 				}
+
+				// Clear any previous markers
+				mMap.clear();
 				
 				// Instantiate an AlertDialog.Builder with its constructor
 				popupListViewForSearchResults(searchResults);

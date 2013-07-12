@@ -539,6 +539,9 @@ public class EditEvent extends FragmentActivity implements OnClickListener, OnMy
 					searchResults.add(addressToStringConversion(searchResult));
 				}
 				
+				// Clear any previous markers
+				mMap.clear();
+				
 				// Instantiate an AlertDialog.Builder with its constructor
 				popUpListViewForSearchResults(searchResults);
 				
