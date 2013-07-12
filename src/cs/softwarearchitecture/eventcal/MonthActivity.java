@@ -247,6 +247,7 @@ public class MonthActivity extends DefaultView {
 
 				String imageResourceType = ((Event) events.get(position)).getGroup();
 				
+				// Image selection
 				if (imageResourceType.equals("PERSONAL")) {
 					eventImage.setImageResource(R.drawable.ic_action_personal);
 				}

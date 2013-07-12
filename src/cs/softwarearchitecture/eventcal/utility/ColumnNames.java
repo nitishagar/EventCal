@@ -1,7 +1,5 @@
 package cs.softwarearchitecture.eventcal.utility;
 
-import android.database.sqlite.SQLiteDatabase;
-
 public interface ColumnNames {
 
 	// Table initialization constants
@@ -16,16 +14,5 @@ public interface ColumnNames {
 	public static final String COLUMN_LOCATION = "location";
 	public static final String COLUMN_REMINDER_TIME = "reminder_time";
 	public static final String COLUMN_REV_START_DATE = "reverse_date";
-
-	/* (non-Javadoc)
-	 * @see android.database.sqlite.SQLiteOpenHelper#onCreate(android.database.sqlite.SQLiteDatabase)
-	 */
-	public abstract void onCreate(SQLiteDatabase db);
-
-	/* (non-Javadoc)
-	 * @see android.database.sqlite.SQLiteOpenHelper#onUpgrade(android.database.sqlite.SQLiteDatabase, int, int)
-	 */
-	public abstract void onUpgrade(SQLiteDatabase db, int oldVersion,
-			int newVersion);
 
 }

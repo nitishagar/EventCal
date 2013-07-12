@@ -116,11 +116,11 @@
         <service android:name="cs.softwarearchitecture.eventcal.services.GoogleService" >
         </service>
         <service
-            android:name="cs.softwarearchitecture.eventcal.services.getEventBriteEventService"
+            android:name="cs.softwarearchitecture.eventcal.services.EventbriteEventService"
             android:enabled="true" >
         </service>
         <service
-            android:name="cs.softwarearchitecture.eventcal.services.getUWEventService"
+            android:name="cs.softwarearchitecture.eventcal.services.UWEventService"
             android:enabled="true" >
         </service>
 
