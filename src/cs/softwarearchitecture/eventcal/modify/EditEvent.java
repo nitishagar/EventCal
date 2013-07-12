@@ -540,49 +540,56 @@ public class EditEvent extends FragmentActivity implements OnClickListener, OnMy
 				}
 				
 				// Instantiate an AlertDialog.Builder with its constructor
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				
-				final String[] resultsString = searchResults.toArray(new String[0]);
-				builder.setTitle(R.string.location_results_)
-					   .setItems(resultsString, new DialogInterface.OnClickListener() {
-						   public void onClick(DialogInterface dialog, int arrayIndex) {
-							   InputMethodManager inputManager = (InputMethodManager)
-									   getSystemService(Context.INPUT_METHOD_SERVICE); 
-
-							   inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
-									   InputMethodManager.HIDE_NOT_ALWAYS);
-							   try {
-								   List<Address> addr = new ArrayList<Address>();
-								   addr = mGeocoder.getFromLocationName(resultsString[arrayIndex], 1);
-								   Address addressSelected = addr.get(0);
-								   LatLng latLng = new LatLng(addressSelected.getLatitude(), 
-										   						addressSelected.getLongitude());
-								   
-								   // Set the location Value
-								   mLocation = mGeoHasher.encode(latLng);
-								   mLocationString = resultsString[arrayIndex];
-								   mLocationAvailable = true;
-								   
-								   showLocation();
-								   
-							   } catch (Exception e) {
-								   Log.e("LOCATION", "Exception caught: " + e.getMessage());
-							   }
-						   }
-
-					   });
-				
-				// Create the AlertDialog
-				AlertDialog dialog = builder.create();
-				
-				// Show the Dialog
-				dialog.show();
+				popUpListViewForSearchResults(searchResults);
 				
 			} catch (Exception e) {
 				Log.e(DefaultView.TAG, "Exception caught: " + e.getMessage());
 			}
 			break;
 		}
+	}
+
+	/**
+	 * @param searchResults
+	 */
+	private void popUpListViewForSearchResults(List<String> searchResults) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		
+		final String[] resultsString = searchResults.toArray(new String[0]);
+		builder.setTitle(R.string.location_results_)
+			   .setItems(resultsString, new DialogInterface.OnClickListener() {
+				   public void onClick(DialogInterface dialog, int arrayIndex) {
+					   InputMethodManager inputManager = (InputMethodManager)
+							   getSystemService(Context.INPUT_METHOD_SERVICE); 
+
+					   inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+							   InputMethodManager.HIDE_NOT_ALWAYS);
+					   try {
+						   List<Address> addr = new ArrayList<Address>();
+						   addr = mGeocoder.getFromLocationName(resultsString[arrayIndex], 1);
+						   Address addressSelected = addr.get(0);
+						   LatLng latLng = new LatLng(addressSelected.getLatitude(), 
+								   						addressSelected.getLongitude());
+						   
+						   // Set the location Value
+						   mLocation = mGeoHasher.encode(latLng);
+						   mLocationString = resultsString[arrayIndex];
+						   mLocationAvailable = true;
+						   
+						   showLocation();
+						   
+					   } catch (Exception e) {
+						   Log.e("LOCATION", "Exception caught: " + e.getMessage());
+					   }
+				   }
+
+			   });
+		
+		// Create the AlertDialog
+		AlertDialog dialog = builder.create();
+		
+		// Show the Dialog
+		dialog.show();
 	}
 
 	/**
