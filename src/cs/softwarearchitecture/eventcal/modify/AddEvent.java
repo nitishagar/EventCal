@@ -1,17 +1,24 @@
 package cs.softwarearchitecture.eventcal.modify;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -19,6 +26,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -26,9 +34,13 @@ import android.widget.RadioButton;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import cs.softwarearchitecture.eventcal.DefaultView;
 import cs.softwarearchitecture.eventcal.R;
@@ -39,6 +51,10 @@ import cs.softwarearchitecture.eventcal.utility.Geohasher;
 
 public class AddEvent extends FragmentActivity implements OnClickListener, OnMyLocationChangeListener {
 	
+	// Constants
+	private static final int ZOOM_LEVEL_ON_MAP = 9;
+	private static final int MAX_RESULTS = 15;
+
 	// Event Group
 	public static final String PERSONAL = "PERSONAL";
 	
@@ -55,6 +71,9 @@ public class AddEvent extends FragmentActivity implements OnClickListener, OnMyL
 	private int mToTime = 0;
 	private int mReminder = 0;
 	
+	// Location GeoCoding
+	Geocoder mGeocoder;
+	
 	public static String TAG = "Add Event";
 	
 	// Map for location 
@@ -69,7 +88,7 @@ public class AddEvent extends FragmentActivity implements OnClickListener, OnMyL
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_add_event);
+		setContentView(R.layout.activity_modify_event);
 		
 		ActionBar actionBar = getActionBar();
 	    actionBar.setDisplayHomeAsUpEnabled(true);
@@ -120,6 +139,12 @@ public class AddEvent extends FragmentActivity implements OnClickListener, OnMyL
 		
 		// Maps setup
 		setUpMapIfNeeded();
+		
+		// Location Search 
+		mGeocoder = new Geocoder(this, Locale.ENGLISH);
+		
+		Button search = (Button) findViewById(R.id.searchButton);
+		search.setOnClickListener(this);
 		
 	}
 	
@@ -270,7 +295,7 @@ public class AddEvent extends FragmentActivity implements OnClickListener, OnMyL
 			super.onBackPressed();
 			break;
 		case R.id.saveButton:
-			EditText titleBox = (EditText)findViewById(R.id.editTitle);
+			EditText titleBox = (EditText) findViewById(R.id.editTitle);
 			mTitle = titleBox.getText().toString();
 			
 			if (mandatoryValuesSpecified()){
@@ -292,6 +317,8 @@ public class AddEvent extends FragmentActivity implements OnClickListener, OnMyL
 				if (mLocationAvailable)
 					values.put(ColumnNames.COLUMN_LOCATION, mLocation);
 				
+				
+				
 				Log.d(TAG, "from : " + Integer.toString(mFromTime) + 
 						" to: " + Integer.toString(mToTime));
 				
@@ -302,6 +329,83 @@ public class AddEvent extends FragmentActivity implements OnClickListener, OnMyL
 				
 				// Go back to the previous activity
 				super.onBackPressed();
+			}
+			break;
+			
+		case R.id.searchButton:
+			EditText locationString = (EditText) findViewById(R.id.locationString);
+			
+			String searchString = locationString.getText().toString();
+			try {
+				List<Address> searchResultsAddress = new ArrayList<Address>();
+				
+				searchResultsAddress = mGeocoder.getFromLocationName(searchString, MAX_RESULTS);
+				
+				Log.d("LOCATION", "Search String: " + searchString);
+				
+				// Converting the location to Strings (human readable addresses)
+				List<String> searchResults = new ArrayList<String>();
+				int index = 0;
+				for (Address searchResult : searchResultsAddress) {
+					String addressVal = "";
+					while (searchResult.getAddressLine(index) != null) {
+						addressVal += searchResult.getAddressLine(index);
+						if (index <= searchResult.getMaxAddressLineIndex() - 1) {
+							 addressVal += ", ";
+						}
+						else {
+							addressVal += " ";
+						}
+						Log.d("LOCATION", "Location search result: " + addressVal);
+						index ++;
+					}
+					
+					searchResults.add(addressVal);
+					index = 0;
+				}
+				
+				// Instantiate an AlertDialog.Builder with its constructor
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				
+				final String[] resultsString = searchResults.toArray(new String[0]);
+				builder.setTitle(R.string.location_results_)
+					   .setItems(resultsString, new DialogInterface.OnClickListener() {
+						   public void onClick(DialogInterface dialog, int arrayIndex) {
+							   InputMethodManager inputManager = (InputMethodManager)
+									   getSystemService(Context.INPUT_METHOD_SERVICE); 
+
+							   inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+									   InputMethodManager.HIDE_NOT_ALWAYS);
+							   try {
+								   List<Address> addr = new ArrayList<Address>();
+								   addr = mGeocoder.getFromLocationName(resultsString[arrayIndex], 1);
+								   Address addressSelected = addr.get(0);
+								   LatLng latLng = new LatLng(addressSelected.getLatitude(), 
+										   						addressSelected.getLongitude());
+								   
+								   // Set the location Value
+								   mLocation = mGeoHasher.encode(latLng);
+								   mLocationAvailable = true;
+								   
+								   CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latLng, 
+										   												ZOOM_LEVEL_ON_MAP);
+								   mMap.animateCamera(update);
+								   mMap.addMarker(new MarkerOptions().position(latLng).title(resultsString[arrayIndex]));
+								   
+							   } catch (Exception e) {
+								   Log.e("LOCATION", "Exception caught: " + e.getMessage());
+							   }
+						   }
+					   });
+				
+				// Create the AlertDialog
+				AlertDialog dialog = builder.create();
+				
+				// Show the Dialog
+				dialog.show();
+				
+			} catch (Exception e) {
+				Log.e(DefaultView.TAG, "Exception caught: " + e.getMessage());
 			}
 			break;
 		}

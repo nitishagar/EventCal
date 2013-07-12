@@ -704,6 +704,7 @@ public class DefaultView extends FragmentActivity {
 			final String title 	= event.getTitle();
 			final String date = event.getDate();
 			final String group = event.getGroup();
+			final String location = event.getLocation();
 			final int reminder = event.getReminder();
 			final int _id = event.getID();
 
@@ -769,9 +770,8 @@ public class DefaultView extends FragmentActivity {
 					editEventIntent.putExtra("reminder", reminder);
 					editEventIntent.putExtra("group", group);
 					editEventIntent.putExtra("id", _id);
-
-					Log.d(TAG, "Event start_time: " + start_time);
-
+					editEventIntent.putExtra("location", location);
+					
 					editEventIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					startActivity(editEventIntent);
 				}
