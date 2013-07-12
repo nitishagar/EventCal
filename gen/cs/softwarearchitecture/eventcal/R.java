@@ -618,45 +618,46 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int five_pm=0x7f020027;
         public static final int four=0x7f020028;
         public static final int four_pm=0x7f020029;
-        public static final int grey_line=0x7f02002a;
-        public static final int ic_action_eventbrite_event=0x7f02002b;
-        public static final int ic_action_facebook_event=0x7f02002c;
-        public static final int ic_action_google_event=0x7f02002d;
-        public static final int ic_action_personal=0x7f02002e;
-        public static final int ic_action_uw_event=0x7f02002f;
-        public static final int ic_launcher=0x7f020030;
-        public static final int lighter=0x7f020031;
-        public static final int navigation_back=0x7f020032;
-        public static final int navigation_forward=0x7f020033;
-        public static final int nine=0x7f020034;
-        public static final int nine_pm=0x7f020035;
-        public static final int one=0x7f020036;
-        public static final int one_pm=0x7f020037;
-        public static final int seven=0x7f020038;
-        public static final int seven_pm=0x7f020039;
-        public static final int six=0x7f02003a;
-        public static final int six_pm=0x7f02003b;
-        public static final int ten=0x7f02003c;
-        public static final int ten_pm=0x7f02003d;
-        public static final int three=0x7f02003e;
-        public static final int three_pm=0x7f02003f;
-        public static final int twelve=0x7f020040;
-        public static final int twelve_pm=0x7f020041;
-        public static final int two=0x7f020042;
-        public static final int two_pm=0x7f020043;
-        public static final int vpi__tab_indicator=0x7f020044;
-        public static final int vpi__tab_selected_focused_holo=0x7f020045;
-        public static final int vpi__tab_selected_holo=0x7f020046;
-        public static final int vpi__tab_selected_pressed_holo=0x7f020047;
-        public static final int vpi__tab_unselected_focused_holo=0x7f020048;
-        public static final int vpi__tab_unselected_holo=0x7f020049;
-        public static final int vpi__tab_unselected_pressed_holo=0x7f02004a;
+        public static final int gradient_month_view=0x7f02002a;
+        public static final int grey_line=0x7f02002b;
+        public static final int ic_action_eventbrite_event=0x7f02002c;
+        public static final int ic_action_facebook_event=0x7f02002d;
+        public static final int ic_action_google_event=0x7f02002e;
+        public static final int ic_action_personal=0x7f02002f;
+        public static final int ic_action_uw_event=0x7f020030;
+        public static final int ic_launcher=0x7f020031;
+        public static final int lighter=0x7f020032;
+        public static final int navigation_back=0x7f020033;
+        public static final int navigation_forward=0x7f020034;
+        public static final int nine=0x7f020035;
+        public static final int nine_pm=0x7f020036;
+        public static final int one=0x7f020037;
+        public static final int one_pm=0x7f020038;
+        public static final int seven=0x7f020039;
+        public static final int seven_pm=0x7f02003a;
+        public static final int six=0x7f02003b;
+        public static final int six_pm=0x7f02003c;
+        public static final int ten=0x7f02003d;
+        public static final int ten_pm=0x7f02003e;
+        public static final int three=0x7f02003f;
+        public static final int three_pm=0x7f020040;
+        public static final int twelve=0x7f020041;
+        public static final int twelve_pm=0x7f020042;
+        public static final int two=0x7f020043;
+        public static final int two_pm=0x7f020044;
+        public static final int vpi__tab_indicator=0x7f020045;
+        public static final int vpi__tab_selected_focused_holo=0x7f020046;
+        public static final int vpi__tab_selected_holo=0x7f020047;
+        public static final int vpi__tab_selected_pressed_holo=0x7f020048;
+        public static final int vpi__tab_unselected_focused_holo=0x7f020049;
+        public static final int vpi__tab_unselected_holo=0x7f02004a;
+        public static final int vpi__tab_unselected_pressed_holo=0x7f02004b;
     }
     public static final class id {
-        public static final int action_goto=0x7f090042;
-        public static final int action_settings=0x7f090041;
+        public static final int action_goto=0x7f090048;
+        public static final int action_settings=0x7f090047;
         public static final int bottom=0x7f090006;
-        public static final int calendar_grid=0x7f090040;
+        public static final int calendar_grid=0x7f090041;
         public static final int cancelButton=0x7f090015;
         public static final int com_facebook_login_activity_progress_bar=0x7f090024;
         public static final int com_facebook_picker_activity_circle=0x7f090023;
@@ -678,10 +679,12 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int com_facebook_usersettingsfragment_logo_image=0x7f090034;
         public static final int com_facebook_usersettingsfragment_profile_name=0x7f090035;
         public static final int currentDate=0x7f090037;
-        public static final int dayEventRelative=0x7f09003e;
+        public static final int dayEventRelative=0x7f09003f;
         public static final int dayViewPager=0x7f090019;
-        public static final int dayViewScroll=0x7f090039;
-        public static final int delete_event=0x7f090047;
+        public static final int dayViewRelativeLayout=0x7f090039;
+        public static final int dayViewRelativeLayoutInside=0x7f09003b;
+        public static final int dayViewScroll=0x7f09003a;
+        public static final int delete_event=0x7f09004d;
         public static final int editTitle=0x7f090009;
         public static final int eventList=0x7f09001c;
         public static final int event_details=0x7f09001f;
@@ -689,17 +692,20 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int event_list=0x7f090017;
         public static final int event_subtitle=0x7f090021;
         public static final int event_title=0x7f090020;
+        public static final int eventbrite_login=0x7f090044;
+        public static final int facebook_login=0x7f090043;
         public static final int flipper=0x7f090038;
         public static final int fromDate=0x7f09000b;
         public static final int fromDateTime=0x7f09000a;
         public static final int fromTime=0x7f09000c;
+        public static final int google_login=0x7f090045;
         public static final int large=0x7f090002;
-        public static final int linearLayout2=0x7f09003b;
-        public static final int linearLayout3=0x7f09003d;
+        public static final int linearLayout2=0x7f09003c;
+        public static final int linearLayout3=0x7f09003e;
         public static final int maxReminder=0x7f090014;
         public static final int medReminder=0x7f090013;
-        public static final int menu_add=0x7f090043;
-        public static final int menu_item_share=0x7f090046;
+        public static final int menu_add=0x7f090049;
+        public static final int menu_item_share=0x7f09004c;
         public static final int minReminder=0x7f090012;
         public static final int monthListView=0x7f09001b;
         public static final int monthview=0x7f09001a;
@@ -707,24 +713,25 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int normal=0x7f090001;
         public static final int pageIndicator=0x7f090018;
         public static final int picker_subtitle=0x7f090033;
-        public static final int relativeLayout242=0x7f09003a;
-        public static final int relativeLayout3=0x7f09003c;
+        public static final int relativeLayout3=0x7f09003d;
         public static final int reminder=0x7f090010;
         public static final int reminderRadio=0x7f090011;
         public static final int saveButton=0x7f090016;
-        public static final int search=0x7f090045;
+        public static final int search=0x7f09004b;
         public static final int search_box=0x7f090032;
-        public static final int section_label=0x7f09003f;
+        public static final int section_label=0x7f090040;
         public static final int separator=0x7f09001d;
         public static final int small=0x7f090000;
         public static final int title=0x7f090008;
         public static final int toDate=0x7f09000e;
         public static final int toDateTime=0x7f09000d;
         public static final int toTime=0x7f09000f;
-        public static final int today=0x7f090044;
+        public static final int today=0x7f09004a;
         public static final int top=0x7f090007;
         public static final int triangle=0x7f090004;
         public static final int underline=0x7f090005;
+        public static final int userid=0x7f090042;
+        public static final int uw_login=0x7f090046;
     }
     public static final class integer {
         public static final int default_circle_indicator_orientation=0x7f0c0000;
@@ -755,7 +762,8 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int dayview=0x7f030012;
         public static final int fragment_default_view_dummy=0x7f030013;
         public static final int month=0x7f030014;
-        public static final int week=0x7f030015;
+        public static final int user_id_dialog=0x7f030015;
+        public static final int week=0x7f030016;
     }
     public static final class menu {
         public static final int add_event=0x7f0d0000;
@@ -766,12 +774,12 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int _10_min=0x7f07002c;
         public static final int _15_min=0x7f07002b;
         public static final int _5_min=0x7f07002d;
-        public static final int accounts_login=0x7f07003b;
+        public static final int accounts_login=0x7f07003c;
         public static final int action_goto=0x7f07001e;
         public static final int action_search=0x7f07001d;
         public static final int action_settings=0x7f07001f;
         public static final int add_event=0x7f070021;
-        public static final int app_id=0x7f07003c;
+        public static final int app_id=0x7f07003d;
         public static final int app_name=0x7f07001c;
         public static final int app_read=0x7f070023;
         public static final int app_write=0x7f070024;
@@ -808,33 +816,35 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int event_calendar=0x7f07002e;
         public static final int event_search=0x7f070036;
         public static final int eventbrite_login=0x7f070039;
+        public static final int eventbrite_user_id=0x7f070040;
         public static final int facebook_login=0x7f070038;
         public static final int from=0x7f070026;
         public static final int google_login=0x7f07003a;
         public static final int invalid_date=0x7f070001;
         public static final int month_name_format=0x7f070002;
         public static final int new_event_notifications=0x7f070037;
-        public static final int pref_default_display_name=0x7f070042;
-        public static final int pref_description_social_recommendations=0x7f070040;
+        public static final int ok=0x7f07003e;
+        public static final int pref_default_display_name=0x7f070046;
+        public static final int pref_description_social_recommendations=0x7f070044;
         /**  Example settings for Data & Sync 
          */
-        public static final int pref_header_data_sync=0x7f070044;
+        public static final int pref_header_data_sync=0x7f070048;
         /**  Strings related to Settings 
  Example General settings 
          */
-        public static final int pref_header_general=0x7f07003e;
+        public static final int pref_header_general=0x7f070042;
         /**  Example settings for Notifications 
          */
-        public static final int pref_header_notifications=0x7f070047;
-        public static final int pref_ringtone_silent=0x7f07004a;
-        public static final int pref_title_add_friends_to_messages=0x7f070043;
-        public static final int pref_title_display_name=0x7f070041;
-        public static final int pref_title_new_message_notifications=0x7f070048;
-        public static final int pref_title_ringtone=0x7f070049;
-        public static final int pref_title_social_recommendations=0x7f07003f;
-        public static final int pref_title_sync_frequency=0x7f070045;
-        public static final int pref_title_system_sync_settings=0x7f070046;
-        public static final int pref_title_vibrate=0x7f07004b;
+        public static final int pref_header_notifications=0x7f07004b;
+        public static final int pref_ringtone_silent=0x7f07004e;
+        public static final int pref_title_add_friends_to_messages=0x7f070047;
+        public static final int pref_title_display_name=0x7f070045;
+        public static final int pref_title_new_message_notifications=0x7f07004c;
+        public static final int pref_title_ringtone=0x7f07004d;
+        public static final int pref_title_social_recommendations=0x7f070043;
+        public static final int pref_title_sync_frequency=0x7f070049;
+        public static final int pref_title_system_sync_settings=0x7f07004a;
+        public static final int pref_title_vibrate=0x7f07004f;
         public static final int reminder=0x7f07002a;
         public static final int save=0x7f070028;
         public static final int share=0x7f070030;
@@ -843,9 +853,11 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int title_activity_agenda=0x7f070033;
         public static final int title_activity_edit_event=0x7f07002f;
         public static final int title_activity_month=0x7f070034;
-        public static final int title_activity_settings=0x7f07003d;
+        public static final int title_activity_settings=0x7f070041;
         public static final int to=0x7f070027;
         public static final int today=0x7f070032;
+        public static final int user_id=0x7f07003f;
+        public static final int uw_login=0x7f07003b;
     }
     public static final class style {
         /** 

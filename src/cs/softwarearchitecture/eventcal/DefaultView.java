@@ -1,5 +1,6 @@
 package cs.softwarearchitecture.eventcal;
 
+import java.security.acl.NotOwnerException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,8 +49,10 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.ScrollView;
 import android.widget.SearchView;
 import android.widget.SpinnerAdapter;
+import android.widget.ViewFlipper;
 
 import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.Facebook;
@@ -60,6 +63,7 @@ import cs.softwarearchitecture.eventcal.model.Event;
 import cs.softwarearchitecture.eventcal.modify.AddEvent;
 import cs.softwarearchitecture.eventcal.modify.EditEvent;
 import cs.softwarearchitecture.eventcal.services.FacebookService;
+import cs.softwarearchitecture.eventcal.services.getEventBriteEventService;
 import cs.softwarearchitecture.eventcal.viewpagerindicator.TitlePageIndicator;
 
 public class DefaultView extends FragmentActivity {  
@@ -189,79 +193,88 @@ public class DefaultView extends FragmentActivity {
 
 		@Override
 		protected Void doInBackground(Void... arg0) {
-			// Calculate current date
-			mCalendarChanging.add(Calendar.DAY_OF_MONTH, 0);
+			SharedPreferences settingsPreference = PreferenceManager.getDefaultSharedPreferences(DefaultView.this);
 
-			currentDay = mCalendarChanging.get(Calendar.DATE);
-			currentMonth = mCalendarChanging.get(Calendar.MONTH) + 1;
-			currentYear = mCalendarChanging.get(Calendar.YEAR);
+			if(settingsPreference.getBoolean("notifications_new_message", false)) {
+				Log.d("NOTIFICATION", "notification enabled");
+				
+				// Calculate current date
+				mCalendarChanging.add(Calendar.DAY_OF_MONTH, 0);
 
-			String[] dateString = { Integer.toString(CurrentDateTimeConverter.timeDateFormatter(currentDay, currentMonth, Integer.toString(currentYear))) };
+				currentDay = mCalendarChanging.get(Calendar.DATE);
+				currentMonth = mCalendarChanging.get(Calendar.MONTH) + 1;
+				currentYear = mCalendarChanging.get(Calendar.YEAR);
 
-			Log.d(TAG, dateString[0] );
+				String[] dateString = { Integer.toString(CurrentDateTimeConverter.timeDateFormatter(currentDay, currentMonth, Integer.toString(currentYear))) };
 
-			Cursor notifCursor = 
-					mEventContentResolver.query(
-							DBEventsContentProvider.CONTENT_URI, null, 
-							"START_DATE =? AND REMINDER_TIME IS NOT NULL", dateString, null);
+				Log.d(TAG, dateString[0] );
 
-			Calendar cal = Calendar.getInstance();
-			int notifIterator = 0;
+				Cursor notifCursor = 
+						mEventContentResolver.query(
+								DBEventsContentProvider.CONTENT_URI, null, 
+								"START_DATE =? AND REMINDER_TIME IS NOT NULL", dateString, null);
 
-			if (notifCursor.getCount() > 0) {
-				while (notifCursor.moveToNext()) {
-					Log.d(TAG, "EventCount : " + Integer.toString(notifCursor.getCount()));
+				Calendar cal = Calendar.getInstance();
+				int notifIterator = 0;
 
-					int _id = notifCursor.getInt(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_ID));
-					String title = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_TITLE));
-					String start_time = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_TIME));
-					String end_time = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_END_TIME));
-					String start_date = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_DATE));
-					String location = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_LOCATION));
-					String group = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_TABLE));
-					int reminder = notifCursor.getInt(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_REMINDER_TIME));
+				if (notifCursor.getCount() > 0) {
+					while (notifCursor.moveToNext()) {
+						Log.d("NOTIFICATION", "EventCount : " + Integer.toString(notifCursor.getCount()));
 
-					Intent notificationIntent = new Intent(DefaultView.this,
-							EventNotificationReceiver.class);
-					notificationIntent.putExtra("title", title);
-					notificationIntent.putExtra("start_time", start_time);
-					notificationIntent.putExtra("end_time", end_time);
-					notificationIntent.putExtra("date", start_date);
-					notificationIntent.putExtra("reminder", reminder);
-					notificationIntent.putExtra("group", group);
-					notificationIntent.putExtra("id", _id);
+						int _id = notifCursor.getInt(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_ID));
+						String title = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_TITLE));
+						String start_time = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_TIME));
+						String end_time = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_END_TIME));
+						String start_date = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_DATE));
+						String location = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_LOCATION));
+						String group = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_TABLE));
+						int reminder = notifCursor.getInt(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_REMINDER_TIME));
 
-					// As the same intent cancels the previously set alarm having
-					// same intent
-					// changing the intent for every alarm event so that every alarm
-					// gets
-					// scheduled properly.
-					notificationIntent.setData(Uri.parse("timer:" + _id));
+						Intent notificationIntent = new Intent(DefaultView.this,
+								EventNotificationReceiver.class);
+						notificationIntent.putExtra("title", title);
+						notificationIntent.putExtra("start_time", start_time);
+						notificationIntent.putExtra("end_time", end_time);
+						notificationIntent.putExtra("date", start_date);
+						notificationIntent.putExtra("reminder", reminder);
+						notificationIntent.putExtra("group", group);
+						notificationIntent.putExtra("id", _id);
 
-					// notification broadcast call
-					PendingIntent sender = PendingIntent.getBroadcast(
-							DefaultView.this, 0, notificationIntent,
-							Intent.FLAG_GRANT_READ_URI_PERMISSION);
+						SharedPreferences preference = getSharedPreferences("setting-pref", Context.MODE_PRIVATE);
+						notificationIntent.putExtra("notification_tone", preference.getString("notification_tone", null));
 
-					// getting notification time (Calculation)
-					Date notificationTime = new Date();
-					notificationTime.setHours(Integer.parseInt(start_time.substring(1,3)));
-					notificationTime.setMinutes(Integer.parseInt(start_time.substring(3,5)));
-					//					cal.setTimeInMillis((( * 60) +  ((notificationTime.getMinutes() - reminder) * 60)) * 60 * 1000);
+						// As the same intent cancels the previously set alarm having
+						// same intent
+						// changing the intent for every alarm event so that every alarm
+						// gets
+						// scheduled properly.
+						notificationIntent.setData(Uri.parse("timer:" + _id));
 
-					cal.set(Integer.parseInt(start_date.substring(5, 9)), Integer.parseInt(start_date.substring(3, 5)), 
-							Integer.parseInt(start_date.substring(1,3)), notificationTime.getHours(), 
-							(notificationTime.getMinutes() - reminder));
-					Log.d(TAG, "Time set: " + cal.getTime());
+						// notification broadcast call
+						PendingIntent sender = PendingIntent.getBroadcast(
+								DefaultView.this, 0, notificationIntent,
+								Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-					// only broadcast event to come (event which have passed are ignored)
-					if(cal.getTimeInMillis() - mCalendarChanging.getTimeInMillis() > 0) {
-						Log.d(TAG, "Difference in time: " + (cal.getTimeInMillis() - mCalendarChanging.getTimeInMillis()));
-						AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-						am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
+						// getting notification time (Calculation)
+						Date notificationTime = new Date();
+						notificationTime.setHours(Integer.parseInt(start_time.substring(1,3)));
+						notificationTime.setMinutes(Integer.parseInt(start_time.substring(3,5)));
+						//					cal.setTimeInMillis((( * 60) +  ((notificationTime.getMinutes() - reminder) * 60)) * 60 * 1000);
 
-						// number of notification
-						notifIterator++;
+						cal.set(Integer.parseInt(start_date.substring(5, 9)), Integer.parseInt(start_date.substring(3, 5)) - 1, 
+								Integer.parseInt(start_date.substring(1,3)), notificationTime.getHours(), 
+								(notificationTime.getMinutes() - reminder));
+						Log.d("NOTIFICATION", "Time set: " + cal.getTime());
+
+						// only broadcast event to come (event which have passed are ignored)
+						if(cal.getTimeInMillis() - mCalendarChanging.getTimeInMillis() > 0) {
+							Log.d("NOTIFICATION", "Difference in time: " + (cal.getTimeInMillis() - mCalendarChanging.getTimeInMillis()));
+							AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+							am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sender);
+
+							// number of notification
+							notifIterator++;
+						}
 					}
 				}
 			}
@@ -314,6 +327,8 @@ public class DefaultView extends FragmentActivity {
 
 			if(settingsPreference.getBoolean("eventbrite_login", false)) {
 				// Eventbrite service kickoff
+				Intent intent = new Intent(DefaultView.this, getEventBriteEventService.class);
+				startService(intent);
 			}
 
 			// UW service kickoff
@@ -565,6 +580,8 @@ public class DefaultView extends FragmentActivity {
 
 		private Context mContext;
 		RelativeLayout dayEventRelative;
+		ViewFlipper dayViewFlipper;
+		
 
 		public DayViewFragment() {
 		}
@@ -579,11 +596,21 @@ public class DefaultView extends FragmentActivity {
 
 			dayEventRelative = 
 					(RelativeLayout) rootView.findViewById(R.id.dayEventRelative);
+			dayViewFlipper = (ViewFlipper) rootView.findViewById(R.id.flipper);
 
 			//Log.v(TAG, "onCreateView");
+			final int dPosition = -50;
+			dayViewFlipper.post(new Runnable() 
+		    {
+		        @Override
+		        public void run() 
+		        {
+		            dayViewFlipper.scrollTo(0, dPosition);
+		        }
+		    });
 
 			loadDataForDay();
-
+		
 			return rootView;
 		}
 
@@ -698,23 +725,23 @@ public class DefaultView extends FragmentActivity {
 			String type = event.getType();
 
 			if (type.equals("PERSONAL")) {
-				button.setBackgroundColor(0xa0db8e00);
+				button.setBackgroundColor(0x69000000);
 			}
 
 			if (type.equals("FACEBOOK")) {
-				button.setBackgroundColor(Color.CYAN);
+				button.setBackgroundColor(0x09c00000);
 			}
 
 			if (type.equals("EVENTBRITE")) {
-				button.setBackgroundColor(0xfbf2a300);
+				button.setBackgroundColor(0xff880000);
 			}
 
 			if (type.equals("UW")) {
-				button.setBackgroundColor(0xdee4fa00);
+				button.setBackgroundColor(0xa6c00000);
 			}
 
 			if (type.equals("GOOGLE")) {
-				button.setBackgroundColor(Color.YELLOW);
+				button.setBackgroundColor(0x7e572a00);
 			}
 
 			button.setLayoutParams(lprams);
