@@ -131,15 +131,39 @@ public class EditEvent extends FragmentActivity implements OnClickListener, OnMy
 		mLocation = extras.getString("location"); 
 		Log.d("LOCATION_EDIT", "Title: " + title);
 		Log.d("LOCATION_EDIT", "Getting Location Strings: " + extras.getString("location"));
-		if (mLocation != null && mGroup.equals("PERSONAL")) {
-			Log.d("LOCATION_EDIT", "Getting Location Strings");
-			mLocationString = getLocationString(mLocation);
-			EditText locationBox = (EditText)findViewById(R.id.locationString);
-			locationBox.setText(mLocationString);
-			mLocationAvailable = true;
-			
-			// Show on Map
-			showLocation();
+		if (mLocation != null) {
+			if (mGroup.equals("PERSONAL")) {
+				Log.d("LOCATION_EDIT", "Getting Location Strings");
+				mLocationString = getLocationString(mLocation);
+				EditText locationBox = (EditText)findViewById(R.id.locationString);
+				locationBox.setText(mLocationString);
+				mLocationAvailable = true;
+			}
+			else {
+				mLocationString = mLocation;
+				EditText locationBox = (EditText)findViewById(R.id.locationString);
+				locationBox.setText(mLocationString);
+				
+				List<Address> storedAddr = new ArrayList<Address>();
+				try {
+					storedAddr = mGeocoder.getFromLocationName(mLocationString, 1);
+					if (!(storedAddr.isEmpty())) {
+						Address stAddr = storedAddr.get(0);
+						LatLng latLng = new LatLng(stAddr.getLatitude(), 
+								stAddr.getLongitude());
+
+						// Set the location Value
+						mLocation = mGeoHasher.encode(latLng);
+						mLocationAvailable = true;
+					}
+				} catch (IOException e) {
+					Log.e(DefaultView.TAG, "Exception Caught: " + e.getMessage());
+				}
+			}
+			if (mLocationAvailable) {
+				// Show on Map
+				showLocation();
+			}
 		}
 		
 		// Setting the text of the Buttons 
