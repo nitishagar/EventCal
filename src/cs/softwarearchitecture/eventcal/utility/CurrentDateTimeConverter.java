@@ -79,12 +79,6 @@ public class CurrentDateTimeConverter {
 	 * @param thirdVal
 	 * @return formatted time or date 
 	 */
-	/**
-	 * @param firstVal
-	 * @param secondVal
-	 * @param thirdVal
-	 * @return
-	 */
 	public static int timeDateFormatter(int firstVal, int secondVal, String thirdVal) {
 		int formattedValue = 0;
 		String firstString = "";

@@ -41,12 +41,6 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 	// Identifies a particular Loader being used in this component
     private static final int URL_LOADER = 0;
 
-//    String[] mFromColumns = { DBSQLiteHelper.COLUMN_TITLE };
-//    int[] mToFields = { R.id.event_title };
-
-	/**
-	 * 
-	 */
 	AgendaCursorAdapter mAdapter;
 	
 	ListView mListView;

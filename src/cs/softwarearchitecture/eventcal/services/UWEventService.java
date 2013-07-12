@@ -21,7 +21,7 @@ import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
 import cs.softwarearchitecture.eventcal.utility.ColumnNames;
 import cs.softwarearchitecture.eventcal.utility.CurrentDateTimeConverter;
 
-public class getUWEventService extends IntentService {
+public class UWEventService extends IntentService {
 	public class Event{
 	      String title;
 	      String location;
@@ -35,7 +35,7 @@ public class getUWEventService extends IntentService {
    * A constructor is required, and must call the super IntentService(String)
    * constructor with a name for the worker thread.
    */
-  public getUWEventService() {
+  public UWEventService() {
       super("getUWEventService");
   }
   
@@ -61,7 +61,7 @@ public class getUWEventService extends IntentService {
 
 	public void parseUWEventsArray(JsonReader reader) throws IOException {
 		//List eventList = new ArrayList();
-	    Log.d(getUWEventService.TAG, "i'm here");
+	    Log.d(UWEventService.TAG, "i'm here");
 	    reader.beginObject(); //start
 	    reader.nextName();// response"
 	    reader.beginObject();
@@ -84,25 +84,25 @@ public class getUWEventService extends IntentService {
 	    reader.endObject();
 	    */
 	    reader.skipValue();
-	    Log.d(getUWEventService.TAG, "i'm here 11");
+	    Log.d(UWEventService.TAG, "i'm here 11");
 	    reader.nextName();// data
-	    Log.d(getUWEventService.TAG, "i'm here 5");
+	    Log.d(UWEventService.TAG, "i'm here 5");
 	    reader.beginObject();
-	    Log.d(getUWEventService.TAG, "i'm here 6");
+	    Log.d(UWEventService.TAG, "i'm here 6");
 	    reader.nextName();//result
-	    Log.d(getUWEventService.TAG, "i'm here 7");
+	    Log.d(UWEventService.TAG, "i'm here 7");
 	    reader.beginArray();
 	    
 	    while (reader.hasNext()) {
-	    	Log.d(getUWEventService.TAG, "i'm here 3");
+	    	Log.d(UWEventService.TAG, "i'm here 3");
 	    	Event addEvent = getUWEvents(reader);
 	    	if (addEvent.valid == 1){
 	    		UWEvents.add(addEvent);
 	    	}
-	    	Log.d(getUWEventService.TAG, "i'm here 77");
+	    	Log.d(UWEventService.TAG, "i'm here 77");
 	    	//eventList.add("New Event");
 	    }
-	    Log.d(getUWEventService.TAG, "i'm here 4");
+	    Log.d(UWEventService.TAG, "i'm here 4");
 	    reader.endArray();
 	    reader.endObject();
 	    reader.endObject();
@@ -132,16 +132,16 @@ public class getUWEventService extends IntentService {
 		Event event = new Event();
 
 	    reader.beginObject();
-	    Log.d(getUWEventService.TAG, "i'm here 88");
+	    Log.d(UWEventService.TAG, "i'm here 88");
 	    while (reader.hasNext()) {
 	    	String name = reader.nextName();
-	    	 Log.d(getUWEventService.TAG, name);
+	    	 Log.d(UWEventService.TAG, name);
 	        if (name.equals("Title")) {
 	        	event.title = reader.nextString();
-	        	Log.d(getUWEventService.TAG, event.title);
+	        	Log.d(UWEventService.TAG, event.title);
 	        } else if(name.equals("Where")){
 	        	event.location = reader.nextString();
-	        	Log.d(getUWEventService.TAG, event.location);
+	        	Log.d(UWEventService.TAG, event.location);
 	        } 
 	        else if(name.equals("When")){
 	        	String timeDate = reader.nextString();
@@ -170,33 +170,33 @@ public class getUWEventService extends IntentService {
 	}
 			
 	public ArrayList<Integer> parseEventTime(String timeString){	
-		Log.d(getUWEventService.TAG, timeString);
+		Log.d(UWEventService.TAG, timeString);
 		ArrayList<Integer> returnTime = new ArrayList<Integer>();
 		String[] splitString = timeString.split(" ");
-		Log.d(getUWEventService.TAG, splitString[0]);
-		Log.d(getUWEventService.TAG, splitString[1]);
-		Log.d(getUWEventService.TAG, splitString[2]);
-		Log.d(getUWEventService.TAG, splitString[3]);
-		Log.d(getUWEventService.TAG, splitString[4]);
-		Log.d(getUWEventService.TAG, splitString[5]);
-		Log.d(getUWEventService.TAG, splitString[6]);
-		Log.d(getUWEventService.TAG, splitString[7]);
-		Log.d(getUWEventService.TAG, splitString[8]);
-		Log.d(getUWEventService.TAG, splitString[9]);
-		Log.d(getUWEventService.TAG, splitString[10]);
-		Log.d(getUWEventService.TAG, splitString[11]);
-		Log.d(getUWEventService.TAG, splitString[12]);
+		Log.d(UWEventService.TAG, splitString[0]);
+		Log.d(UWEventService.TAG, splitString[1]);
+		Log.d(UWEventService.TAG, splitString[2]);
+		Log.d(UWEventService.TAG, splitString[3]);
+		Log.d(UWEventService.TAG, splitString[4]);
+		Log.d(UWEventService.TAG, splitString[5]);
+		Log.d(UWEventService.TAG, splitString[6]);
+		Log.d(UWEventService.TAG, splitString[7]);
+		Log.d(UWEventService.TAG, splitString[8]);
+		Log.d(UWEventService.TAG, splitString[9]);
+		Log.d(UWEventService.TAG, splitString[10]);
+		Log.d(UWEventService.TAG, splitString[11]);
+		Log.d(UWEventService.TAG, splitString[12]);
 		Integer startTime;
 		Integer startDate;
 		Integer endTime;
 		Integer endDate;
-		Log.d(getUWEventService.TAG,  "before parsing time and date");
+		Log.d(UWEventService.TAG,  "before parsing time and date");
 		if (splitString[5].equals("am") || splitString[5].equals("pm")){
-			Log.d(getUWEventService.TAG,  "UW different format");
+			Log.d(UWEventService.TAG,  "UW different format");
 
 			String[] startTimeSplit = splitString[4].split(":");
-			Log.d(getUWEventService.TAG,  startTimeSplit[0]);
-			Log.d(getUWEventService.TAG,  startTimeSplit[1]);
+			Log.d(UWEventService.TAG,  startTimeSplit[0]);
+			Log.d(UWEventService.TAG,  startTimeSplit[1]);
 			String[] endTimeSplit = splitString[12].split(":");
 			
 			startTime =  Integer.parseInt(findTime(startTimeSplit[0], startTimeSplit[1], splitString[5]));
@@ -211,9 +211,9 @@ public class getUWEventService extends IntentService {
 			String[] startTimeSplit = splitString[4].split(":");
 			String[] endTimeSplit = splitString[11].split(":");
 			startTime = Integer.parseInt("1" + startTimeSplit[0] + startTimeSplit[1] + startTimeSplit[2]);
-			Log.d(getUWEventService.TAG, splitString[1]);
-			Log.d(getUWEventService.TAG, splitString[2]);
-			Log.d(getUWEventService.TAG, splitString[3]);
+			Log.d(UWEventService.TAG, splitString[1]);
+			Log.d(UWEventService.TAG, splitString[2]);
+			Log.d(UWEventService.TAG, splitString[3]);
 			startDate = Integer.parseInt(findDate(splitString[1],splitString[2],splitString[3]));
 			//String startDate = splitString[1]+splitString[2]+splitString[3];
 			endTime = Integer.parseInt("1" + endTimeSplit[0] + endTimeSplit[1] + endTimeSplit[2]);
@@ -225,7 +225,7 @@ public class getUWEventService extends IntentService {
 		returnTime.add(startDate);
 		returnTime.add(endTime);
 		returnTime.add(endDate);
-		Log.d(getUWEventService.TAG, "lalala");
+		Log.d(UWEventService.TAG, "lalala");
 		return returnTime;
 	}
 	
@@ -245,7 +245,7 @@ public class getUWEventService extends IntentService {
 		else {
 			returnTime = "10" + hour + minutes + "00";
 		}
-		Log.d(getUWEventService.TAG, returnTime);
+		Log.d(UWEventService.TAG, returnTime);
 		return returnTime;
 		 
 	}
@@ -278,7 +278,7 @@ public class getUWEventService extends IntentService {
 			date = day + "12" + year;
 		}
 		date = "1" + date;
-		Log.d(getUWEventService.TAG, date);
+		Log.d(UWEventService.TAG, date);
 		return date;
 	}
   /**
@@ -288,7 +288,7 @@ public class getUWEventService extends IntentService {
    */
   @Override
   protected void onHandleIntent(Intent intent) {
-	  Log.d(getUWEventService.TAG, "I'm here");
+	  Log.d(UWEventService.TAG, "I'm here");
 	  
 		try {
     		url = new URL("http://api.uwaterloo.ca/public/v1/?key=" + UWAPIKey + "&service=CalendarEvents&output=json");
