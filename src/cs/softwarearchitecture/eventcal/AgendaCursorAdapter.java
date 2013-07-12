@@ -91,7 +91,7 @@ public class AgendaCursorAdapter extends CursorAdapter {
 		imageViewSetting(view, cursor);
 
 		/*
-         * Separator
+         * Date Separator
          */
         seperatorImplementation(cursor, seperatorDate);
 
@@ -158,6 +158,7 @@ public class AgendaCursorAdapter extends CursorAdapter {
 	}
 
 	/**
+	 * Image Selection for each event from the res folder
 	 * @param view
 	 * @param cursor
 	 */

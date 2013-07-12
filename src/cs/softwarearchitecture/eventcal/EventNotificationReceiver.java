@@ -62,7 +62,7 @@ public class EventNotificationReceiver extends BroadcastReceiver {
             
             // ringtone for notification
             String notification_ring_URI = extras.getString("notification_tone", null);
-//          Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            // Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             Ringtone ringtone = RingtoneManager.getRingtone(context, Uri.parse(notification_ring_URI));
             ringtone.play();
         }

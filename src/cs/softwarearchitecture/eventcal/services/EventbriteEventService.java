@@ -19,7 +19,7 @@ import cs.softwarearchitecture.eventcal.utility.ColumnNames;
 import cs.softwarearchitecture.eventcal.utility.CurrentDateTimeConverter;
 
 
-public class getEventBriteEventService extends IntentService {
+public class EventbriteEventService extends IntentService {
 	public class Event{
 	      String title;
 	      String location;
@@ -32,7 +32,7 @@ public class getEventBriteEventService extends IntentService {
    * A constructor is required, and must call the super IntentService(String)
    * constructor with a name for the worker thread.
    */
-  public getEventBriteEventService() {
+  public EventbriteEventService() {
       super("getEventBriteEventService");
   }
   
@@ -58,7 +58,7 @@ public class getEventBriteEventService extends IntentService {
 
 	public void parseEventBriteEventsArray(JsonReader reader) throws IOException {
 		//List eventList = new ArrayList();
-	    Log.d(getEventBriteEventService.TAG, "i'm here");
+	    Log.d(EventbriteEventService.TAG, "i'm here");
 	    reader.beginObject(); 
 	    reader.nextName();// events
 	    reader.beginArray();
@@ -66,7 +66,7 @@ public class getEventBriteEventService extends IntentService {
 	    while (reader.hasNext()) {
 	    	EventBriteEvents.add(getEventBriteEvents(reader));
 	    }
-	    Log.d(getEventBriteEventService.TAG, "i'm here 4");
+	    Log.d(EventbriteEventService.TAG, "i'm here 4");
 
 	    reader.endArray();
 	    reader.endObject();
@@ -79,18 +79,18 @@ public class getEventBriteEventService extends IntentService {
 		Event event = new Event();
 		
 	    reader.beginObject();
-	    Log.d(getEventBriteEventService.TAG, "i'm here 88");
+	    Log.d(EventbriteEventService.TAG, "i'm here 88");
 	    reader.nextName();
 	    reader.beginObject();
 	    while (reader.hasNext()) {
 	    	String name = reader.nextName();
-	    	 Log.d(getEventBriteEventService.TAG, name);
+	    	 Log.d(EventbriteEventService.TAG, name);
 	        if (name.equals("title")) {
 	        	event.title = reader.nextString();
-	        	Log.d(getEventBriteEventService.TAG, event.title);
+	        	Log.d(EventbriteEventService.TAG, event.title);
 	        } else if(name.equals("venue")){
 	        	event.location = getLoc(reader);
-	        	Log.d(getEventBriteEventService.TAG, event.location);
+	        	Log.d(EventbriteEventService.TAG, event.location);
 	        } 
 	        else if(name.equals("start_date")){
 	        	ArrayList<Integer> startTimeAndDate = formatTimeAndDate(reader.nextString());
@@ -126,7 +126,7 @@ public class getEventBriteEventService extends IntentService {
 		return location;
 	}		
 	public ArrayList<Integer> formatTimeAndDate(String timeDate){
-		Log.d(getEventBriteEventService.TAG, timeDate);
+		Log.d(EventbriteEventService.TAG, timeDate);
 		ArrayList<Integer> returnFormatted = new ArrayList<Integer>();
 		String[] splitTimeDate = timeDate.split(" "); // [0] = date, [1] = time
 		String[] splitDate = splitTimeDate[0].split("-");
@@ -150,7 +150,7 @@ public class getEventBriteEventService extends IntentService {
    */
   @Override
   protected void onHandleIntent(Intent intent) {
-	  Log.d(getEventBriteEventService.TAG, "I'm here");
+	  Log.d(EventbriteEventService.TAG, "I'm here");
 	  
 		try {
     		url = new URL("https://www.eventbrite.com/json/event_search?app_key=" + EventBriteAPIKey + "&city=Waterloo&country=CA");
