@@ -363,52 +363,62 @@ public class AddEvent extends FragmentActivity implements OnClickListener, OnMyL
 					searchResults.add(addressVal);
 					index = 0;
 				}
+
+				// Clear any previous markers
+				mMap.clear();
 				
 				// Instantiate an AlertDialog.Builder with its constructor
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				
-				final String[] resultsString = searchResults.toArray(new String[0]);
-				builder.setTitle(R.string.location_results_)
-					   .setItems(resultsString, new DialogInterface.OnClickListener() {
-						   public void onClick(DialogInterface dialog, int arrayIndex) {
-							   InputMethodManager inputManager = (InputMethodManager)
-									   getSystemService(Context.INPUT_METHOD_SERVICE); 
-
-							   inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
-									   InputMethodManager.HIDE_NOT_ALWAYS);
-							   try {
-								   List<Address> addr = new ArrayList<Address>();
-								   addr = mGeocoder.getFromLocationName(resultsString[arrayIndex], 1);
-								   Address addressSelected = addr.get(0);
-								   LatLng latLng = new LatLng(addressSelected.getLatitude(), 
-										   						addressSelected.getLongitude());
-								   
-								   // Set the location Value
-								   mLocation = mGeoHasher.encode(latLng);
-								   mLocationAvailable = true;
-								   
-								   CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latLng, 
-										   												ZOOM_LEVEL_ON_MAP);
-								   mMap.animateCamera(update);
-								   mMap.addMarker(new MarkerOptions().position(latLng).title(resultsString[arrayIndex]));
-								   
-							   } catch (Exception e) {
-								   Log.e("LOCATION", "Exception caught: " + e.getMessage());
-							   }
-						   }
-					   });
-				
-				// Create the AlertDialog
-				AlertDialog dialog = builder.create();
-				
-				// Show the Dialog
-				dialog.show();
+				popupListViewForSearchResults(searchResults);
 				
 			} catch (Exception e) {
 				Log.e(DefaultView.TAG, "Exception caught: " + e.getMessage());
 			}
 			break;
 		}
+	}
+
+	/**
+	 * @param searchResults
+	 */
+	private void popupListViewForSearchResults(List<String> searchResults) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		
+		final String[] resultsString = searchResults.toArray(new String[0]);
+		builder.setTitle(R.string.location_results_)
+			   .setItems(resultsString, new DialogInterface.OnClickListener() {
+				   public void onClick(DialogInterface dialog, int arrayIndex) {
+					   InputMethodManager inputManager = (InputMethodManager)
+							   getSystemService(Context.INPUT_METHOD_SERVICE); 
+
+					   inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+							   InputMethodManager.HIDE_NOT_ALWAYS);
+					   try {
+						   List<Address> addr = new ArrayList<Address>();
+						   addr = mGeocoder.getFromLocationName(resultsString[arrayIndex], 1);
+						   Address addressSelected = addr.get(0);
+						   LatLng latLng = new LatLng(addressSelected.getLatitude(), 
+								   						addressSelected.getLongitude());
+						   
+						   // Set the location Value
+						   mLocation = mGeoHasher.encode(latLng);
+						   mLocationAvailable = true;
+						   
+						   CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latLng, 
+								   												ZOOM_LEVEL_ON_MAP);
+						   mMap.animateCamera(update);
+						   mMap.addMarker(new MarkerOptions().position(latLng).title(resultsString[arrayIndex]));
+						   
+					   } catch (Exception e) {
+						   Log.e("LOCATION", "Exception caught: " + e.getMessage());
+					   }
+				   }
+			   });
+		
+		// Create the AlertDialog
+		AlertDialog dialog = builder.create();
+		
+		// Show the Dialog
+		dialog.show();
 	}
 
 	/**
