@@ -1,24 +1,35 @@
 package cs.softwarearchitecture.eventcal.modify;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
-import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -27,14 +38,28 @@ import android.widget.RadioGroup;
 import android.widget.ShareActionProvider;
 import android.widget.TimePicker;
 import android.widget.Toast;
-import cs.softwarearchitecture.eventcal.CurrentDateTimeConverter;
+
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.SupportMapFragment;
+
 import cs.softwarearchitecture.eventcal.DefaultView;
 import cs.softwarearchitecture.eventcal.R;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
-import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
+import cs.softwarearchitecture.eventcal.utility.ColumnNames;
+import cs.softwarearchitecture.eventcal.utility.CurrentDateTimeConverter;
+import cs.softwarearchitecture.eventcal.utility.Geohasher;
 
 @SuppressLint("SimpleDateFormat")
-public class EditEvent extends Activity implements OnClickListener {
+public class EditEvent extends FragmentActivity implements OnClickListener, OnMyLocationChangeListener {
+
+	// Constants
+	private static final int ZOOM_LEVEL_ON_MAP = 9;
+	private static final int MAX_RESULTS = 15;
 
 	// Reminder value
 	private String mTitle;
@@ -47,7 +72,7 @@ public class EditEvent extends Activity implements OnClickListener {
 	private String[] mIdArgs = new String[1];
 
 	SimpleDateFormat mDateFormatter = new SimpleDateFormat("MMMM dd yyyy");
-	SimpleDateFormat mTimeFormatter = new SimpleDateFormat("hh:mm a");
+	SimpleDateFormat mTimeFormatter = new SimpleDateFormat("hh:mm aa");
 
 	// Share event provider
 	private ShareActionProvider mShareActionProvider;
@@ -55,16 +80,32 @@ public class EditEvent extends Activity implements OnClickListener {
 	public static String TAG = "Edit Event";
 	
 	Calendar mDateTime = Calendar.getInstance();
+	
+	// Map for location 
+	private GoogleMap mMap;
+
+	// Location GeoCoding
+	Geocoder mGeocoder;
+	
+	private static final Geohasher mGeoHasher = new Geohasher();
+
+	private String mLocation;
+
+	private boolean mLocationAvailable = false;
+	private String mLocationString;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);  
 
-		setContentView(R.layout.activity_add_event);
+		setContentView(R.layout.activity_modify_event);
 
 		// Back button functionality enabled
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
+		
+		// Maps setup
+		setUpMapIfNeeded();
 		
 	}
 
@@ -83,8 +124,48 @@ public class EditEvent extends Activity implements OnClickListener {
 
 		// Setting text of the title
 		EditText titleBox = (EditText)findViewById(R.id.editTitle);
-		titleBox.setText(title);
+		titleBox.setText(mTitle);
 
+		// Setting text of the location
+		mGeocoder = new Geocoder(this, Locale.ENGLISH);
+		mLocation = extras.getString("location"); 
+		Log.d("LOCATION_EDIT", "Title: " + title);
+		Log.d("LOCATION_EDIT", "Getting Location Strings: " + extras.getString("location"));
+		if (mLocation != null) {
+			if (mGroup.equals("PERSONAL")) {
+				Log.d("LOCATION_EDIT", "Getting Location Strings");
+				mLocationString = getLocationString(mLocation);
+				EditText locationBox = (EditText)findViewById(R.id.locationString);
+				locationBox.setText(mLocationString);
+				mLocationAvailable = true;
+			}
+			else {
+				mLocationString = mLocation;
+				EditText locationBox = (EditText)findViewById(R.id.locationString);
+				locationBox.setText(mLocationString);
+				
+				List<Address> storedAddr = new ArrayList<Address>();
+				try {
+					storedAddr = mGeocoder.getFromLocationName(mLocationString, 1);
+					if (!(storedAddr.isEmpty())) {
+						Address stAddr = storedAddr.get(0);
+						LatLng latLng = new LatLng(stAddr.getLatitude(), 
+								stAddr.getLongitude());
+
+						// Set the location Value
+						mLocation = mGeoHasher.encode(latLng);
+						mLocationAvailable = true;
+					}
+				} catch (IOException e) {
+					Log.e(DefaultView.TAG, "Exception Caught: " + e.getMessage());
+				}
+			}
+			if (mLocationAvailable) {
+				// Show on Map
+				showLocation();
+			}
+		}
+		
 		// Setting the text of the Buttons 
 		Button txtDate = (Button) findViewById(R.id.fromDate);
 		Button txtTime = (Button) findViewById(R.id.fromTime);
@@ -128,8 +209,44 @@ public class EditEvent extends Activity implements OnClickListener {
 		save.setOnClickListener(this);
 		cancel.setOnClickListener(this);
 
+		// Location Search 
+		Button search = (Button) findViewById(R.id.searchButton);
+		search.setOnClickListener(this);
+		
 	}
 
+	private String getLocationString(String location) {
+		LatLng latLng = mGeoHasher.decode(location);
+		List<Address> storedAddr = new ArrayList<Address>();
+		try {
+			storedAddr = mGeocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+			Address stAddr = storedAddr.get(0);
+			return addressToStringConversion(stAddr);
+		} catch (Exception e) {
+			Log.e("LOCATION_EDIT", "Exception caught: " + e.getMessage());
+		}
+		return null;
+	}
+
+	private void setUpMapIfNeeded() {
+        // Do a null check to confirm that we have not already instantiated the
+        // map.
+        if (mMap == null) {
+            // Try to obtain the map from the SupportMapFragment.
+            mMap = ((SupportMapFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.map)).getMap();
+            // Check if we were successful in obtaining the map.
+            if (mMap != null) {
+                setUpMap();
+            }
+        }
+    }
+	
+	private void setUpMap() {
+        mMap.setMyLocationEnabled(true);
+        mMap.setOnMyLocationChangeListener(this);
+    }
+	
 	/**
 	 * @param txtDate
 	 * @param txtTime
@@ -159,17 +276,19 @@ public class EditEvent extends Activity implements OnClickListener {
 		// setting the time
 		switch(txtTime.getId()){
 		case R.id.fromTime:
-			hourOfDay = Integer.parseInt(start_time.substring(0, 2));
-			minute = Integer.parseInt(start_time.substring(2, 4));
+			hourOfDay = Integer.parseInt(start_time.substring(1, 3));
+			minute = Integer.parseInt(start_time.substring(3, 5));
 			
 			mFromTime = CurrentDateTimeConverter.timeDateFormatter(hourOfDay, minute, "00");
+			Log.d("TIME VALUE", "Time: " + Integer.toString(hourOfDay) + ":" + Integer.toString(minute) + "--" + start_time);
 			break;
 		case R.id.toTime:
 			if (end_time != null){
-				hourOfDay = Integer.parseInt(end_time.substring(0, 2));
-				minute = Integer.parseInt(end_time.substring(2, 4));
+				hourOfDay = Integer.parseInt(end_time.substring(1, 3));
+				minute = Integer.parseInt(end_time.substring(3, 5));
 			
 				mToTime = CurrentDateTimeConverter.timeDateFormatter(hourOfDay, minute, "00");
+				Log.d("TIME VALUE", "Time: " + Integer.toString(hourOfDay) + ":" + Integer.toString(minute) + "--" + end_time);
 			}
 			else{
 				mToTime = mFromTime;
@@ -179,6 +298,7 @@ public class EditEvent extends Activity implements OnClickListener {
 
 		mDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
 		mDateTime.set(Calendar.MINUTE, minute);
+		mDateTime.set(Calendar.SECOND, 0);
 		txtTime.setText(mTimeFormatter.format(mDateTime.getTime()));
 	}
 
@@ -372,17 +492,20 @@ public class EditEvent extends Activity implements OnClickListener {
 				Log.d(TAG, "from : " + mFromTime + " to: " + mToTime);
 				Log.d(TAG, "from date: " + mFromDate);
 				ContentValues values = new ContentValues();
-				values.put(DBSQLiteHelper.COLUMN_TABLE, mGroup);
-				values.put(DBSQLiteHelper.COLUMN_TITLE, mTitle);
-				values.put(DBSQLiteHelper.COLUMN_START_DATE, mFromDate);
-				values.put(DBSQLiteHelper.COLUMN_START_TIME, mFromTime);
+				values.put(ColumnNames.COLUMN_TABLE, mGroup);
+				values.put(ColumnNames.COLUMN_TITLE, mTitle);
+				values.put(ColumnNames.COLUMN_START_DATE, mFromDate);
+				values.put(ColumnNames.COLUMN_START_TIME, mFromTime);
 				if (mToTime != 0){
-					values.put(DBSQLiteHelper.COLUMN_END_TIME, mToTime);
-					values.put(DBSQLiteHelper.COLUMN_END_DATE, mFromDate);
+					values.put(ColumnNames.COLUMN_END_TIME, mToTime);
+					values.put(ColumnNames.COLUMN_END_DATE, mFromDate);
 				}
 				if (mReminder != 0)
-					values.put(DBSQLiteHelper.COLUMN_REMINDER_TIME, mReminder);
+					values.put(ColumnNames.COLUMN_REMINDER_TIME, mReminder);
 
+				if (mLocationAvailable)
+					values.put(ColumnNames.COLUMN_LOCATION, mLocation);
+				
 				Log.d(TAG, "from : " + Integer.toString(mFromTime) + 
 						" to: " + Integer.toString(mToTime));
 
@@ -399,9 +522,106 @@ public class EditEvent extends Activity implements OnClickListener {
 				super.onBackPressed();
 			}
 			break;
+		case R.id.searchButton:
+			EditText locationString = (EditText) findViewById(R.id.locationString);
+			
+			String searchString = locationString.getText().toString();
+			try {
+				List<Address> searchResultsAddress = new ArrayList<Address>();
+				
+				searchResultsAddress = mGeocoder.getFromLocationName(searchString, MAX_RESULTS);
+				
+				Log.d("LOCATION", "Search String: " + searchString);
+				
+				// Converting the location to Strings (human readable addresses)
+				List<String> searchResults = new ArrayList<String>();
+				for (Address searchResult : searchResultsAddress) {
+					searchResults.add(addressToStringConversion(searchResult));
+				}
+				
+				// Clear any previous markers
+				mMap.clear();
+				
+				// Instantiate an AlertDialog.Builder with its constructor
+				popUpListViewForSearchResults(searchResults);
+				
+			} catch (Exception e) {
+				Log.e(DefaultView.TAG, "Exception caught: " + e.getMessage());
+			}
+			break;
 		}
 	}
 
+	/**
+	 * @param searchResults
+	 */
+	private void popUpListViewForSearchResults(List<String> searchResults) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		
+		final String[] resultsString = searchResults.toArray(new String[0]);
+		builder.setTitle(R.string.location_results_)
+			   .setItems(resultsString, new DialogInterface.OnClickListener() {
+				   public void onClick(DialogInterface dialog, int arrayIndex) {
+					   InputMethodManager inputManager = (InputMethodManager)
+							   getSystemService(Context.INPUT_METHOD_SERVICE); 
+
+					   inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+							   InputMethodManager.HIDE_NOT_ALWAYS);
+					   try {
+						   List<Address> addr = new ArrayList<Address>();
+						   addr = mGeocoder.getFromLocationName(resultsString[arrayIndex], 1);
+						   Address addressSelected = addr.get(0);
+						   LatLng latLng = new LatLng(addressSelected.getLatitude(), 
+								   						addressSelected.getLongitude());
+						   
+						   // Set the location Value
+						   mLocation = mGeoHasher.encode(latLng);
+						   mLocationString = resultsString[arrayIndex];
+						   mLocationAvailable = true;
+						   
+						   showLocation();
+						   
+					   } catch (Exception e) {
+						   Log.e("LOCATION", "Exception caught: " + e.getMessage());
+					   }
+				   }
+
+			   });
+		
+		// Create the AlertDialog
+		AlertDialog dialog = builder.create();
+		
+		// Show the Dialog
+		dialog.show();
+	}
+
+	/**
+	 * 
+	 */
+	private void showLocation() {
+		Log.d("LOCATION_EDIT", "Location: " + mLocation);
+		LatLng latLng = mGeoHasher.decode(mLocation);
+		CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latLng, ZOOM_LEVEL_ON_MAP);
+		mMap.animateCamera(update);
+		mMap.addMarker(new MarkerOptions().position(latLng).title(mLocationString));
+	}
+	
+	private String addressToStringConversion(Address address) {
+		int index = 0;
+		String addressVal = "";
+		while (address.getAddressLine(index) != null) {
+			addressVal += address.getAddressLine(index);
+			if (index <= address.getMaxAddressLineIndex() - 1) {
+				 addressVal += ", ";
+			}
+			else {
+				addressVal += " ";
+			}
+			Log.d("LOCATION", "Location search result: " + addressVal);
+			index ++;
+		}
+		return addressVal;
+	}
 	/**
 	 * Check the Event validity
 	 * @return event validity
@@ -425,6 +645,12 @@ public class EditEvent extends Activity implements OnClickListener {
 			return false;
 		}
 		return true;
+	}
+	
+	@Override
+	public void onMyLocationChange(Location location) {
+		mLocation = mGeoHasher.encode(location);
+		mLocationAvailable  = true;
 	}
 
 }

@@ -1,6 +1,5 @@
 package cs.softwarearchitecture.eventcal;
 
-import java.security.acl.NotOwnerException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,6 +22,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -36,7 +36,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils.TruncateAt;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -58,12 +57,16 @@ import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.Facebook;
 
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
-import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
-import cs.softwarearchitecture.eventcal.model.Event;
 import cs.softwarearchitecture.eventcal.modify.AddEvent;
 import cs.softwarearchitecture.eventcal.modify.EditEvent;
 import cs.softwarearchitecture.eventcal.services.FacebookService;
-import cs.softwarearchitecture.eventcal.services.getEventBriteEventService;
+import cs.softwarearchitecture.eventcal.services.GoogleService;
+import cs.softwarearchitecture.eventcal.services.EventbriteEventService;
+import cs.softwarearchitecture.eventcal.services.UWEventService;
+import cs.softwarearchitecture.eventcal.utility.ColumnNames;
+import cs.softwarearchitecture.eventcal.utility.CurrentDateTimeConverter;
+import cs.softwarearchitecture.eventcal.utility.Event;
+import cs.softwarearchitecture.eventcal.utility.Values;
 import cs.softwarearchitecture.eventcal.viewpagerindicator.TitlePageIndicator;
 
 public class DefaultView extends FragmentActivity {  
@@ -221,14 +224,14 @@ public class DefaultView extends FragmentActivity {
 					while (notifCursor.moveToNext()) {
 						Log.d("NOTIFICATION", "EventCount : " + Integer.toString(notifCursor.getCount()));
 
-						int _id = notifCursor.getInt(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_ID));
-						String title = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_TITLE));
-						String start_time = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_TIME));
-						String end_time = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_END_TIME));
-						String start_date = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_DATE));
-						String location = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_LOCATION));
-						String group = notifCursor.getString(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_TABLE));
-						int reminder = notifCursor.getInt(notifCursor.getColumnIndex(DBSQLiteHelper.COLUMN_REMINDER_TIME));
+						int _id = notifCursor.getInt(notifCursor.getColumnIndex(ColumnNames.COLUMN_ID));
+						String title = notifCursor.getString(notifCursor.getColumnIndex(ColumnNames.COLUMN_TITLE));
+						String start_time = notifCursor.getString(notifCursor.getColumnIndex(ColumnNames.COLUMN_START_TIME));
+						String end_time = notifCursor.getString(notifCursor.getColumnIndex(ColumnNames.COLUMN_END_TIME));
+						String start_date = notifCursor.getString(notifCursor.getColumnIndex(ColumnNames.COLUMN_START_DATE));
+						String location = notifCursor.getString(notifCursor.getColumnIndex(ColumnNames.COLUMN_LOCATION));
+						String group = notifCursor.getString(notifCursor.getColumnIndex(ColumnNames.COLUMN_TABLE));
+						int reminder = notifCursor.getInt(notifCursor.getColumnIndex(ColumnNames.COLUMN_REMINDER_TIME));
 
 						Intent notificationIntent = new Intent(DefaultView.this,
 								EventNotificationReceiver.class);
@@ -323,15 +326,20 @@ public class DefaultView extends FragmentActivity {
 
 			if(settingsPreference.getBoolean("google_login", false)) {
 				// Google service kickoff
+				Log.d(TAG, "Google Service kickoff!");
+				Intent intent = new Intent(DefaultView.this, GoogleService.class);
+				startService(intent);
 			}
 
 			if(settingsPreference.getBoolean("eventbrite_login", false)) {
 				// Eventbrite service kickoff
-				Intent intent = new Intent(DefaultView.this, getEventBriteEventService.class);
+				Intent intent = new Intent(DefaultView.this, EventbriteEventService.class);
 				startService(intent);
 			}
 
 			// UW service kickoff
+			Intent intent = new Intent(DefaultView.this, UWEventService.class);
+			startService(intent);
 			return null;
 		}
 
@@ -482,6 +490,10 @@ public class DefaultView extends FragmentActivity {
 		case R.id.today:
 			mCalendarChanging = Calendar.getInstance(Locale.getDefault());
 			updateDate(0);
+			break;
+		case R.id.menu_location:
+			Intent locationIntent = new Intent(this, MapActivity.class);
+			startActivity(locationIntent);
 			break;
 		}
 		return true;
@@ -654,22 +666,22 @@ public class DefaultView extends FragmentActivity {
 					mEventContentResolver.query(
 							DBEventsContentProvider.CONTENT_URI, null, 
 							"START_DATE =? AND END_TIME NOT NULL", dateString, 
-							DBSQLiteHelper.COLUMN_START_TIME + " ASC");
+							ColumnNames.COLUMN_START_TIME + " ASC");
 			
 			//Log.v(TAG, "loading events");
 			if (cursor.moveToFirst()) {
 				while(!cursor.isAfterLast()){
-					String type = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TABLE));
+					String type = cursor.getString(cursor.getColumnIndex(ColumnNames.COLUMN_TABLE));
 					Log.d(TAG, "loading events " + type);
 
-					int _id = cursor.getInt(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_ID));
-					String title = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TITLE));
-					String start_time = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_TIME));
-					String end_time = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_END_TIME));
-					String start_date = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_DATE));
-					String location = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_LOCATION));
-					String group = cursor.getString(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TABLE));
-					int reminder = cursor.getInt(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_REMINDER_TIME));
+					int _id = cursor.getInt(cursor.getColumnIndex(ColumnNames.COLUMN_ID));
+					String title = cursor.getString(cursor.getColumnIndex(ColumnNames.COLUMN_TITLE));
+					String start_time = cursor.getString(cursor.getColumnIndex(ColumnNames.COLUMN_START_TIME));
+					String end_time = cursor.getString(cursor.getColumnIndex(ColumnNames.COLUMN_END_TIME));
+					String start_date = cursor.getString(cursor.getColumnIndex(ColumnNames.COLUMN_START_DATE));
+					String location = cursor.getString(cursor.getColumnIndex(ColumnNames.COLUMN_LOCATION));
+					String group = cursor.getString(cursor.getColumnIndex(ColumnNames.COLUMN_TABLE));
+					int reminder = cursor.getInt(cursor.getColumnIndex(ColumnNames.COLUMN_REMINDER_TIME));
 
 					Log.v(TAG, "before start_time is " +  start_time);
 					Log.v(TAG, "before end_time is " + end_time);
@@ -705,6 +717,7 @@ public class DefaultView extends FragmentActivity {
 			final String title 	= event.getTitle();
 			final String date = event.getDate();
 			final String group = event.getGroup();
+			final String location = event.getLocation();
 			final int reminder = event.getReminder();
 			final int _id = event.getID();
 
@@ -724,25 +737,7 @@ public class DefaultView extends FragmentActivity {
 
 			String type = event.getType();
 
-			if (type.equals("PERSONAL")) {
-				button.setBackgroundColor(0x69000000);
-			}
-
-			if (type.equals("FACEBOOK")) {
-				button.setBackgroundColor(0x09c00000);
-			}
-
-			if (type.equals("EVENTBRITE")) {
-				button.setBackgroundColor(0xff880000);
-			}
-
-			if (type.equals("UW")) {
-				button.setBackgroundColor(0xa6c00000);
-			}
-
-			if (type.equals("GOOGLE")) {
-				button.setBackgroundColor(0x7e572a00);
-			}
+			eventColorSelection(button, type);
 
 			button.setLayoutParams(lprams);
 			button.setTextColor(Color.BLACK);
@@ -770,15 +765,47 @@ public class DefaultView extends FragmentActivity {
 					editEventIntent.putExtra("reminder", reminder);
 					editEventIntent.putExtra("group", group);
 					editEventIntent.putExtra("id", _id);
-
-					Log.d(TAG, "Event start_time: " + start_time);
-
+					editEventIntent.putExtra("location", location);
+					
 					editEventIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					startActivity(editEventIntent);
 				}
 			});
 		}
 
+		/**
+		 * Event Color selection
+		 * @param button
+		 * @param type
+		 */
+		private void eventColorSelection(Button button, String type) {
+			if (type.equals("PERSONAL")) {
+				button.getBackground().setColorFilter(Color.parseColor("#690 "), PorterDuff.Mode.DARKEN);
+			}
+
+			if (type.equals("FACEBOOK")) {
+				button.getBackground().setColorFilter(Color.parseColor("#09c"), PorterDuff.Mode.DARKEN);
+			}
+
+			if (type.equals("EVENTBRITE")) {
+				button.getBackground().setColorFilter(Color.parseColor("#f80"), PorterDuff.Mode.DARKEN); //setBackgroundColor(0xfbf2a300);
+			}
+
+			if (type.equals("UW")) {
+				button.getBackground().setColorFilter(Color.parseColor("#a6c"), PorterDuff.Mode.DARKEN);
+			}
+
+			if (type.equals("GOOGLE")) {
+				button.getBackground().setColorFilter(Color.parseColor("#7e572a "), PorterDuff.Mode.DARKEN);
+			}
+		}
+		
+		/**
+		 * Calculates the time difference in time (in terms of minutes)
+		 * @param start_time
+		 * @param end_time
+		 * @return diffMinutes
+		 */
 		private long calculateDiffInTime(String start_time, String end_time) {
 			String startTimeEvent = start_time;
 			String endTimeEvent = end_time;
@@ -807,8 +834,12 @@ public class DefaultView extends FragmentActivity {
 		}
 
 
+		/**
+		 * Margin Calculation
+		 * @param start_time
+		 * @return margin
+		 */
 		private int calculateMargin(String start_time) {
-			// TODO Auto-generated method stub
 			double margin = 3;
 			for (int i = 0; start_time.compareToIgnoreCase(
 					values.getTIME_VALUES()[i]) != 0; i++) {

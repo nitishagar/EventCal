@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
+import cs.softwarearchitecture.eventcal.utility.ColumnNames;
 
 /**
  * @author nitishagarwal
@@ -73,25 +73,25 @@ public class AgendaCursorAdapter extends CursorAdapter {
 		TextView subtitleTime =  (TextView)view.findViewById(R.id.event_subtitle);
 		
 		eventTitle.setText(cursor.getString(
-				cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TITLE)));
+				cursor.getColumnIndex(ColumnNames.COLUMN_TITLE)));
 		
-		if (!(cursor.isNull(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_END_TIME))) 
-				|| cursor.getInt(cursor.getColumnIndex(DBSQLiteHelper.COLUMN_END_TIME)) != 0) {
+		if (!(cursor.isNull(cursor.getColumnIndex(ColumnNames.COLUMN_END_TIME))) 
+				|| cursor.getInt(cursor.getColumnIndex(ColumnNames.COLUMN_END_TIME)) != 0) {
 			subtitleTime.setText(timeFormatted(Integer.toString(cursor.getInt(
-					cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_TIME)))) + "-" 
+					cursor.getColumnIndex(ColumnNames.COLUMN_START_TIME)))) + "-" 
 					+ timeFormatted(Integer.toString(cursor.getInt(
-							cursor.getColumnIndex(DBSQLiteHelper.COLUMN_END_TIME)))));
+							cursor.getColumnIndex(ColumnNames.COLUMN_END_TIME)))));
 		} 
 		else {
 			subtitleTime.setText(timeFormatted(Integer.toString(cursor.getInt(
-					cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_TIME)))));
+					cursor.getColumnIndex(ColumnNames.COLUMN_START_TIME)))));
 		}
 		
 		// Image for each event type/group
 		imageViewSetting(view, cursor);
 
 		/*
-         * Separator
+         * Date Separator
          */
         seperatorImplementation(cursor, seperatorDate);
 
@@ -126,12 +126,12 @@ public class AgendaCursorAdapter extends CursorAdapter {
                     cursor.moveToPosition(position - 1);
 
                     int prevDate = cursor.getInt(
-            				cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_DATE));
+            				cursor.getColumnIndex(ColumnNames.COLUMN_START_DATE));
 
                     cursor.moveToPosition(position);
                     
                     int nextDate = cursor.getInt(
-            				cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_DATE));
+            				cursor.getColumnIndex(ColumnNames.COLUMN_START_DATE));
                     
                     if (nextDate != prevDate) {
                         needSeparator = true;
@@ -146,7 +146,7 @@ public class AgendaCursorAdapter extends CursorAdapter {
 
         if (needSeparator) {
         	String dateRaw = Integer.toString(cursor.getInt(
-    				cursor.getColumnIndex(DBSQLiteHelper.COLUMN_START_DATE)));
+    				cursor.getColumnIndex(ColumnNames.COLUMN_START_DATE)));
         	
         	seperatorDate.setText(dateRaw.substring(1, 3) + "-" + dateRaw.substring(3,5) + "-"
         			+ dateRaw.substring(5, dateRaw.length()));
@@ -158,6 +158,7 @@ public class AgendaCursorAdapter extends CursorAdapter {
 	}
 
 	/**
+	 * Image Selection for each event from the res folder
 	 * @param view
 	 * @param cursor
 	 */
@@ -166,7 +167,7 @@ public class AgendaCursorAdapter extends CursorAdapter {
 
 
 		String imageResourceType = cursor.getString(
-				cursor.getColumnIndex(DBSQLiteHelper.COLUMN_TABLE));
+				cursor.getColumnIndex(ColumnNames.COLUMN_TABLE));
 
 		if (imageResourceType.equals("PERSONAL")) {
 			eventImage.setImageResource(R.drawable.ic_action_personal);

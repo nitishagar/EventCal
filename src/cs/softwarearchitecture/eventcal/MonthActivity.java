@@ -32,8 +32,8 @@ import com.squareup.timessquare.CalendarPickerView.OnDateSelectedListener;
 import com.squareup.timessquare.CalendarPickerView.SelectionMode;
 
 import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
-import cs.softwarearchitecture.eventcal.model.Event;
 import cs.softwarearchitecture.eventcal.modify.AddEvent;
+import cs.softwarearchitecture.eventcal.utility.Event;
 
 public class MonthActivity extends DefaultView {
 
@@ -168,6 +168,10 @@ public class MonthActivity extends DefaultView {
 		case R.id.today:
 			mCalendar.selectDate(new Date());
 			break;
+		case R.id.menu_location:
+			Intent locationIntent = new Intent(this, MapActivity.class);
+			startActivity(locationIntent);
+			break;
 		}
 		return true;
 	}
@@ -243,6 +247,7 @@ public class MonthActivity extends DefaultView {
 
 				String imageResourceType = ((Event) events.get(position)).getGroup();
 				
+				// Image selection
 				if (imageResourceType.equals("PERSONAL")) {
 					eventImage.setImageResource(R.drawable.ic_action_personal);
 				}
