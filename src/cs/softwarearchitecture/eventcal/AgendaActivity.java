@@ -269,6 +269,7 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 				String end_time = cursor.getString(cursor.getColumnIndex(ColumnNames.COLUMN_END_TIME));
 				String date = cursor.getString(cursor.getColumnIndex(ColumnNames.COLUMN_START_DATE));
 				String group = cursor.getString(cursor.getColumnIndex(ColumnNames.COLUMN_TABLE));
+				String location = cursor.getString(cursor.getColumnIndex(ColumnNames.COLUMN_LOCATION));
 				int reminder = cursor.getInt(cursor.getColumnIndex(ColumnNames.COLUMN_REMINDER_TIME));
 
 				editEventIntent.putExtra("title", title);
@@ -278,6 +279,7 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 				editEventIntent.putExtra("reminder", reminder);
 				editEventIntent.putExtra("group", group);
 				editEventIntent.putExtra("id", _id);
+				editEventIntent.putExtra("location", location);
 
 				cursor.moveToNext();
 			}

@@ -24,6 +24,7 @@
     <string name="share">Share</string>
     <string name="delete">Delete</string>
     <string name="today">Today</string>
+    <string name="search_button">Search</string>
 
     <string-array name="view_list">
         <item>Days</item>
@@ -47,5 +48,6 @@
     <string name="eventbrite_user_id">Eventbrite User ID</string>
     <string name="location">Location</string>
     <string name="title_activity_map">Location</string>
+    <string name="location_results_">Location Results:</string>
 
 </resources>
