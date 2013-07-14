@@ -31,7 +31,6 @@ import com.squareup.timessquare.CalendarPickerView;
 import com.squareup.timessquare.CalendarPickerView.OnDateSelectedListener;
 import com.squareup.timessquare.CalendarPickerView.SelectionMode;
 
-import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
 import cs.softwarearchitecture.eventcal.modify.AddEvent;
 import cs.softwarearchitecture.eventcal.utility.Event;
 
@@ -234,10 +233,10 @@ public class MonthActivity extends DefaultView {
 				// Seperator not needed for this view
 				seperatorDate.setVisibility(View.GONE);
 				
-				eventTitle.setText(((Event) events.get(position)).getTitle());
+				eventTitle.setText(events.get(position).getTitle());
 				
-				String startTime = ((Event) events.get(position)).getStartTime();
-				String endTime = ((Event) events.get(position)).getEndTime();
+				String startTime = events.get(position).getStartTime();
+				String endTime = events.get(position).getEndTime();
 				
 				if(endTime != null)
 					eventTime.setText(timeFormatted(startTime) + "-" 
@@ -245,7 +244,7 @@ public class MonthActivity extends DefaultView {
 				else
 					eventTime.setText(timeFormatted(startTime));
 
-				String imageResourceType = ((Event) events.get(position)).getGroup();
+				String imageResourceType = events.get(position).getGroup();
 				
 				// Image selection
 				if (imageResourceType.equals("PERSONAL")) {

@@ -386,7 +386,8 @@ public class AddEvent extends FragmentActivity implements OnClickListener, OnMyL
 		final String[] resultsString = searchResults.toArray(new String[0]);
 		builder.setTitle(R.string.location_results_)
 			   .setItems(resultsString, new DialogInterface.OnClickListener() {
-				   public void onClick(DialogInterface dialog, int arrayIndex) {
+				   @Override
+				public void onClick(DialogInterface dialog, int arrayIndex) {
 					   InputMethodManager inputManager = (InputMethodManager)
 							   getSystemService(Context.INPUT_METHOD_SERVICE); 
 

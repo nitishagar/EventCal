@@ -9,10 +9,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import cs.softwarearchitecture.eventcal.DefaultView;
-
 import android.annotation.SuppressLint;
 import android.util.Log;
+import cs.softwarearchitecture.eventcal.DefaultView;
 
 /**
  * @author nitishagarwal

@@ -43,9 +43,9 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.SupportMapFragment;
 
 import cs.softwarearchitecture.eventcal.DefaultView;
 import cs.softwarearchitecture.eventcal.R;
@@ -561,7 +561,8 @@ public class EditEvent extends FragmentActivity implements OnClickListener, OnMy
 		final String[] resultsString = searchResults.toArray(new String[0]);
 		builder.setTitle(R.string.location_results_)
 			   .setItems(resultsString, new DialogInterface.OnClickListener() {
-				   public void onClick(DialogInterface dialog, int arrayIndex) {
+				   @Override
+				public void onClick(DialogInterface dialog, int arrayIndex) {
 					   InputMethodManager inputManager = (InputMethodManager)
 							   getSystemService(Context.INPUT_METHOD_SERVICE); 
 

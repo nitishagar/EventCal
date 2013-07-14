@@ -9,6 +9,7 @@ import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.provider.BaseColumns;
 import android.provider.CalendarContract.Calendars;
 import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
@@ -59,7 +60,7 @@ public class GoogleService extends IntentService {
 			                  EVENT_PROJECTION, 
 			                  Calendars.VISIBLE + " = 1", 
 			                  null, 
-			                  Calendars._ID + " ASC");
+			                  BaseColumns._ID + " ASC");
 		if (calCursor.moveToFirst()) {
 			do {
 				long id = calCursor.getLong(0);
@@ -72,7 +73,7 @@ public class GoogleService extends IntentService {
 		
 		String[] proj = 
 				new String[]{
-				Events._ID, 
+				BaseColumns._ID, 
 				Events.DTSTART, 
 				Events.DTEND, 
 				Events.TITLE,
@@ -111,14 +112,14 @@ public class GoogleService extends IntentService {
 					// For reminder time we have to see another table
 					String[] reminder_projection = 
 							new String[]{
-							Reminders._ID, 
+							BaseColumns._ID, 
 							Reminders.MINUTES};
 					Cursor cursor_reminder = 
 							getContentResolver().
 							query(
 									Reminders.CONTENT_URI, 
 									reminder_projection, 
-									Reminders._ID + " = ? ", 
+									BaseColumns._ID + " = ? ", 
 									new String[]{Long.toString(event_id)}, 
 									null);
 					int reminder = 0;

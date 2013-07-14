@@ -1,8 +1,6 @@
 package cs.softwarearchitecture.eventcal.services;
 
 import java.io.IOException;
-
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -16,57 +14,55 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.util.JsonReader;
 import android.util.Log;
-
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
 import cs.softwarearchitecture.eventcal.utility.ColumnNames;
-import cs.softwarearchitecture.eventcal.utility.CurrentDateTimeConverter;
 
 public class UWEventService extends IntentService {
 	public class Event{
-	      String title;
-	      String location;
-	      Integer startTime;
-	      Integer startDate;
-	      Integer endTime;
-	      Integer endDate;
-	      int valid;
-	  }
-  /** 
-   * A constructor is required, and must call the super IntentService(String)
-   * constructor with a name for the worker thread.
-   */
-  public UWEventService() {
-      super("UWEventService");
-  }
-  
-  private static final String TAG = "getUWEventService";
-  InputStream in;
-  List<Event> UWEvents = new ArrayList();
-  //private ListView eventsListView;
-  //private ArrayAdapter arrayAdapter;
-  URL url;
-  HttpURLConnection urlConnection;
-  String UWAPIKey = "caeecfb4db9804ec82b9adbfbdd151a3";
-  
+		String title;
+		String location;
+		Integer startTime;
+		Integer startDate;
+		Integer endTime;
+		Integer endDate;
+		int valid;
+	}
+	/** 
+	 * A constructor is required, and must call the super IntentService(String)
+	 * constructor with a name for the worker thread.
+	 */
+	public UWEventService() {
+		super("UWEventService");
+	}
+
+	private static final String TAG = "UWEventService";
+	InputStream in;
+	List<Event> UWEvents = new ArrayList();
+	//private ListView eventsListView;
+	//private ArrayAdapter arrayAdapter;
+	URL url;
+	HttpURLConnection urlConnection;
+	String UWAPIKey = "caeecfb4db9804ec82b9adbfbdd151a3";
+
 	public void parseUWEvents(InputStream in) throws IOException {
 		JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
-	   // try {
-	    	
-	    parseUWEventsArray(reader);
-	    //}
-	    //finally {
-	    	reader.close();
-	  //  }
+		// try {
+
+		parseUWEventsArray(reader);
+		//}
+		//finally {
+		reader.close();
+		//  }
 	}
 
 	public void parseUWEventsArray(JsonReader reader) throws IOException {
 		//List eventList = new ArrayList();
-	    Log.d(UWEventService.TAG, "i'm here");
-	    reader.beginObject(); //start
-	    reader.nextName();// response"
-	    reader.beginObject();
-	    reader.nextName();// meta
-	    /*
+		Log.d(UWEventService.TAG, "i'm here");
+		reader.beginObject(); //start
+		reader.nextName();// response"
+		reader.beginObject();
+		reader.nextName();// meta
+		/*
 	    reader.beginObject();
 	    reader.nextName();// request
 	    reader.nextString();
@@ -78,41 +74,41 @@ public class UWEventService extends IntentService {
 	    reader.nextString();
 	    reader.nextName();// version
 	    reader.nextString();
-	    
-	    
+
+
 	    Log.d(getUWEventService.TAG, "i'm here 2");
 	    reader.endObject();
-	    */
-	    reader.skipValue();
-	    Log.d(UWEventService.TAG, "i'm here 11");
-	    reader.nextName();// data
-	    Log.d(UWEventService.TAG, "i'm here 5");
-	    reader.beginObject();
-	    Log.d(UWEventService.TAG, "i'm here 6");
-	    reader.nextName();//result
-	    Log.d(UWEventService.TAG, "i'm here 7");
-	    reader.beginArray();
-	    
-	    while (reader.hasNext()) {
-	    	Log.d(UWEventService.TAG, "i'm here 3");
-	    	Event addEvent = getUWEvents(reader);
-	    	if (addEvent.valid == 1){
-	    		UWEvents.add(addEvent);
-	    	}
-	    	Log.d(UWEventService.TAG, "i'm here 77");
-	    	//eventList.add("New Event");
-	    }
-	    Log.d(UWEventService.TAG, "i'm here 4");
-	    reader.endArray();
-	    reader.endObject();
-	    reader.endObject();
-	    reader.endObject();
-	    //return eventList;
+		 */
+		reader.skipValue();
+		Log.d(UWEventService.TAG, "i'm here 11");
+		reader.nextName();// data
+		Log.d(UWEventService.TAG, "i'm here 5");
+		reader.beginObject();
+		Log.d(UWEventService.TAG, "i'm here 6");
+		reader.nextName();//result
+		Log.d(UWEventService.TAG, "i'm here 7");
+		reader.beginArray();
+
+		while (reader.hasNext()) {
+			Log.d(UWEventService.TAG, "i'm here 3");
+			Event addEvent = getUWEvents(reader);
+			if (addEvent.valid == 1){
+				UWEvents.add(addEvent);
+			}
+			Log.d(UWEventService.TAG, "i'm here 77");
+			//eventList.add("New Event");
+		}
+		Log.d(UWEventService.TAG, "i'm here 4");
+		reader.endArray();
+		reader.endObject();
+		reader.endObject();
+		reader.endObject();
+		//return eventList;
 	}
 
 	/*public String getUWEvents(JsonReader reader) throws IOException {
 		String event = "";
-		
+
 	    reader.beginObject();
 	    while (reader.hasNext()) {
 	    	String name = reader.nextName();
@@ -126,49 +122,49 @@ public class UWEventService extends IntentService {
 	    reader.endObject();
 	    return event;
 	}*/
-	
-			
+
+
 	public Event getUWEvents(JsonReader reader) throws IOException {
 		Event event = new Event();
 
-	    reader.beginObject();
-	    Log.d(UWEventService.TAG, "i'm here 88");
-	    while (reader.hasNext()) {
-	    	String name = reader.nextName();
-	    	 Log.d(UWEventService.TAG, name);
-	        if (name.equals("Title")) {
-	        	event.title = reader.nextString();
-	        	Log.d(UWEventService.TAG, event.title);
-	        } else if(name.equals("Where")){
-	        	event.location = reader.nextString();
-	        	Log.d(UWEventService.TAG, event.location);
-	        } 
-	        else if(name.equals("When")){
-	        	String timeDate = reader.nextString();
-	        	if (timeDate.equals("")){
-	        		event.startTime = 0;
-		        	event.startDate = 0;
-		        	event.endTime = 0;
-		        	event.endDate = 0;
-		        	event.valid = 0;
-	        	}
-	        	else {
-		        	ArrayList<Integer> timeAndDate = parseEventTime(timeDate);
-		        	event.startTime = timeAndDate.get(0);
-		        	event.startDate = timeAndDate.get(1);
-		        	event.endTime = timeAndDate.get(2);
-		        	event.endDate = timeAndDate.get(3);
-		        	event.valid = 1;
-	        	}
-	        }
-	        else {
-	        	reader.skipValue();
-	        }
-	    }
-	    reader.endObject();
-	    return event;
+		reader.beginObject();
+		Log.d(UWEventService.TAG, "i'm here 88");
+		while (reader.hasNext()) {
+			String name = reader.nextName();
+			Log.d(UWEventService.TAG, name);
+			if (name.equals("Title")) {
+				event.title = reader.nextString();
+				Log.d(UWEventService.TAG, event.title);
+			} else if(name.equals("Where")){
+				event.location = reader.nextString();
+				Log.d(UWEventService.TAG, event.location);
+			} 
+			else if(name.equals("When")){
+				String timeDate = reader.nextString();
+				if (timeDate.equals("")){
+					event.startTime = 0;
+					event.startDate = 0;
+					event.endTime = 0;
+					event.endDate = 0;
+					event.valid = 0;
+				}
+				else {
+					ArrayList<Integer> timeAndDate = parseEventTime(timeDate);
+					event.startTime = timeAndDate.get(0);
+					event.startDate = timeAndDate.get(1);
+					event.endTime = timeAndDate.get(2);
+					event.endDate = timeAndDate.get(3);
+					event.valid = 1;
+				}
+			}
+			else {
+				reader.skipValue();
+			}
+		}
+		reader.endObject();
+		return event;
 	}
-			
+
 	public ArrayList<Integer> parseEventTime(String timeString){	
 		Log.d(UWEventService.TAG, timeString);
 		ArrayList<Integer> returnTime = new ArrayList<Integer>();
@@ -198,9 +194,9 @@ public class UWEventService extends IntentService {
 			Log.d(UWEventService.TAG,  startTimeSplit[0]);
 			Log.d(UWEventService.TAG,  startTimeSplit[1]);
 			String[] endTimeSplit = splitString[12].split(":");
-			
+
 			startTime =  Integer.parseInt(findTime(startTimeSplit[0], startTimeSplit[1], splitString[5]));
-			
+
 
 			startDate = Integer.parseInt(findDate(splitString[1],splitString[2],splitString[3]));
 			//String startDate = splitString[1]+splitString[2]+splitString[3];
@@ -228,9 +224,9 @@ public class UWEventService extends IntentService {
 		Log.d(UWEventService.TAG, "lalala");
 		return returnTime;
 	}
-	
+
 	public String findTime(String hour, String minutes, String amOrPm){
-		
+
 		String returnTime;
 		if (amOrPm.equals("pm") && !hour.equals("12")){
 			int intHour = Integer.parseInt(hour);
@@ -247,7 +243,7 @@ public class UWEventService extends IntentService {
 		}
 		Log.d(UWEventService.TAG, returnTime);
 		return returnTime;
-		 
+
 	}
 
 	public String findDate(String day, String month, String year){
@@ -281,45 +277,45 @@ public class UWEventService extends IntentService {
 		Log.d(UWEventService.TAG, date);
 		return date;
 	}
-  /**
-   * The IntentService calls this method from the default worker thread with
-   * the intent that started the service. When this method returns, IntentService
-   * stops the service, as appropriate.
-   */
-  @Override
-  protected void onHandleIntent(Intent intent) {
-	  Log.d(UWEventService.TAG, "I'm here");
-	  
+	/**
+	 * The IntentService calls this method from the default worker thread with
+	 * the intent that started the service. When this method returns, IntentService
+	 * stops the service, as appropriate.
+	 */
+	@Override
+	protected void onHandleIntent(Intent intent) {
+		Log.d(UWEventService.TAG, "I'm here");
+
 		try {
-    		url = new URL("http://api.uwaterloo.ca/public/v1/?key=" + UWAPIKey + "&service=CalendarEvents&output=json");
-    		urlConnection = (HttpURLConnection)url.openConnection();
-    		in = urlConnection.getInputStream();
-    		parseUWEvents(in);
-    		int i = UWEvents.size();
-    		int j = 0;
-    		//while (i > 0){
-    		//	Log.d(getUWEventService.TAG, UWEvents.get(i));
-    		//	i += 1;
-    		//}
-    		while (j < i){
-	    		ContentValues values = new ContentValues();
-	    		Event insertEvent = UWEvents.get(j);
-	    		//int insertStartTime = Integer.parseInt(insertEvent.startTime);
-	    		//int insertStartDate = Integer.parseInt(insertEvent.startDate);
-	    		//int insertEndTime = Integer.parseInt(insertEvent.endTime);
-	    		//int insertEndDate = Integer.parseInt(insertEvent.endDate);
-	            values.put(ColumnNames.COLUMN_TABLE, "UW");
-	            values.put(ColumnNames.COLUMN_TITLE, insertEvent.title);
-	            values.put(ColumnNames.COLUMN_START_DATE, insertEvent.startDate);
-	            values.put(ColumnNames.COLUMN_START_TIME, insertEvent.startTime);
-	            values.put(ColumnNames.COLUMN_END_TIME, insertEvent.endTime);
-	            values.put(ColumnNames.COLUMN_END_DATE, insertEvent.endDate);
-	            values.put(ColumnNames.COLUMN_LOCATION, insertEvent.location);
-	            values.put(ColumnNames.COLUMN_REMINDER_TIME,"");
-	            getContentResolver().insert(DBEventsContentProvider.CONTENT_URI, values);
-	            j += 1;
-    		}
-			
+			url = new URL("http://api.uwaterloo.ca/public/v1/?key=" + UWAPIKey + "&service=CalendarEvents&output=json");
+			urlConnection = (HttpURLConnection)url.openConnection();
+			in = urlConnection.getInputStream();
+			parseUWEvents(in);
+			int i = UWEvents.size();
+			int j = 0;
+			//while (i > 0){
+			//	Log.d(getUWEventService.TAG, UWEvents.get(i));
+			//	i += 1;
+			//}
+			while (j < i){
+				ContentValues values = new ContentValues();
+				Event insertEvent = UWEvents.get(j);
+				//int insertStartTime = Integer.parseInt(insertEvent.startTime);
+				//int insertStartDate = Integer.parseInt(insertEvent.startDate);
+				//int insertEndTime = Integer.parseInt(insertEvent.endTime);
+				//int insertEndDate = Integer.parseInt(insertEvent.endDate);
+				values.put(ColumnNames.COLUMN_TABLE, "UW");
+				values.put(ColumnNames.COLUMN_TITLE, insertEvent.title);
+				values.put(ColumnNames.COLUMN_START_DATE, insertEvent.startDate);
+				values.put(ColumnNames.COLUMN_START_TIME, insertEvent.startTime);
+				values.put(ColumnNames.COLUMN_END_TIME, insertEvent.endTime);
+				values.put(ColumnNames.COLUMN_END_DATE, insertEvent.endDate);
+				values.put(ColumnNames.COLUMN_LOCATION, insertEvent.location);
+				values.put(ColumnNames.COLUMN_REMINDER_TIME,"");
+				getContentResolver().insert(DBEventsContentProvider.CONTENT_URI, values);
+				j += 1;
+			}
+
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -330,13 +326,13 @@ public class UWEventService extends IntentService {
 		finally{
 			urlConnection.disconnect();
 		}
-		
-		
+
+
 		/* eventsListView = (ListView) findViewById(R.id.calendarEvent_list);
 
 	        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, UWEvents);
-	 
+
 	        eventsListView.setAdapter(arrayAdapter);
-	    */
-  }
+		 */
+	}
 }

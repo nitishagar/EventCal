@@ -32,6 +32,7 @@ import android.text.TextUtils;
 import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
@@ -94,6 +95,19 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 
 	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()){
+		case android.R.id.home:
+			super.onBackPressed();
+			break;
+		}
+		return true;
+	}
+	
 	/**
 	 * A preference value change listener that updates the preference's summary
 	 * to reflect its new value.
@@ -360,7 +374,8 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 			    builder.setView(dialogView)
 			    // Add the buttons
 			    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-			    	public void onClick(DialogInterface dialog, int id) {
+			    	@Override
+					public void onClick(DialogInterface dialog, int id) {
 			    		// User clicked OK button
 			    		EditText userID = (EditText) dialogView.findViewById(R.id.userid);
 
@@ -380,7 +395,8 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 			    	}
 			    })
 			    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-			    	public void onClick(DialogInterface dialog, int id) {
+			    	@Override
+					public void onClick(DialogInterface dialog, int id) {
 			    		CheckBoxPreference loginCheck = (CheckBoxPreference) findPreference("eventbrite_login");
 			    		loginCheck.setChecked(false);
 			    		
@@ -461,6 +477,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 			if(result) {
 				AlertDialog.Builder invalidUser = new AlertDialog.Builder(SettingsActivity.this);
 				invalidUser.setIcon(R.drawable.ic_stat_alerts).setTitle("Error").setMessage("Invalid User ID!").setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+					@Override
 					public void onClick(DialogInterface dialog, int id) {
 						CheckBoxPreference loginCheck = (CheckBoxPreference) findPreference("eventbrite_login");
 			    		loginCheck.setChecked(false);
