@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -58,6 +59,10 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		
+		// Action bar back button implementation
+		ActionBar actionBar = getActionBar();
+	    actionBar.setDisplayHomeAsUpEnabled(true);
+	    
 		// In the simplified UI, fragments are not used at all and we instead
 		// use the older PreferenceActivity APIs.
 
@@ -418,6 +423,12 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 			HttpURLConnection urlConnection;
 			InputStream in;
 			try {
+				// Storing in pref
+				SharedPreferences preference = getSharedPreferences("eventbrite-session", 0);
+				Editor eventbriteEditor = preference.edit();
+				eventbriteEditor.putString("user_id", mSettingPreference.getString("user_id", null));
+				eventbriteEditor.commit();
+				
 				URL url = new URL("https://www.eventbrite.com/json/event_search?app_key=SCGKMFBZ2BGVSH5XL2&user_key=" + mSettingPreference.getString("user_id", null));
 				urlConnection = (HttpURLConnection) url.openConnection();
 				urlConnection.setDoInput(true);
@@ -451,6 +462,8 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 				AlertDialog.Builder invalidUser = new AlertDialog.Builder(SettingsActivity.this);
 				invalidUser.setIcon(R.drawable.ic_stat_alerts).setTitle("Error").setMessage("Invalid User ID!").setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
+						CheckBoxPreference loginCheck = (CheckBoxPreference) findPreference("eventbrite_login");
+			    		loginCheck.setChecked(false);
 						//nothing just close the box
 			    		dialog.cancel();
 					}

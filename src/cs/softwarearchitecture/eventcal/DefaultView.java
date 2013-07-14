@@ -22,7 +22,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -57,9 +56,9 @@ import com.facebook.android.Facebook;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
 import cs.softwarearchitecture.eventcal.modify.AddEvent;
 import cs.softwarearchitecture.eventcal.modify.EditEvent;
+import cs.softwarearchitecture.eventcal.services.EventbriteEventService;
 import cs.softwarearchitecture.eventcal.services.FacebookService;
 import cs.softwarearchitecture.eventcal.services.GoogleService;
-import cs.softwarearchitecture.eventcal.services.EventbriteEventService;
 import cs.softwarearchitecture.eventcal.services.UWEventService;
 import cs.softwarearchitecture.eventcal.utility.ColumnNames;
 import cs.softwarearchitecture.eventcal.utility.CurrentDateTimeConverter;
@@ -198,7 +197,7 @@ public class DefaultView extends FragmentActivity {
 
 			if(settingsPreference.getBoolean("notifications_new_message", false)) {
 				Log.d("NOTIFICATION", "notification enabled");
-				
+
 				// Calculate current date
 				mCalendarChanging.add(Calendar.DAY_OF_MONTH, 0);
 
@@ -299,6 +298,7 @@ public class DefaultView extends FragmentActivity {
 			// Setup Facebook Session
 			mFacebook = new Facebook(getString(R.string.app_id));
 			mAsyncRunnner = new AsyncFacebookRunner(mFacebook);
+
 		}
 
 		@SuppressWarnings("deprecation")
@@ -653,7 +653,7 @@ public class DefaultView extends FragmentActivity {
 							DBEventsContentProvider.CONTENT_URI, null, 
 							"START_DATE =? AND END_TIME NOT NULL", dateString, 
 							ColumnNames.COLUMN_START_TIME + " ASC");
-			
+
 			//Log.v(TAG, "loading events");
 			if (cursor.moveToFirst()) {
 				while(!cursor.isAfterLast()){
@@ -752,7 +752,7 @@ public class DefaultView extends FragmentActivity {
 					editEventIntent.putExtra("group", group);
 					editEventIntent.putExtra("id", _id);
 					editEventIntent.putExtra("location", location);
-					
+
 					editEventIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					startActivity(editEventIntent);
 				}
@@ -785,7 +785,7 @@ public class DefaultView extends FragmentActivity {
 				button.setBackgroundColor(Color.YELLOW);
 			}
 		}
-		
+
 		/**
 		 * Calculates the time difference in time (in terms of minutes)
 		 * @param start_time
