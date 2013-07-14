@@ -3,6 +3,8 @@
  */
 package cs.softwarearchitecture.eventcal;
 
+import java.text.DateFormatSymbols;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
@@ -148,8 +150,10 @@ public class AgendaCursorAdapter extends CursorAdapter {
         	String dateRaw = Integer.toString(cursor.getInt(
     				cursor.getColumnIndex(ColumnNames.COLUMN_START_DATE)));
         	
-        	seperatorDate.setText(dateRaw.substring(1, 3) + "-" + dateRaw.substring(3,5) + "-"
-        			+ dateRaw.substring(5, dateRaw.length()));
+        	String month = new DateFormatSymbols().getMonths()[Integer.parseInt(dateRaw.substring(3,5)) - 1];
+        	String day = dateRaw.substring(1, 3);
+        	String year = dateRaw.substring(5, dateRaw.length());
+        	seperatorDate.setText(day + "-" + month + "-" + year);
            
             seperatorDate.setVisibility(View.VISIBLE);
         } else {

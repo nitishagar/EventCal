@@ -33,7 +33,7 @@ public class EventbriteEventService extends IntentService {
    * constructor with a name for the worker thread.
    */
   public EventbriteEventService() {
-      super("getEventBriteEventService");
+      super("EventbriteEventService");
   }
   
   private static final String TAG = "getEventBriteEventService";

@@ -36,7 +36,7 @@ public class UWEventService extends IntentService {
    * constructor with a name for the worker thread.
    */
   public UWEventService() {
-      super("getUWEventService");
+      super("UWEventService");
   }
   
   private static final String TAG = "getUWEventService";

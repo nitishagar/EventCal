@@ -2,7 +2,11 @@ package cs.softwarearchitecture.eventcal;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URL;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -13,6 +17,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.CheckBoxPreference;
@@ -23,6 +28,7 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -331,7 +337,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 		
 		if (sharedPreferences.getBoolean("eventbrite_login", false)) {
 			if(mSettingPreference.getString("user_id", null) == null) {
-				Log.d(DefaultView.TAG, "Eventbrite Login clicked!");
+				Log.d(DefaultView.TAG, "Eventbrite Login clicked! User ID: " + mSettingPreference.getString("user_id", null) );
 				
 				// Creating a login Id dialog
 				AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -344,6 +350,8 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 			    // Pass null as the parent view because its going in the dialog layout
 			    final View dialogView = inflater.inflate(R.layout.user_id_dialog, null);
 			    
+			    final ValidityCheck tokenValidityCheck = new ValidityCheck();
+			    
 			    builder.setView(dialogView)
 			    // Add the buttons
 			    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
@@ -351,19 +359,19 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 			    		// User clicked OK button
 			    		EditText userID = (EditText) dialogView.findViewById(R.id.userid);
 
-			    		try{
-			    			Log.d(DefaultView.TAG, "USER ID: " + userID.getText().toString());
-				    		// Also check the value is correct or not
-			    			
-			    			
-			    			// Store it in shared preferences
-			    			mSettingEditor = mSettingPreference.edit();
-			    			mSettingEditor.putString("user_id", userID.getText().toString());
-			    			mSettingEditor.commit();
-			    		}
-			    		catch (Exception e){
-			    			Log.e(DefaultView.TAG, "Exception caught: " + e.getMessage());
-			    		}
+			    		Log.d(DefaultView.TAG, "USER ID: " + userID.getText().toString());
+
+			    		// Store it in shared preferences
+			    		mSettingEditor = mSettingPreference.edit();
+			    		mSettingEditor.putString("user_id", userID.getText().toString());
+			    		mSettingEditor.commit();
+
+			    		dialog.cancel();
+
+			    		/*
+			    		 * Checking the validity  of the token
+			    		 */
+			    		tokenValidityCheck.execute();
 			    	}
 			    })
 			    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -400,5 +408,63 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 		
 	}
 
+	/**
+	 * Checking the validity  of the token 
+	 */	
+	class ValidityCheck extends AsyncTask<Void, Void, Boolean> {
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			HttpURLConnection urlConnection;
+			InputStream in;
+			try {
+				URL url = new URL("https://www.eventbrite.com/json/event_search?app_key=SCGKMFBZ2BGVSH5XL2&user_key=" + mSettingPreference.getString("user_id", null));
+				urlConnection = (HttpURLConnection) url.openConnection();
+				urlConnection.setDoInput(true);
+				in = urlConnection.getInputStream();	 
+				JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+				reader.beginObject();
+				Log.d(DefaultView.TAG, reader.toString());
+				if (reader.nextName().equals("error")){
+					reader.close();
+					urlConnection.disconnect();
+					return true;
+				}
+				else{
+					reader.close();
+					urlConnection.disconnect();
+					return false;
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		/* (non-Javadoc)
+		 * @see android.os.AsyncTask#onPostExecute(java.lang.Object)
+		 */
+		@Override
+		protected void onPostExecute(Boolean result) {
+			if(result) {
+				AlertDialog.Builder invalidUser = new AlertDialog.Builder(SettingsActivity.this);
+				invalidUser.setIcon(R.drawable.ic_stat_alerts).setTitle("Error").setMessage("Invalid User ID!").setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						//nothing just close the box
+			    		dialog.cancel();
+					}
+				});
+				// Create the AlertDialog
+				AlertDialog invalidDialog = invalidUser.create();
+				// Show the Dialog
+				invalidDialog.show();
+				mSettingEditor = mSettingPreference.edit();
+				mSettingEditor.remove("user_id");
+				mSettingEditor.commit();
+			}
+		}
+		
+	}
 
 }
