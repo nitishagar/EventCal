@@ -766,23 +766,23 @@ public class DefaultView extends FragmentActivity {
 		 */
 		private void eventColorSelection(Button button, String type) {
 			if (type.equals("PERSONAL")) {
-				button.getBackground().setColorFilter(Color.parseColor("#690 "), PorterDuff.Mode.DARKEN);
+				button.setBackgroundColor(0xa0db8e00);
 			}
 
 			if (type.equals("FACEBOOK")) {
-				button.getBackground().setColorFilter(Color.parseColor("#09c"), PorterDuff.Mode.DARKEN);
+				button.setBackgroundColor(Color.CYAN);
 			}
 
 			if (type.equals("EVENTBRITE")) {
-				button.getBackground().setColorFilter(Color.parseColor("#f80"), PorterDuff.Mode.DARKEN); //setBackgroundColor(0xfbf2a300);
+				button.setBackgroundColor(0xfbf2a300);
 			}
 
 			if (type.equals("UW")) {
-				button.getBackground().setColorFilter(Color.parseColor("#a6c"), PorterDuff.Mode.DARKEN);
+				button.setBackgroundColor(0xdee4fa00);
 			}
 
 			if (type.equals("GOOGLE")) {
-				button.getBackground().setColorFilter(Color.parseColor("#7e572a "), PorterDuff.Mode.DARKEN);
+				button.setBackgroundColor(Color.YELLOW);
 			}
 		}
 		
