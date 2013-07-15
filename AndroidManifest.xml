@@ -133,7 +133,8 @@
         <activity
             android:name="cs.softwarearchitecture.eventcal.MapActivity"
             android:label="@string/title_activity_map"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:screenOrientation="portrait" >
         </activity>
         
         <service android:name="com.google.cloud.backend.android.GCMIntentService" />

@@ -335,9 +335,11 @@ public class DefaultView extends FragmentActivity {
 				startService(intent);
 			}
 
-			// UW service kickoff
-			Intent intent = new Intent(DefaultView.this, UWEventService.class);
-			startService(intent);
+			if(settingsPreference.getBoolean("uw_login", false)) {
+				// UW service kickoff
+				Intent intent = new Intent(DefaultView.this, UWEventService.class);
+				startService(intent);
+			}
 			return null;
 		}
 
