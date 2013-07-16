@@ -23,6 +23,7 @@ public class UWEventService extends TemplateService {
 		super();
 	}
 
+	@Override
 	protected void parseEvents(InputStream in) throws IOException {
 		JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
 
@@ -30,6 +31,7 @@ public class UWEventService extends TemplateService {
 		reader.close();
 	}
 
+	@Override
 	protected void parseEventsArray(JsonReader reader) throws IOException {
 		Log.d(UWEventService.TAG, "i'm here");
 		reader.beginObject(); //start

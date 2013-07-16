@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -35,11 +36,14 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.facebook.android.AsyncFacebookRunner.RequestListener;
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
+
+import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
 
 public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener{
 
@@ -92,7 +96,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 
 		bindPreferenceSummaryToValue(findPreference("notifications_new_event_ringtone"));
 		bindPreferenceSummaryToValue(findPreference("sync_frequency"));
-
+		
 	}
 
 	/* (non-Javadoc)
@@ -333,100 +337,163 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String value) {
-		if (sharedPreferences.getBoolean("facebook_login", false)) {
-			if(!(DefaultView.mFacebook.isSessionValid())){
-				int FORCE_DIALOG_AUTH =-1;
-				Log.d(DefaultView.TAG, "Facebook Login requested!");
-				LoginDialogListener loginComplete = new LoginDialogListener();
-				DefaultView.mFacebook.authorize(this, PERMS, loginComplete);
-				Log.d(DefaultView.TAG, "Facebook authorize called!");
-			}
-		}
-		else {
-			if(DefaultView.mFacebook.isSessionValid()){
-				Log.d(DefaultView.TAG, "Logging out...");
-				try{
-					DefaultView.mAsyncRunnner.logout(this, new LogoutRequestListener());
-				}
-				catch (Exception e){
-					Log.e(DefaultView.TAG, "Exception caught: " + e.getMessage());
+		if (value.equals("facebook_login")) {
+			if (sharedPreferences.getBoolean("facebook_login", false)) {
+				if(!(DefaultView.mFacebook.isSessionValid())){
+					int FORCE_DIALOG_AUTH =-1;
+					Log.d(DefaultView.TAG, "Facebook Login requested!");
+					LoginDialogListener loginComplete = new LoginDialogListener();
+					DefaultView.mFacebook.authorize(this, PERMS, loginComplete);
+					Log.d(DefaultView.TAG, "Facebook authorize called!");
 				}
 			}
-		} 
-		
-		if (sharedPreferences.getBoolean("eventbrite_login", false)) {
-			if(mSettingPreference.getString("user_id", null) == null) {
-				Log.d(DefaultView.TAG, "Eventbrite Login clicked! User ID: " + mSettingPreference.getString("user_id", null) );
-				
-				// Creating a login Id dialog
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder.setTitle(R.string.eventbrite_user_id);
-				
-				// Get the layout inflater
-			    LayoutInflater inflater = this.getLayoutInflater();
+			else {
+				if(DefaultView.mFacebook.isSessionValid()){
+					Log.d(DefaultView.TAG, "Logging out...");
+					try{
+						DefaultView.mAsyncRunnner.logout(this, new LogoutRequestListener());
+					}
+					catch (Exception e){
+						Log.e(DefaultView.TAG, "Exception caught: " + e.getMessage());
+					}
+				}
 
-			    // Inflate and set the layout for the dialog
-			    // Pass null as the parent view because its going in the dialog layout
-			    final View dialogView = inflater.inflate(R.layout.user_id_dialog, null);
-			    
-			    final ValidityCheck tokenValidityCheck = new ValidityCheck();
-			    
-			    builder.setView(dialogView)
-			    // Add the buttons
-			    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-			    	@Override
-					public void onClick(DialogInterface dialog, int id) {
-			    		// User clicked OK button
-			    		EditText userID = (EditText) dialogView.findViewById(R.id.userid);
+				// Delete confirmation dialog
+				deleteDialog("facebook_login", "FACEBOOK");
+			} 
+		}
 
-			    		Log.d(DefaultView.TAG, "USER ID: " + userID.getText().toString());
+		if (value.equals("eventbrite_login")) {
+			if (sharedPreferences.getBoolean("eventbrite_login", false)) {
+				if(mSettingPreference.getString("user_id", null) == null) {
+					Log.d(DefaultView.TAG, "Eventbrite Login clicked! User ID: " + mSettingPreference.getString("user_id", null) );
 
-			    		// Store it in shared preferences
-			    		mSettingEditor = mSettingPreference.edit();
-			    		mSettingEditor.putString("user_id", userID.getText().toString());
-			    		mSettingEditor.commit();
+					// Creating a login Id dialog
+					AlertDialog.Builder builder = new AlertDialog.Builder(this);
+					builder.setTitle(R.string.eventbrite_user_id);
 
-			    		dialog.cancel();
+					// Get the layout inflater
+					LayoutInflater inflater = this.getLayoutInflater();
 
-			    		/*
-			    		 * Checking the validity  of the token
-			    		 */
-			    		tokenValidityCheck.execute();
-			    	}
-			    })
-			    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-			    	@Override
-					public void onClick(DialogInterface dialog, int id) {
-			    		CheckBoxPreference loginCheck = (CheckBoxPreference) findPreference("eventbrite_login");
-			    		loginCheck.setChecked(false);
-			    		
-			    		// close the dialog box
-			    		dialog.cancel();
-			    	}
-			    });
-				
-				// Create the AlertDialog
-				AlertDialog dialog = builder.create();
-				
-				// Show the Dialog
-				dialog.show();
+					// Inflate and set the layout for the dialog
+					// Pass null as the parent view because its going in the dialog layout
+					final View dialogView = inflater.inflate(R.layout.user_id_dialog, null);
+
+					final ValidityCheck tokenValidityCheck = new ValidityCheck();
+
+					builder.setView(dialogView)
+					// Add the buttons
+					.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int id) {
+							// User clicked OK button
+							EditText userID = (EditText) dialogView.findViewById(R.id.userid);
+
+							Log.d(DefaultView.TAG, "USER ID: " + userID.getText().toString());
+
+							// Store it in shared preferences
+							mSettingEditor = mSettingPreference.edit();
+							mSettingEditor.putString("user_id", userID.getText().toString());
+							mSettingEditor.commit();
+
+							dialog.cancel();
+
+							/*
+							 * Checking the validity  of the token
+							 */
+							tokenValidityCheck.execute();
+						}
+					})
+					.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int id) {
+							CheckBoxPreference loginCheck = (CheckBoxPreference) findPreference("eventbrite_login");
+							loginCheck.setChecked(false);
+							
+							// close the dialog box
+							dialog.cancel();
+						}
+					});
+
+					// Create the AlertDialog
+					AlertDialog dialog = builder.create();
+
+					// Show the Dialog
+					dialog.show();
+				}
+			} 
+			else{
+				// Delete confirmation dialog
+				if (mSettingPreference.getString("user_id", null) != null) {
+					deleteDialog("eventbrite_login", "EVENTBRITE");
+					
+					Log.d(DefaultView.TAG, "Deleting user ID for Eventbrite!");
+					mSettingEditor = mSettingPreference.edit();
+					mSettingEditor.remove("user_id");
+					mSettingEditor.commit();
+				}
 			}
-		} 
-		else{
-			Log.d(DefaultView.TAG, "Deleting user ID for Eventbrite!");
-			mSettingEditor = mSettingPreference.edit();
-			mSettingEditor.remove("user_id");
-			mSettingEditor.commit();
 		}
 		
-		if (sharedPreferences.getBoolean("google_login", false)) {
-			Log.d(DefaultView.TAG, "Google Login clicked!");	
+		if (value.equals("google_login")) {
+			if (sharedPreferences.getBoolean("google_login", false)) {
+				Log.d(DefaultView.TAG, "Google Login clicked!");	
+			}
+			else {
+				deleteDialog("google_login", "GOOGLE");
+			}
 		}
-		
-		if (sharedPreferences.getBoolean("uw_login", false)) {
-			Log.d(DefaultView.TAG, "UW Login clicked!");	
+
+		if (value.equals("uw_login")) {
+			if (sharedPreferences.getBoolean("uw_login", false)) {
+				Log.d(DefaultView.TAG, "UW Login clicked!");	
+			}
+			else {
+				deleteDialog("uw_login", "UW");
+			}
 		}
-		
+	}
+
+	/**
+	 * Deleting events
+	 * @param tableSource 
+	 * @param checkboxName 
+	 * 
+	 */
+	@SuppressLint("DefaultLocale")
+	private void deleteDialog(final String checkboxName, final String tableSource) {
+		// Give a warning message before deleting data
+		AlertDialog.Builder warningBox = new AlertDialog.Builder(SettingsActivity.this);
+		warningBox.setIcon(R.drawable.ic_stat_alerts).setTitle("Warning")
+		.setMessage("Are you sure you want to delete " + tableSource.toLowerCase() + " events?")
+		.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			@SuppressWarnings("deprecation")
+			@Override
+			public void onClick(DialogInterface dialog, int id) {
+				CheckBoxPreference loginCheck = (CheckBoxPreference) findPreference(checkboxName);
+				loginCheck.setChecked(false);
+				
+				// Delete the data
+				getContentResolver().delete(DBEventsContentProvider.CONTENT_URI, "TABLE_SOURCE LIKE \"" + tableSource + "\"", null);
+				
+				dialog.cancel();
+			}
+		})
+		.setNegativeButton("No", new DialogInterface.OnClickListener() {
+			@SuppressWarnings("deprecation")
+			@Override
+			public void onClick(DialogInterface dialog, int id) {
+				CheckBoxPreference loginCheck = (CheckBoxPreference) findPreference(checkboxName);
+				loginCheck.setChecked(false);
+
+				// close the dialog box
+				dialog.cancel();
+			}
+		});
+		// Create the AlertDialog
+		AlertDialog warningDialog = warningBox.create();
+		// Show the Dialog
+		warningDialog.show();
 	}
 
 	/**

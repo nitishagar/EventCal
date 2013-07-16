@@ -3,19 +3,15 @@ package cs.softwarearchitecture.eventcal.services;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.JsonReader;
 import android.util.Log;
-import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
-import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
 import cs.softwarearchitecture.eventcal.utility.CurrentDateTimeConverter;
 
 
@@ -44,6 +40,7 @@ public class EventbriteEventService extends TemplateService {
 
 	}
 
+	@Override
 	protected void parseEventsArray(JsonReader reader) throws IOException {
 		Log.d(EventbriteEventService.TAG, "i'm here");
 		reader.beginObject(); 

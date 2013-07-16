@@ -12,7 +12,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.util.JsonReader;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
-import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
+import cs.softwarearchitecture.eventcal.utility.ColumnNames;
 
 class TemplateService extends IntentService {
 	
@@ -71,14 +71,14 @@ class TemplateService extends IntentService {
 		while (iter < eventSize){
 			ContentValues values = new ContentValues();
 			Event insertEvent = mEvents.get(iter);
-			values.put(DBSQLiteHelper.COLUMN_TABLE, "UW");
-			values.put(DBSQLiteHelper.COLUMN_TITLE, insertEvent.title);
-			values.put(DBSQLiteHelper.COLUMN_START_DATE, insertEvent.startDate);
-			values.put(DBSQLiteHelper.COLUMN_START_TIME, insertEvent.startTime);
-			values.put(DBSQLiteHelper.COLUMN_END_TIME, insertEvent.endTime);
-			values.put(DBSQLiteHelper.COLUMN_END_DATE, insertEvent.endDate);
-			values.put(DBSQLiteHelper.COLUMN_LOCATION, insertEvent.location);
-			values.put(DBSQLiteHelper.COLUMN_REMINDER_TIME,"");
+			values.put(ColumnNames.COLUMN_TABLE, "UW");
+			values.put(ColumnNames.COLUMN_TITLE, insertEvent.title);
+			values.put(ColumnNames.COLUMN_START_DATE, insertEvent.startDate);
+			values.put(ColumnNames.COLUMN_START_TIME, insertEvent.startTime);
+			values.put(ColumnNames.COLUMN_END_TIME, insertEvent.endTime);
+			values.put(ColumnNames.COLUMN_END_DATE, insertEvent.endDate);
+			values.put(ColumnNames.COLUMN_LOCATION, insertEvent.location);
+			values.put(ColumnNames.COLUMN_REMINDER_TIME,"");
 			getContentResolver().insert(DBEventsContentProvider.CONTENT_URI, values);
 			iter += 1;
 		}
