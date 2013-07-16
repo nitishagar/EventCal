@@ -7,9 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
-import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -17,68 +15,53 @@ import android.content.SharedPreferences;
 import android.util.JsonReader;
 import android.util.Log;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
-import cs.softwarearchitecture.eventcal.utility.ColumnNames;
+import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
 import cs.softwarearchitecture.eventcal.utility.CurrentDateTimeConverter;
 
 
-public class EventbriteEventService extends IntentService {
-	public class Event{
-		String title;
-		String location;
-		Integer startTime;
-		Integer startDate;
-		Integer endTime;
-		Integer endDate;
-	}
+public class EventbriteEventService extends TemplateService {
+
+	private String mEventbriteID;
+
+
 	/** 
 	 * A constructor is required, and must call the super IntentService(String)
 	 * constructor with a name for the worker thread.
 	 */
 	public EventbriteEventService() {
-		super("EventbriteEventService");
+		super();
 	}
 
 	private static final String TAG = "EventbriteEventService";
-	InputStream in;
-	List<Event> EventBriteEvents = new ArrayList();
-	//private ListView eventsListView;
-	//private ArrayAdapter arrayAdapter;
-	URL url;
-	HttpURLConnection urlConnection;
-	String EventBriteAPIKey = "SCGKMFBZ2BGVSH5XL2";
-	private String mEventbriteID;
 
-	public void parseEventBriteEvents(InputStream in) throws IOException {
+
+	protected void parseEvent(InputStream in) throws IOException {
 		JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
-		// try {
 
-		parseEventBriteEventsArray(reader);
-		//}
-		//finally {
+		parseEventsArray(reader);
+
 		reader.close();
-		//  }
+
 	}
 
-	public void parseEventBriteEventsArray(JsonReader reader) throws IOException {
-		//List eventList = new ArrayList();
+	protected void parseEventsArray(JsonReader reader) throws IOException {
 		Log.d(EventbriteEventService.TAG, "i'm here");
 		reader.beginObject(); 
 		reader.nextName();// events
 		reader.beginArray();
 		reader.skipValue();
 		while (reader.hasNext()) {
-			EventBriteEvents.add(getEventBriteEvents(reader));
+			mEvents.add(getEventBriteEvents(reader));
 		}
 		Log.d(EventbriteEventService.TAG, "i'm here 4");
 
 		reader.endArray();
 		reader.endObject();
-		//return eventList;
 	}
 
 
 
-	public Event getEventBriteEvents(JsonReader reader) throws IOException {
+	protected Event getEventBriteEvents(JsonReader reader) throws IOException {
 		Event event = new Event();
 
 		reader.beginObject();
@@ -92,7 +75,7 @@ public class EventbriteEventService extends IntentService {
 				event.title = reader.nextString();
 				Log.d(EventbriteEventService.TAG, event.title);
 			} else if(name.equals("venue")){
-				event.location = getLoc(reader);
+				event.location = getLocation(reader);
 				Log.d(EventbriteEventService.TAG, event.location);
 			} 
 			else if(name.equals("start_date")){
@@ -111,10 +94,11 @@ public class EventbriteEventService extends IntentService {
 		}
 		reader.endObject();
 		reader.endObject();
+		event.valid = 1;
 		return event;
 	}
-
-	public String getLoc(JsonReader reader) throws IOException{
+	
+	protected String getLocation(JsonReader reader) throws IOException{
 		String location = "";
 		reader.beginObject();
 		while (reader.hasNext()) {
@@ -128,9 +112,10 @@ public class EventbriteEventService extends IntentService {
 		}
 		reader.endObject();
 		return location;
-	}
-
-	public ArrayList<Integer> formatTimeAndDate(String timeDate){
+	}		
+	
+	
+	protected ArrayList<Integer> formatTimeAndDate(String timeDate){
 		Log.d(EventbriteEventService.TAG, timeDate);
 		ArrayList<Integer> returnFormatted = new ArrayList<Integer>();
 		String[] splitTimeDate = timeDate.split(" "); // [0] = date, [1] = time
@@ -138,10 +123,6 @@ public class EventbriteEventService extends IntentService {
 		String[] splitTime = splitTimeDate[1].split(":");
 		Integer date = CurrentDateTimeConverter.timeDateFormatter(Integer.parseInt(splitDate[2]), Integer.parseInt(splitDate[1]),splitDate[0]);
 		Integer time = CurrentDateTimeConverter.timeDateFormatter(Integer.parseInt(splitTime[0]), Integer.parseInt(splitTime[1]),splitTime[2]);
-		//String date = splitDate[1] + splitDate[2] + splitDate[0];
-		//String time = splitTime[0] + splitTime[1] + splitTime[2];
-		//Log.d(getEventBriteEventService.TAG, time);
-		//Log.d(getEventBriteEventService.TAG, date);
 		returnFormatted.add(time);
 		returnFormatted.add(date);
 		return returnFormatted;
@@ -155,45 +136,14 @@ public class EventbriteEventService extends IntentService {
 	 */
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		SharedPreferences mEventbritePreference = getSharedPreferences("eventbrite-session", Context.MODE_PRIVATE);
-		mEventbriteID = mEventbritePreference.getString("user_id", null);
+		SharedPreferences eventbritePreference = getSharedPreferences("eventbrite-session", Context.MODE_PRIVATE);
+		mEventbriteID = eventbritePreference.getString("user_id", null);
 
 		Log.d(EventbriteEventService.TAG, "I'm here");
-
+		mAPIKey = "SCGKMFBZ2BGVSH5XL2";
 		try {
-			url = new URL("https://www.eventbrite.com/json/event_search?app_key=" + EventBriteAPIKey + "&user_key=" + mEventbriteID + "&city=Waterloo&country=CA");
-			urlConnection = (HttpURLConnection)url.openConnection();
-			in = urlConnection.getInputStream();
-			parseEventBriteEvents(in);
-			int i = EventBriteEvents.size();
-			int j = 0;
-
-
-			while (j < i){
-				ContentValues values = new ContentValues();
-				Event insertEvent = EventBriteEvents.get(j);
-				/*Log.d(getEventBriteEventService.TAG, insertEvent.title);
-	    		Log.d(getEventBriteEventService.TAG, insertEvent.location);
-	    		Log.d(getEventBriteEventService.TAG, insertEvent.startTime);
-	    		Log.d(getEventBriteEventService.TAG, insertEvent.startDate);
-	    		Log.d(getEventBriteEventService.TAG, insertEvent.endTime);
-	    		Log.d(getEventBriteEventService.TAG, insertEvent.endDate);
-	    		int insertStartTime = Integer.parseInt(insertEvent.startTime);
-	    		int insertStartDate = Integer.parseInt(insertEvent.startDate);
-	    		int insertEndTime = Integer.parseInt(insertEvent.endTime);
-	    		int insertEndDate = Integer.parseInt(insertEvent.endDate);*/
-
-				values.put(ColumnNames.COLUMN_TABLE, "EVENTBRITE");
-				values.put(ColumnNames.COLUMN_TITLE, insertEvent.title);
-				values.put(ColumnNames.COLUMN_START_DATE,  insertEvent.startDate);
-				values.put(ColumnNames.COLUMN_START_TIME, insertEvent.startTime);
-				values.put(ColumnNames.COLUMN_END_TIME,  insertEvent.endTime);
-				values.put(ColumnNames.COLUMN_END_DATE,  insertEvent.endDate);
-				values.put(ColumnNames.COLUMN_LOCATION, insertEvent.location);
-
-				getContentResolver().insert(DBEventsContentProvider.CONTENT_URI, values);
-				j += 1;
-			}
+			mEventURL = new URL("https://www.eventbrite.com/json/event_search?app_key=" + mAPIKey + "&user_key=" + mEventbriteID + "&city=Waterloo&country=CA");
+			feedingDatabase("EVENTBRITE");
 
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
@@ -203,15 +153,10 @@ public class EventbriteEventService extends IntentService {
 			e.printStackTrace();
 		}
 		finally{
-			urlConnection.disconnect();
+			mURLConnection.disconnect();
 		}
 
 
-		/* eventsListView = (ListView) findViewById(R.id.calendarEvent_list);
 
-	        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, UWEvents);
-
-	        eventsListView.setAdapter(arrayAdapter); 
-		 */
 	}
 }
