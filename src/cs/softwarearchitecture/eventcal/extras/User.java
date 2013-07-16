@@ -1,4 +1,4 @@
-package cs.softwarearchitecture.eventcal.utility;
+package cs.softwarearchitecture.eventcal.extras;
 
 import java.util.ArrayList;
 import java.util.Date;

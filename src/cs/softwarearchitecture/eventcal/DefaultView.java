@@ -54,16 +54,18 @@ import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.Facebook;
 
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
+import cs.softwarearchitecture.eventcal.extras.ColumnNames;
+import cs.softwarearchitecture.eventcal.extras.CurrentDateTimeConverter;
+import cs.softwarearchitecture.eventcal.extras.Event;
+import cs.softwarearchitecture.eventcal.extras.Values;
 import cs.softwarearchitecture.eventcal.modify.AddEvent;
 import cs.softwarearchitecture.eventcal.modify.EditEvent;
 import cs.softwarearchitecture.eventcal.services.EventbriteEventService;
 import cs.softwarearchitecture.eventcal.services.FacebookService;
 import cs.softwarearchitecture.eventcal.services.GoogleService;
 import cs.softwarearchitecture.eventcal.services.UWEventService;
-import cs.softwarearchitecture.eventcal.utility.ColumnNames;
-import cs.softwarearchitecture.eventcal.utility.CurrentDateTimeConverter;
-import cs.softwarearchitecture.eventcal.utility.Event;
-import cs.softwarearchitecture.eventcal.utility.Values;
+import cs.softwarearchitecture.eventcal.utility.EventNotificationReceiver;
+import cs.softwarearchitecture.eventcal.utility.SettingsActivity;
 import cs.softwarearchitecture.eventcal.viewpagerindicator.TitlePageIndicator;
 
 public class DefaultView extends FragmentActivity {  

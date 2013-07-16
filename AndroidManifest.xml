@@ -65,13 +65,13 @@
                 android:value=".Search" />
         </activity>
         <activity
-            android:name="cs.softwarearchitecture.eventcal.SettingsActivity"
+            android:name="cs.softwarearchitecture.eventcal.utility.SettingsActivity"
             android:configChanges="orientation"
             android:label="@string/title_activity_settings"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="cs.softwarearchitecture.eventcal.Search"
+            android:name="cs.softwarearchitecture.eventcal.utility.Search"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" >
@@ -124,7 +124,7 @@
             android:enabled="true" >
         </service>
 
-        <receiver android:name="cs.softwarearchitecture.eventcal.EventNotificationReceiver" >
+        <receiver android:name="cs.softwarearchitecture.eventcal.utility.EventNotificationReceiver" >
             <intent-filter>
                 <data android:scheme="timer:" />
             </intent-filter>

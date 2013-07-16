@@ -16,7 +16,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import cs.softwarearchitecture.eventcal.DefaultView;
 import cs.softwarearchitecture.eventcal.database.DBSQLiteHelper;
-import cs.softwarearchitecture.eventcal.utility.ColumnNames;
+import cs.softwarearchitecture.eventcal.extras.ColumnNames;
 
 /**
  * @author nitishagarwal

@@ -1,4 +1,4 @@
-package cs.softwarearchitecture.eventcal;
+package cs.softwarearchitecture.eventcal.utility;
 
 import java.util.ArrayList;
 
@@ -11,9 +11,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import cs.softwarearchitecture.eventcal.DefaultView;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
+import cs.softwarearchitecture.eventcal.extras.ColumnNames;
 import cs.softwarearchitecture.eventcal.modify.EditEvent;
-import cs.softwarearchitecture.eventcal.utility.ColumnNames;
 
 public class Search extends ListActivity { 
 	

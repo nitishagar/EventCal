@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cs.softwarearchitecture.eventcal;
+package cs.softwarearchitecture.eventcal.extras;
 
 import java.text.DateFormatSymbols;
 
@@ -14,7 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cs.softwarearchitecture.eventcal.utility.ColumnNames;
+import cs.softwarearchitecture.eventcal.DefaultView;
+import cs.softwarearchitecture.eventcal.R;
 
 /**
  * @author nitishagarwal

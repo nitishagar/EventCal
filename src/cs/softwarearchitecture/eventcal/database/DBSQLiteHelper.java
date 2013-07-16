@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import cs.softwarearchitecture.eventcal.DefaultView;
-import cs.softwarearchitecture.eventcal.utility.ColumnNames;
+import cs.softwarearchitecture.eventcal.extras.ColumnNames;
 
 /**
  * @author nitishagarwal

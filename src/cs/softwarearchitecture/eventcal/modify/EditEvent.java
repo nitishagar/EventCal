@@ -50,9 +50,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import cs.softwarearchitecture.eventcal.DefaultView;
 import cs.softwarearchitecture.eventcal.R;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
-import cs.softwarearchitecture.eventcal.utility.ColumnNames;
-import cs.softwarearchitecture.eventcal.utility.CurrentDateTimeConverter;
-import cs.softwarearchitecture.eventcal.utility.Geohasher;
+import cs.softwarearchitecture.eventcal.extras.ColumnNames;
+import cs.softwarearchitecture.eventcal.extras.CurrentDateTimeConverter;
+import cs.softwarearchitecture.eventcal.extras.Geohasher;
 
 @SuppressLint("SimpleDateFormat")
 public class EditEvent extends FragmentActivity implements OnClickListener, OnMyLocationChangeListener {

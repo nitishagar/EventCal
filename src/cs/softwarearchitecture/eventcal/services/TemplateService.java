@@ -12,7 +12,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.util.JsonReader;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
-import cs.softwarearchitecture.eventcal.utility.ColumnNames;
+import cs.softwarearchitecture.eventcal.extras.ColumnNames;
 
 class TemplateService extends IntentService {
 	

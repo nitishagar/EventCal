@@ -12,7 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.JsonReader;
 import android.util.Log;
-import cs.softwarearchitecture.eventcal.utility.CurrentDateTimeConverter;
+import cs.softwarearchitecture.eventcal.extras.CurrentDateTimeConverter;
 
 
 public class EventbriteEventService extends TemplateService {

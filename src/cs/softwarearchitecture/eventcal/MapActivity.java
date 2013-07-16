@@ -25,8 +25,8 @@ import com.google.cloud.backend.android.CloudQuery;
 import com.google.cloud.backend.android.CloudQuery.Order;
 import com.google.cloud.backend.android.CloudQuery.Scope;
 
-import cs.softwarearchitecture.eventcal.utility.Geohasher;
-import cs.softwarearchitecture.eventcal.utility.User;
+import cs.softwarearchitecture.eventcal.extras.Geohasher;
+import cs.softwarearchitecture.eventcal.extras.User;
  
 public class MapActivity extends CloudBackendActivity implements OnMyLocationChangeListener{
  
@@ -117,8 +117,13 @@ public class MapActivity extends CloudBackendActivity implements OnMyLocationCha
 		@Override
 		protected void onPostExecute(CloudEntity resultEntity) {
 			Log.d("MAP", "Location Sent!");
-       		mLocSent = true;
-       		mSelfID = resultEntity.getId();
+			try {
+				mSelfID = resultEntity.getId();
+				mLocSent = true;
+			}
+			catch (Exception e) {
+				Log.e(DefaultView.TAG, "Exception caught: " + e.getMessage());
+			}
        		Log.d("MAP", "Self ID: " + mSelfID);
        		saveState();
 		}

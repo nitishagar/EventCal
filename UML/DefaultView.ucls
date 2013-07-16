@@ -29,7 +29,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="4" language="java" name="cs.softwarearchitecture.eventcal.utility.Values" project="EventCal" 
+  <class id="4" language="java" name="cs.softwarearchitecture.eventcal.extras.Values" project="EventCal" 
     file="/EventCal/src/cs/softwarearchitecture/eventcal/utility/Values.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="-21" y="101"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
@@ -61,7 +61,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="8" language="java" name="cs.softwarearchitecture.eventcal.SettingsActivity.GeneralPreferenceFragment" 
+  <class id="8" language="java" name="cs.softwarearchitecture.eventcal.utility.SettingsActivity.GeneralPreferenceFragment" 
     project="EventCal" file="/EventCal/src/cs/softwarearchitecture/eventcal/SettingsActivity.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="505" y="663"/>    
@@ -71,7 +71,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="9" language="java" name="cs.softwarearchitecture.eventcal.SettingsActivity.DataSyncPreferenceFragment" 
+  <class id="9" language="java" name="cs.softwarearchitecture.eventcal.utility.SettingsActivity.DataSyncPreferenceFragment" 
     project="EventCal" file="/EventCal/src/cs/softwarearchitecture/eventcal/SettingsActivity.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="746" y="664"/>    
@@ -81,7 +81,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="10" language="java" name="cs.softwarearchitecture.eventcal.SettingsActivity" project="EventCal" 
+  <class id="10" language="java" name="cs.softwarearchitecture.eventcal.utility.SettingsActivity" project="EventCal" 
     file="/EventCal/src/cs/softwarearchitecture/eventcal/SettingsActivity.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="760" y="456"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
@@ -90,7 +90,7 @@
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <class id="11" language="java" name="cs.softwarearchitecture.eventcal.SettingsActivity.NotificationPreferenceFragment" 
+  <class id="11" language="java" name="cs.softwarearchitecture.eventcal.utility.SettingsActivity.NotificationPreferenceFragment" 
     project="EventCal" file="/EventCal/src/cs/softwarearchitecture/eventcal/SettingsActivity.java" binary="false" 
     corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="996" y="663"/>    

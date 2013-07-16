@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cs.softwarearchitecture.eventcal.utility;
+package cs.softwarearchitecture.eventcal.extras;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

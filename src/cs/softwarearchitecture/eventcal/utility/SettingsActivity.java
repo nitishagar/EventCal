@@ -1,4 +1,4 @@
-package cs.softwarearchitecture.eventcal;
+package cs.softwarearchitecture.eventcal.utility;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -36,13 +36,13 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
-
 import com.facebook.android.AsyncFacebookRunner.RequestListener;
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
 
+import cs.softwarearchitecture.eventcal.DefaultView;
+import cs.softwarearchitecture.eventcal.R;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
 
 public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener{
@@ -131,6 +131,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 				preference
 				.setSummary(index >= 0 ? listPreference.getEntries()[index]
 						: null);
+				Log.d("SYNC", "Snync freq: " + listPreference.getEntries()[index]);
 
 			} else if (preference instanceof RingtonePreference) {
 				// For ringtone preferences, look up the correct display value
@@ -205,6 +206,8 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 	 */
 	private class LoginDialogListener implements DialogListener {
 
+		private Editor mEditor;
+
 		/* (non-Javadoc)
 		 * @see com.facebook.android.Facebook.DialogListener#onComplete(android.os.Bundle)
 		 */
@@ -214,10 +217,10 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
 			Log.d(DefaultView.TAG, "Facebook Login successful!");
 			//			mText.setText("Facebook Login successful. Press Menu...");
 			SharedPreferences preference = getSharedPreferences("facebook-session", 0);
-			DefaultView.mEditor = preference.edit();
-			DefaultView.mEditor.putString("access_token", DefaultView.mFacebook.getAccessToken());
-			DefaultView.mEditor.putLong("access_expires", DefaultView.mFacebook.getAccessExpires());
-			DefaultView.mEditor.commit();
+			mEditor = preference.edit();
+			mEditor.putString("access_token", DefaultView.mFacebook.getAccessToken());
+			mEditor.putLong("access_expires", DefaultView.mFacebook.getAccessExpires());
+			mEditor.commit();
 
 		}
 

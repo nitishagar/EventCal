@@ -29,10 +29,12 @@ import android.widget.ListView;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
+import cs.softwarearchitecture.eventcal.extras.AgendaCursorAdapter;
+import cs.softwarearchitecture.eventcal.extras.ColumnNames;
+import cs.softwarearchitecture.eventcal.extras.CurrentDateTimeConverter;
 import cs.softwarearchitecture.eventcal.modify.AddEvent;
 import cs.softwarearchitecture.eventcal.modify.EditEvent;
-import cs.softwarearchitecture.eventcal.utility.ColumnNames;
-import cs.softwarearchitecture.eventcal.utility.CurrentDateTimeConverter;
+import cs.softwarearchitecture.eventcal.utility.SettingsActivity;
 
 public class AgendaActivity extends DefaultView implements LoaderManager.LoaderCallbacks<Cursor>, OnItemClickListener  {
 

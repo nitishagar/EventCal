@@ -16,8 +16,8 @@ import android.provider.CalendarContract.Reminders;
 import android.text.format.DateFormat;
 import android.util.Log;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
-import cs.softwarearchitecture.eventcal.utility.ColumnNames;
-import cs.softwarearchitecture.eventcal.utility.CurrentDateTimeConverter;
+import cs.softwarearchitecture.eventcal.extras.ColumnNames;
+import cs.softwarearchitecture.eventcal.extras.CurrentDateTimeConverter;
 
 /**
  * @author nitishagarwal

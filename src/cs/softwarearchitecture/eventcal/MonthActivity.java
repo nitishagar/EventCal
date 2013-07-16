@@ -12,6 +12,7 @@ import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
@@ -20,6 +21,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.ImageView;
@@ -31,8 +34,12 @@ import com.squareup.timessquare.CalendarPickerView;
 import com.squareup.timessquare.CalendarPickerView.OnDateSelectedListener;
 import com.squareup.timessquare.CalendarPickerView.SelectionMode;
 
+import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
+import cs.softwarearchitecture.eventcal.extras.ColumnNames;
+import cs.softwarearchitecture.eventcal.extras.Event;
 import cs.softwarearchitecture.eventcal.modify.AddEvent;
-import cs.softwarearchitecture.eventcal.utility.Event;
+import cs.softwarearchitecture.eventcal.modify.EditEvent;
+import cs.softwarearchitecture.eventcal.utility.SettingsActivity;
 
 public class MonthActivity extends DefaultView {
 
