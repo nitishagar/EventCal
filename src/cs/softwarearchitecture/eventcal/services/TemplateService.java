@@ -11,6 +11,7 @@ import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.util.JsonReader;
+import android.util.Log;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
 import cs.softwarearchitecture.eventcal.extras.ColumnNames;
 
@@ -40,13 +41,12 @@ class TemplateService extends IntentService {
 		super("TemplateService");
 	}
 
-	protected void parseEvents(InputStream in) throws IOException {
-	}
-
 	protected void parseEventsArray(JsonReader reader) throws IOException {
 	}
 
-
+	protected void parseEvent(InputStream in) throws IOException {	
+	}
+	
 	/**
 	 * The IntentService calls this method from the default worker thread with
 	 * the intent that started the service. When this method returns, IntentService
@@ -62,16 +62,17 @@ class TemplateService extends IntentService {
 	 * @param eventType 
 	 * @throws IOException
 	 */
-	protected void feedingDatabase(String eventType) throws IOException {
+	protected void feedingDatabase(String eventType, URL eventURL) throws IOException {
+		mEventURL = eventURL;
 		mURLConnection = (HttpURLConnection)mEventURL.openConnection();
 		mInputStream = mURLConnection.getInputStream();
-		parseEvents(mInputStream);
+		parseEvent(mInputStream);
 		int eventSize = mEvents.size();
 		int iter = 0;
 		while (iter < eventSize){
 			ContentValues values = new ContentValues();
 			Event insertEvent = mEvents.get(iter);
-			values.put(ColumnNames.COLUMN_TABLE, "UW");
+			values.put(ColumnNames.COLUMN_TABLE, eventType);
 			values.put(ColumnNames.COLUMN_TITLE, insertEvent.title);
 			values.put(ColumnNames.COLUMN_START_DATE, insertEvent.startDate);
 			values.put(ColumnNames.COLUMN_START_TIME, insertEvent.startTime);
@@ -83,4 +84,5 @@ class TemplateService extends IntentService {
 			iter += 1;
 		}
 	}
+
 }

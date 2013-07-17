@@ -24,7 +24,7 @@ public class UWEventService extends TemplateService {
 	}
 
 	@Override
-	protected void parseEvents(InputStream in) throws IOException {
+	protected void parseEvent(InputStream in) throws IOException {
 		JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
 
 		parseEventsArray(reader);
@@ -221,7 +221,7 @@ public class UWEventService extends TemplateService {
 		mAPIKey = "caeecfb4db9804ec82b9adbfbdd151a3";
 		try {
 			mEventURL = new URL("http://api.uwaterloo.ca/public/v1/?key=" + mAPIKey + "&service=CalendarEvents&output=json");
-			feedingDatabase("UW");
+			feedingDatabase("UW", mEventURL);
 
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block

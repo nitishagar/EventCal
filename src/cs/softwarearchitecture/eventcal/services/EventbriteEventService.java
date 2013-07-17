@@ -30,7 +30,7 @@ public class EventbriteEventService extends TemplateService {
 
 	private static final String TAG = "EventbriteEventService";
 
-
+	@Override
 	protected void parseEvent(InputStream in) throws IOException {
 		JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
 
@@ -140,7 +140,7 @@ public class EventbriteEventService extends TemplateService {
 		mAPIKey = "SCGKMFBZ2BGVSH5XL2";
 		try {
 			mEventURL = new URL("https://www.eventbrite.com/json/event_search?app_key=" + mAPIKey + "&user_key=" + mEventbriteID + "&city=Waterloo&country=CA");
-			feedingDatabase("EVENTBRITE");
+			feedingDatabase("EVENTBRITE", mEventURL);
 
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block

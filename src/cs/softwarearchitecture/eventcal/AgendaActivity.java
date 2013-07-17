@@ -276,6 +276,7 @@ public class AgendaActivity extends DefaultView implements LoaderManager.LoaderC
 				editEventIntent.putExtra("group", group);
 				editEventIntent.putExtra("id", _id);
 				editEventIntent.putExtra("location", location);
+				Log.d("Location", "Location: " + location);
 
 				cursor.moveToNext();
 			}
