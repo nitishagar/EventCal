@@ -1,4 +1,4 @@
-package cs.softwarearchitecture.eventcal.utility;
+package cs.softwarearchitecture.eventcal;
 
 import java.util.ArrayList;
 
@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import cs.softwarearchitecture.eventcal.DefaultView;
 import cs.softwarearchitecture.eventcal.contentprovider.DBEventsContentProvider;
 import cs.softwarearchitecture.eventcal.extras.ColumnNames;
 import cs.softwarearchitecture.eventcal.modify.EditEvent;
@@ -64,6 +63,7 @@ public class Search extends ListActivity {
 				String date = cursor.getString(cursor.getColumnIndex(ColumnNames.COLUMN_START_DATE));
 				String group = cursor.getString(cursor.getColumnIndex(ColumnNames.COLUMN_TABLE));
 				int reminder = cursor.getInt(cursor.getColumnIndex(ColumnNames.COLUMN_REMINDER_TIME));
+				String location = cursor.getString(cursor.getColumnIndex(ColumnNames.COLUMN_LOCATION));
 				
 				editEventIntent.putExtra("title", title);
 				editEventIntent.putExtra("start_time", start_time);
@@ -72,6 +72,7 @@ public class Search extends ListActivity {
 				editEventIntent.putExtra("reminder", reminder);
 				editEventIntent.putExtra("group", group);
 				editEventIntent.putExtra("id", _id);
+				editEventIntent.putExtra("location", location);
 				
 				cursor.moveToNext();
 			}

@@ -71,7 +71,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="cs.softwarearchitecture.eventcal.utility.Search"
+            android:name="cs.softwarearchitecture.eventcal.Search"
             android:label="@string/app_name"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" >
