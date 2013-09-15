@@ -1,7 +1,7 @@
 EventCal
 ========
 
-Event Calendar application for Software Architecture Project
+Android Event Calendar application that functions as an event hub that displays users' personal, Facebook, UW campus events, Google calendar and Eventbrite local events.
 
 Team Members:
 Yuduo Zhang, Nitish Agarwal, Runda Sun and Ji Zhang
