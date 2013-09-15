@@ -25,14 +25,14 @@ https://docs.google.com/presentation/d/1WCHuPrtNANNKfkesw9t8aScnQIEDxkFe6o1y5mYt
 
 Screenshots:
 
-![alt tag](https://raw.github.com/yuduozhang/EventCal/master/Screenshots/1.png)
+![alt tag](https://raw.github.com/nitishagar/EventCal/master/Screenshots/1.png)
 
-![alt tag](https://raw.github.com/yuduozhang/EventCal/master/Screenshots/2.png)
+![alt tag](https://raw.github.com/nitishagar/EventCal/master/Screenshots/2.png)
 
-![alt tag](https://raw.github.com/yuduozhang/EventCal/master/Screenshots/3.png)
+![alt tag](https://raw.github.com/nitishagar/EventCal/master/Screenshots/3.png)
 
-![alt tag](https://raw.github.com/yuduozhang/EventCal/master/Screenshots/4.png)
+![alt tag](https://raw.github.com/nitishagar/EventCal/master/Screenshots/4.png)
 
-![alt tag](https://raw.github.com/yuduozhang/EventCal/master/Screenshots/5.png)
+![alt tag](https://raw.github.com/nitishagar/EventCal/master/Screenshots/5.png)
 
-![alt tag](https://raw.github.com/yuduozhang/EventCal/master/Screenshots/6.png)
+![alt tag](https://raw.github.com/nitishagar/EventCal/master/Screenshots/6.png)
