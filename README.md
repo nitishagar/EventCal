@@ -15,7 +15,7 @@ https://docs.google.com/file/d/0B2HU60RSt70MMHlYdnJjbzIxUWs/edit?usp=sharing
 - Detailed Software Design and  Architecture Document:
 https://docs.google.com/file/d/0B2FeGdhiDQ7NZTdxV3cyajVoWFE/edit?usp=sharing
 
-- EventCal: Architecture Recovery
+- EventCal: Architecture Recovery:
 https://docs.google.com/file/d/0B2FeGdhiDQ7NN05JdGw4NHpncFU/edit?usp=sharing
 
 
